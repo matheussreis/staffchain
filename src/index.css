@@ -1,13 +1,50 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;1,100;1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+  font-family: 'Fira Sans', sans-serif;
+
+  --color-primary-100: #c4c7f9;
+  --color-primary-200: #9da3ec;
+  --color-primary-300: #7580e0;
+  --color-primary-400: #5663d9;
+  --color-primary-500: #3446d0;
+  --color-primary-600: #2e3dc6;
+  --color-primary-700: #2433b9;
+  --color-primary-800: #1928ae;
+  --color-primary-900: #001ea2;
+
+  --color-secondary-100: #fbb9d4;
+  --color-secondary-200: #f78cb7;
+  --color-secondary-300: #f45c99;
+  --color-secondary-400: #f13382;
+  --color-secondary-500: #f0006c;
+  --color-secondary-600: #df0068;
+  --color-secondary-700: #c80061;
+  --color-secondary-800: #b3005d;
+  --color-secondary-900: #b3005d;
+
+  --color-error: #B00020;
+  --color-warning: #b09300;
+  --color-success: #58b000;
+
+  --color-on-primary-light: white;
+  --color-on-primary-dark: black;
+  --color-on-secondary-light: white;
+  --color-on-secondary-dark: black;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  margin: 0;
+  background-color: rgb(240 240 240);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Montserrat';
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
