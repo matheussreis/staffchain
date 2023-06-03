@@ -1,0 +1,11 @@
+.controls {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+@media screen and (max-width: 420px) {
+    .controls {
+        flex-direction: column
+    }
+}
