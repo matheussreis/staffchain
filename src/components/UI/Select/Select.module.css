@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    width: inherit;
+    flex: 1;
+    flex-basis: 35%;
+}
+
+.container.singleline {
+    flex-basis: 100%;
+}
+
+.container label {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: dimgray;
+}
+
+.error {
+    color: var(--color-error-500);
+    font-size: 12px;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

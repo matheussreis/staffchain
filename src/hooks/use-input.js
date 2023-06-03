@@ -61,6 +61,10 @@ export default function useInput(validator, defaultValue = undefined) {
     dispatch({ type: 'INPUT', value: event.target.value });
   }
 
+  function selectValueChangeHandler(value) {
+    dispatch({ type: 'INPUT', value: value });
+  }
+
   function inputBlurHandler(event) {
     dispatch({ type: 'BLUR' });
   }
@@ -75,6 +79,7 @@ export default function useInput(validator, defaultValue = undefined) {
     hasError,
     errorMessage,
     valueChangeHandler,
+    selectValueChangeHandler,
     inputBlurHandler,
     reset,
   };
