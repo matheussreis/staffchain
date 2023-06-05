@@ -16,7 +16,7 @@ const multiStepFormReducer = (state, action) => {
   }
 };
 
-const useMultiStepForm = (steps) => {
+export default function useMultiStepForm(steps) {
   if (steps) {
     initialState.steps = steps;
   }
@@ -41,6 +41,4 @@ const useMultiStepForm = (steps) => {
     goToPreviousStep,
     goToNextStep,
   };
-};
-
-export default useMultiStepForm;
+}
