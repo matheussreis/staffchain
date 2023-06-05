@@ -1,0 +1,11 @@
+.title {
+    margin: 0 0 0.5rem 0;
+}
+
+.text {
+    margin: 0;
+    font-size: smaller;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

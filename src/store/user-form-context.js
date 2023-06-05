@@ -1,0 +1,70 @@
+import React from 'react';
+
+export const UserFormContext = React.createContext({
+  fields: {
+    firstName: {
+      value: '',
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
+    lastName: {
+      value: '',
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
+    phone: {
+      value: '',
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
+    birthdate: {
+      value: '',
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
+    email: {
+      value: '',
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
+    isAdministrator: {
+      value: { value: '', label: '' },
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
+    departmentName: {
+      value: '',
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
+    password: {
+      value: '',
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
+  },
+});

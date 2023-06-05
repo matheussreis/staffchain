@@ -1,0 +1,113 @@
+import { useContext } from 'react';
+import Input from '../../UI/Input/Input';
+import FormRow from '../../UI/Form/FormRow';
+import Select from '../../UI/Select/Select';
+import yesNoDom from '../../../options/yes-no-dom';
+import Container from '../../UI/Container/Container';
+import { UserFormContext } from '../../../store/user-form-context';
+
+import classes from './Step1.module.css';
+
+export default function Step1() {
+  const { fields } = useContext(UserFormContext);
+
+  return (
+    <Container className={classes['input-container']}>
+      <FormRow>
+        <Input
+          type="text"
+          id="firstName"
+          name="firstName"
+          placeholder="First Name"
+          onBlur={fields.firstName.inputBlurHandler}
+          onChange={fields.firstName.valueChangeHandler}
+          value={fields.firstName.value}
+          hasError={fields.firstName.hasError}
+          errorMessage={fields.firstName.errorMessage}
+        />
+        <Input
+          type="text"
+          id="lastName"
+          name="lastName"
+          placeholder="Last Name"
+          onBlur={fields.lastName.inputBlurHandler}
+          onChange={fields.lastName.valueChangeHandler}
+          value={fields.lastName.value}
+          hasError={fields.lastName.hasError}
+          errorMessage={fields.lastName.errorMessage}
+        />
+      </FormRow>
+      <FormRow>
+        <Input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email"
+          onBlur={fields.email.inputBlurHandler}
+          onChange={fields.email.valueChangeHandler}
+          value={fields.email.value}
+          hasError={fields.email.hasError}
+          errorMessage={fields.email.errorMessage}
+        />
+        <Input
+          type="text"
+          id="phone"
+          name="phone"
+          placeholder="Phone"
+          onBlur={fields.phone.inputBlurHandler}
+          onChange={fields.phone.valueChangeHandler}
+          value={fields.phone.value}
+          hasError={fields.phone.hasError}
+          errorMessage={fields.phone.errorMessage}
+        />
+      </FormRow>
+      <FormRow>
+        <Input
+          type="date"
+          id="birthdate"
+          name="birthdate"
+          placeholder="Birth Date"
+          onBlur={fields.birthdate.inputBlurHandler}
+          onChange={fields.birthdate.valueChangeHandler}
+          value={fields.birthdate.value}
+          hasError={fields.birthdate.hasError}
+          errorMessage={fields.birthdate.errorMessage}
+        />
+        <Select
+          label="Is Administrator"
+          name="isadmin"
+          options={yesNoDom}
+          value={fields.isAdministrator.value}
+          onBlur={fields.isAdministrator.inputBlurHandler}
+          onChange={fields.isAdministrator.valueChangeHandler}
+          hasError={fields.isAdministrator.hasError}
+          errorMessage={fields.isAdministrator.errorMessage}
+        />
+      </FormRow>
+      <FormRow>
+        <Input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Password"
+          onBlur={fields.password.inputBlurHandler}
+          onChange={fields.password.valueChangeHandler}
+          value={fields.password.value}
+          hasError={fields.password.hasError}
+          errorMessage={fields.password.errorMessage}
+        />
+        <Input
+          type="text"
+          id="department"
+          name="department"
+          placeholder="Department Name"
+          onBlur={fields.departmentName.inputBlurHandler}
+          onChange={fields.departmentName.valueChangeHandler}
+          value={fields.departmentName.value}
+          hasError={fields.departmentName.hasError}
+          errorMessage={fields.departmentName.errorMessage}
+        />
+      </FormRow>
+    </Container>
+  );
+}
