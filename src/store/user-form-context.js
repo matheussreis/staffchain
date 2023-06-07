@@ -43,7 +43,7 @@ export const UserFormContext = React.createContext({
       inputBlurHandler: () => {},
     },
     isAdministrator: {
-      value: { value: '', label: '' },
+      value: '',
       isValid: true,
       hasError: false,
       errorMessage: '',
