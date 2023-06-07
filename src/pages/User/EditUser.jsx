@@ -2,8 +2,12 @@ import useInput from '../../hooks/use-input';
 import FIELD_TYPES from '../../enums/field-types';
 import UserForm from '../../components/UserForm/UserForm';
 import { UserFormContext } from '../../store/user-form-context';
+import { useContext } from 'react';
 
 export default function EditUser() {
+  const context = useContext(UserFormContext);
+  const { fields } = context;
+
   const {
     value: firstNameValue,
     isValid: firstNameIsValid,
@@ -11,7 +15,7 @@ export default function EditUser() {
     errorMessage: firstNameErrorMessage,
     valueChangeHandler: firstNameChangeHandler,
     inputBlurHandler: firstNameBlurHandler,
-  } = useInput([FIELD_TYPES.TEXT, ['First Name']]);
+  } = useInput([FIELD_TYPES.TEXT, ['First Name']], fields.firstName.value);
 
   const {
     value: lastNameValue,
@@ -20,7 +24,7 @@ export default function EditUser() {
     errorMessage: lastNameErrorMessage,
     valueChangeHandler: lastNameChangeHandler,
     inputBlurHandler: lastNameBlurHandler,
-  } = useInput([FIELD_TYPES.TEXT, ['Last Name']]);
+  } = useInput([FIELD_TYPES.TEXT, ['Last Name']], fields.lastName.value);
 
   const {
     value: emailValue,
@@ -29,7 +33,7 @@ export default function EditUser() {
     errorMessage: emailErrorMessage,
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
-  } = useInput([FIELD_TYPES.EMAIL, ['email']]);
+  } = useInput([FIELD_TYPES.EMAIL, ['email']], fields.email.value);
 
   const {
     value: phoneValue,
@@ -38,7 +42,7 @@ export default function EditUser() {
     errorMessage: phoneErrorMessage,
     valueChangeHandler: phoneChangeHandler,
     inputBlurHandler: phoneBlurHandler,
-  } = useInput([FIELD_TYPES.TEXT, ['Phone']]);
+  } = useInput([FIELD_TYPES.TEXT, ['Phone']], fields.phone.value);
 
   const {
     value: birthdateValue,
@@ -47,7 +51,7 @@ export default function EditUser() {
     errorMessage: birthdateErrorMessage,
     valueChangeHandler: birthdateChangeHandler,
     inputBlurHandler: birthdateBlurHandler,
-  } = useInput([FIELD_TYPES.TEXT, ['Birth Date']]);
+  } = useInput([FIELD_TYPES.TEXT, ['Birth Date']], fields.birthdate.value);
 
   const {
     value: isAdministratorValue,
@@ -56,7 +60,10 @@ export default function EditUser() {
     errorMessage: isAdministratorErrorMessage,
     selectValueChangeHandler: isAdministratorChangeHandler,
     inputBlurHandler: isAdministratorBlurHandler,
-  } = useInput([FIELD_TYPES.TEXT, ['Is Administrator']]);
+  } = useInput(
+    [FIELD_TYPES.TEXT, ['Is Administrator']],
+    fields.isAdministrator.value
+  );
 
   const {
     value: passwordValue,
@@ -65,7 +72,7 @@ export default function EditUser() {
     errorMessage: passwordErrorMessage,
     valueChangeHandler: passwordChangeHandler,
     inputBlurHandler: passwordBlurHandler,
-  } = useInput([FIELD_TYPES.PASSWORD, [10]]);
+  } = useInput([FIELD_TYPES.PASSWORD, [10]], fields.password.value);
 
   const {
     value: departmentNameValue,
@@ -74,7 +81,10 @@ export default function EditUser() {
     errorMessage: departmentNameErrorMessage,
     valueChangeHandler: departmentNameChangeHandler,
     inputBlurHandler: departmentNameBlurHandler,
-  } = useInput([FIELD_TYPES.TEXT, ['Department Name']]);
+  } = useInput(
+    [FIELD_TYPES.TEXT, ['Department Name']],
+    fields.departmentName.value
+  );
 
   const providerValue = {
     firstName: {
@@ -144,7 +154,7 @@ export default function EditUser() {
   };
 
   return (
-    <UserFormContext.Provider value={{ fields: providerValue }}>
+    <UserFormContext.Provider value={{ ...context, fields: providerValue }}>
       <UserForm />
     </UserFormContext.Provider>
   );

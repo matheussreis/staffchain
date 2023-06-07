@@ -1,9 +1,9 @@
 import Root from './pages/Root';
 import Login from './pages/Login';
+import User from './pages/User/User';
 import ViewMe from './pages/Me/ViewMe';
 import EditMe from './pages/Me/EditMe';
 import EditUser from './pages/User/EditUser';
-import ViewUser from './pages/User/ViewUser';
 import ListUser from './pages/User/ListUser';
 import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
@@ -28,8 +28,8 @@ const router = createBrowserRouter([
           {
             path: ':id',
             children: [
-              { index: true, element: <ViewUser /> },
-              { path: 'edit', element: <EditUser /> },
+              { index: true, element: <User /> },
+              { path: 'edit', element: <User /> },
             ],
           },
         ],
