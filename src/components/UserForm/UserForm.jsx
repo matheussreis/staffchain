@@ -5,9 +5,11 @@ import MultiStepForm from '../UI/MultiStepForm/MultiStepForm';
 import useMultiStepForm from '../../hooks/use-multi-step-form';
 import { UserFormContext } from '../../store/user-form-context';
 import useEditPageCheck from '../../hooks/use-edit-page-check';
+import { useLocation } from 'react-router';
 
 export default function UserForm() {
   const context = useContext(UserFormContext);
+  let location = useLocation();
 
   const { steps, currentStep, goToNextStep, goToPreviousStep } =
     useMultiStepForm([Step1, Step2]);
@@ -39,6 +41,8 @@ export default function UserForm() {
       currentStep={currentStep}
       goToPreviousStep={goToPreviousStep}
       goToNextStep={goToNextStep}
+      isCancelButton={isEdit}
+      cancelRedirect={isEdit ? location.pathname.replace('/edit', '') : null}
       isFormValid={
         context.fields.firstName.isValid &&
         context.fields.lastName.isValid &&

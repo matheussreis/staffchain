@@ -15,6 +15,8 @@ export default function MultiStepForm({
   isFormValid = false,
   lastButtonName,
   formTitle,
+  isCancelButton = false,
+  cancelRedirect = undefined,
 }) {
   const CurentStep = steps[currentStep];
 
@@ -30,6 +32,8 @@ export default function MultiStepForm({
           onNext={goToNextStep}
           lastButtonName={lastButtonName || 'Finish'}
           isFormValid={isFormValid}
+          isCancelButton={isCancelButton}
+          cancelRedirect={cancelRedirect}
         />
       </Form>
     </Container>

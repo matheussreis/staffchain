@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../Button/Button';
 
 import classes from './MultiStepFormControls.module.css';
+import { useNavigate } from 'react-router';
 
 export default function MultiStepFormControls({
   currentStep = 0,
@@ -10,6 +11,8 @@ export default function MultiStepFormControls({
   onNext,
   isFormValid = false,
   lastButtonName = 'Finish',
+  isCancelButton = false,
+  cancelRedirect = undefined,
 }) {
   const [isBackButtonVisible, setIsBackButtonVisible] = useState(false);
   const [isBackButtonDisabled, setIsBackButtonDisabled] = useState(false);
@@ -26,13 +29,24 @@ export default function MultiStepFormControls({
     setIsCreateButtonVisible(currentStep === nextToLastStepIndex);
   }, [currentStep, steps.length]);
 
+  let navigate = useNavigate();
+
   return (
     <div className={classes.controls}>
-      {isBackButtonVisible && (
+      {isBackButtonVisible && !isCancelButton && (
         <Button
           isAlt={true}
           disabled={isBackButtonDisabled}
           onClick={onPrevious}
+        >
+          Back
+        </Button>
+      )}
+
+      {isCancelButton && cancelRedirect && (
+        <Button
+          isAlt={true}
+          onClick={() => navigate(cancelRedirect, { replace: true })}
         >
           Back
         </Button>
