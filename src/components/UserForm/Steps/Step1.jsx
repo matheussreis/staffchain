@@ -73,15 +73,16 @@ export default function Step1() {
           hasError={fields.birthdate.hasError}
           errorMessage={fields.birthdate.errorMessage}
         />
-        <Select
-          label="Is Administrator"
-          name="isadmin"
-          options={yesNoDom}
-          value={fields.isAdministrator.value}
-          onBlur={fields.isAdministrator.inputBlurHandler}
-          onChange={fields.isAdministrator.valueChangeHandler}
-          hasError={fields.isAdministrator.hasError}
-          errorMessage={fields.isAdministrator.errorMessage}
+        <Input
+          type="text"
+          id="department"
+          name="department"
+          placeholder="Department Name"
+          onBlur={fields.departmentName.inputBlurHandler}
+          onChange={fields.departmentName.valueChangeHandler}
+          value={fields.departmentName.value}
+          hasError={fields.departmentName.hasError}
+          errorMessage={fields.departmentName.errorMessage}
         />
       </FormRow>
       <FormRow>
@@ -96,16 +97,15 @@ export default function Step1() {
           hasError={fields.password.hasError}
           errorMessage={fields.password.errorMessage}
         />
-        <Input
-          type="text"
-          id="department"
-          name="department"
-          placeholder="Department Name"
-          onBlur={fields.departmentName.inputBlurHandler}
-          onChange={fields.departmentName.valueChangeHandler}
-          value={fields.departmentName.value}
-          hasError={fields.departmentName.hasError}
-          errorMessage={fields.departmentName.errorMessage}
+        <Select
+          label="Is Administrator"
+          name="isadmin"
+          options={yesNoDom}
+          value={fields.isAdministrator.value}
+          onBlur={fields.isAdministrator.inputBlurHandler}
+          onChange={fields.isAdministrator.valueChangeHandler}
+          hasError={fields.isAdministrator.hasError}
+          errorMessage={fields.isAdministrator.errorMessage}
         />
       </FormRow>
     </Container>
