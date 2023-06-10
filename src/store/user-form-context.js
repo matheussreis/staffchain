@@ -2,6 +2,7 @@ import React from 'react';
 
 export const UserFormContext = React.createContext({
   fields: {
+    id: { value: '' },
     firstName: {
       value: '',
       isValid: true,
