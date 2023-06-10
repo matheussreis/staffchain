@@ -41,8 +41,8 @@ export default function UserForm() {
       currentStep={currentStep}
       goToPreviousStep={goToPreviousStep}
       goToNextStep={goToNextStep}
-      isCancelButton={isEdit}
-      cancelRedirect={isEdit ? location.pathname.replace('/edit', '') : null}
+      isCancelButton={true}
+      cancelRedirect={isEdit ? location.pathname.replace('/edit', '') : '/user'}
       isFormValid={
         context.fields.firstName.isValid &&
         context.fields.lastName.isValid &&
