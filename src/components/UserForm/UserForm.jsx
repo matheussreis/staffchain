@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
+import { useLocation } from 'react-router';
 import MultiStepForm from '../UI/MultiStepForm/MultiStepForm';
 import useMultiStepForm from '../../hooks/use-multi-step-form';
-import { UserFormContext } from '../../store/user-form-context';
 import useEditPageCheck from '../../hooks/use-edit-page-check';
-import { useLocation } from 'react-router';
+import { UserFormContext } from '../../store/user-form-context';
 
 export default function UserForm() {
   const context = useContext(UserFormContext);
@@ -50,6 +50,7 @@ export default function UserForm() {
         context.fields.birthdate.isValid &&
         context.fields.email.isValid &&
         context.fields.isAdministrator.isValid &&
+        context.fields.roleName.isValid &&
         context.fields.departmentName.isValid &&
         context.fields.password.isValid
       }

@@ -1,8 +1,8 @@
+import { useContext } from 'react';
 import useInput from '../../hooks/use-input';
 import FIELD_TYPES from '../../enums/field-types';
 import UserForm from '../../components/UserForm/UserForm';
 import { UserFormContext } from '../../store/user-form-context';
-import { useContext } from 'react';
 
 export default function EditUser() {
   const context = useContext(UserFormContext);
@@ -86,6 +86,15 @@ export default function EditUser() {
     fields.departmentName.value
   );
 
+  const {
+    value: roleNameValue,
+    isValid: roleNameIsValid,
+    hasError: roleNameHasError,
+    errorMessage: roleNameErrorMessage,
+    valueChangeHandler: roleNameChangeHandler,
+    inputBlurHandler: roleNameBlurHandler,
+  } = useInput([FIELD_TYPES.TEXT, ['Role Name']], fields.roleName.value);
+
   const providerValue = {
     firstName: {
       value: firstNameValue,
@@ -150,6 +159,14 @@ export default function EditUser() {
       errorMessage: departmentNameErrorMessage,
       valueChangeHandler: departmentNameChangeHandler,
       inputBlurHandler: departmentNameBlurHandler,
+    },
+    roleName: {
+      value: roleNameValue,
+      isValid: roleNameIsValid,
+      hasError: roleNameHasError,
+      errorMessage: roleNameErrorMessage,
+      valueChangeHandler: roleNameChangeHandler,
+      inputBlurHandler: roleNameBlurHandler,
     },
   };
 

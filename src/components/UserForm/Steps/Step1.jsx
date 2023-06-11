@@ -73,16 +73,39 @@ export default function Step1() {
           hasError={fields.birthdate.hasError}
           errorMessage={fields.birthdate.errorMessage}
         />
+        <Select
+          label="Is Administrator"
+          name="isadmin"
+          options={yesNoDom}
+          value={fields.isAdministrator.value}
+          onBlur={fields.isAdministrator.inputBlurHandler}
+          onChange={fields.isAdministrator.valueChangeHandler}
+          hasError={fields.isAdministrator.hasError}
+          errorMessage={fields.isAdministrator.errorMessage}
+        />
+      </FormRow>
+      <FormRow>
         <Input
           type="text"
-          id="department"
-          name="department"
+          id="departmentName"
+          name="departmentName"
           placeholder="Department Name"
           onBlur={fields.departmentName.inputBlurHandler}
           onChange={fields.departmentName.valueChangeHandler}
           value={fields.departmentName.value}
           hasError={fields.departmentName.hasError}
           errorMessage={fields.departmentName.errorMessage}
+        />
+        <Input
+          type="text"
+          id="roleName"
+          name="roleName"
+          placeholder="Role Name"
+          onBlur={fields.roleName.inputBlurHandler}
+          onChange={fields.roleName.valueChangeHandler}
+          value={fields.roleName.value}
+          hasError={fields.roleName.hasError}
+          errorMessage={fields.roleName.errorMessage}
         />
       </FormRow>
       <FormRow>
@@ -96,16 +119,6 @@ export default function Step1() {
           value={fields.password.value}
           hasError={fields.password.hasError}
           errorMessage={fields.password.errorMessage}
-        />
-        <Select
-          label="Is Administrator"
-          name="isadmin"
-          options={yesNoDom}
-          value={fields.isAdministrator.value}
-          onBlur={fields.isAdministrator.inputBlurHandler}
-          onChange={fields.isAdministrator.valueChangeHandler}
-          hasError={fields.isAdministrator.hasError}
-          errorMessage={fields.isAdministrator.errorMessage}
         />
       </FormRow>
     </Container>

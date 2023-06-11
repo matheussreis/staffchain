@@ -43,6 +43,7 @@ export default function UserFormView() {
           label="Department Name"
           content={fields.departmentName.value}
         />
+        <FieldView label="Role Name" content={fields.roleName.value} />
       </FormRow>
       <FormRow>
         <Button onClick={() => navigate('edit')}>Edit</Button>

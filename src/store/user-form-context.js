@@ -59,6 +59,14 @@ export const UserFormContext = React.createContext({
       valueChangeHandler: () => {},
       inputBlurHandler: () => {},
     },
+    roleName: {
+      value: '',
+      isValid: true,
+      hasError: false,
+      errorMessage: '',
+      valueChangeHandler: () => {},
+      inputBlurHandler: () => {},
+    },
     password: {
       value: '',
       isValid: true,

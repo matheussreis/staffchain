@@ -19,6 +19,7 @@ export default function User() {
     birthdate: { value: '' },
     isAdministrator: { value: '' },
     departmentName: { value: '' },
+    roleName: { value: '' },
     password: { value: '' },
   });
 
@@ -46,6 +47,7 @@ export default function User() {
         phone: { value: location.state.phone },
         birthdate: { value: location.state.birthdate },
         isAdministrator: { value: location.state.isAdministrator },
+        roleName: { value: location.state.roleName },
         departmentName: { value: location.state.departmentName },
         password: { value: location.state.password },
       });
@@ -60,6 +62,7 @@ export default function User() {
         phone: { value: '123321123' },
         birthdate: { value: '1997-01-01' },
         isAdministrator: { value: { label: 'Yes', value: '1' } },
+        roleName: { value: 'Manager' },
         departmentName: { value: 'Marketing' },
         password: { value: '1234567890' },
       });
