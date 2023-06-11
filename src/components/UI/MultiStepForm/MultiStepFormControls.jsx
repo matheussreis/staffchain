@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
 import Button from '../Button/Button';
+import { useNavigate } from 'react-router';
+import React, { useEffect, useState } from 'react';
 
 import classes from './MultiStepFormControls.module.css';
-import { useNavigate } from 'react-router';
 
 export default function MultiStepFormControls({
   currentStep = 0,
@@ -33,7 +33,7 @@ export default function MultiStepFormControls({
 
   return (
     <div className={classes.controls}>
-      {isBackButtonVisible && !isCancelButton && (
+      {isBackButtonVisible && currentStep > 0 && (
         <Button
           isAlt={true}
           disabled={isBackButtonDisabled}
@@ -43,11 +43,13 @@ export default function MultiStepFormControls({
         </Button>
       )}
 
-      {isCancelButton && cancelRedirect && (
-        <Button isAlt={true} onClick={() => navigate(cancelRedirect)}>
-          {currentStep === steps.length - 1 ? 'Back' : 'Cancel'}
-        </Button>
-      )}
+      {(currentStep < 1 || currentStep === steps.length - 1) &&
+        isCancelButton &&
+        cancelRedirect && (
+          <Button isAlt={true} onClick={() => navigate(cancelRedirect)}>
+            {currentStep === steps.length - 1 ? 'Return' : 'Cancel'}
+          </Button>
+        )}
 
       {isNextButtonVisible && (
         <Button disabled={!isFormValid} onClick={onNext}>
