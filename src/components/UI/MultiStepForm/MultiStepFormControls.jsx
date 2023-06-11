@@ -45,7 +45,7 @@ export default function MultiStepFormControls({
 
       {isCancelButton && cancelRedirect && (
         <Button isAlt={true} onClick={() => navigate(cancelRedirect)}>
-          Cancel
+          {currentStep === steps.length - 1 ? 'Back' : 'Cancel'}
         </Button>
       )}
 
