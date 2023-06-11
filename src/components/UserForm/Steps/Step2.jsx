@@ -15,7 +15,7 @@ export default React.memo(function Step2() {
   const content = isEdit ? editContent : createContent;
 
   return (
-    <div>
+    <div className={classes.container}>
       <h3 className={classes.title}>{title}</h3>
       <p className={classes.text}>{content}</p>
     </div>
