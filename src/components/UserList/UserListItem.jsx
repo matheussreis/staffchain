@@ -9,7 +9,7 @@ import classes from './UserListItem.module.css';
 
 function ListItemHeader({ user }) {
   return (
-    <Anchor className={classes['title-link']} to={user.id}>
+    <Anchor className={classes['title-link']} to={user.id} state={user}>
       <h3 className={classes.title}>{`${user.firstName} ${user.lastName}`}</h3>
     </Anchor>
   );
