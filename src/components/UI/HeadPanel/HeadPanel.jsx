@@ -1,6 +1,5 @@
 import Button from '../Button/Button';
 import BUTTON_SIZES from '../../../enums/button-sizes';
-import upperCaseWords from '../../../utils/string-utlis';
 
 import classes from './HeadPanel.module.css';
 
@@ -14,7 +13,7 @@ export default function HeadPanel({
     <div className={classes.container}>
       <div className={classes.content}>
         <h2>
-          {upperCaseWords(moduleName)} ({recordCount})
+          {moduleName} ({recordCount})
         </h2>
         <Button
           className={classes.button}
