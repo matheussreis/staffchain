@@ -38,6 +38,10 @@ export default function Process() {
       // Don't call the API, and use the given state.
       console.log(`PROCESS ID = ${processId} | USE PROCESS DATA FROM STATE`);
       setId(location.state.id);
+      setStep1(location.state.step1);
+      setStep2(location.state.step2);
+      setStep3(location.state.step3);
+      setStep4(location.state.step4);
     } else {
       // Call API using the process ID to fetch the process data.
       console.log(`PROCESS ID = ${processId} | USE PROCESS DATA FROM API`);
