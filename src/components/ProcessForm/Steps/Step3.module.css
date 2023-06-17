@@ -1,0 +1,61 @@
+.list {
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    padding: 0 0 1rem 0;
+}
+
+.item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin: 0 0.5rem;
+}
+
+.button {
+    width: 5rem !important;
+}
+
+.container {
+    gap: 2rem;
+}
+
+/* user list item - START */
+
+.field {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+}
+
+.field p {
+    font-size: 0.7rem;
+    font-weight: 300;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    margin: 0;
+}
+
+.field label {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-weight: 500;
+    font-size: 0.7rem;
+    color: dimgray;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.list-container p {
+    margin: 0;
+}
+
+/* user list item - END */

@@ -1,0 +1,100 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 1rem;
+    padding: 2rem;
+}
+
+.title {
+    margin: 0 0 0.5rem 0;
+}
+
+.button-container {
+    flex-direction: row;
+    flex-wrap: unset;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+/* user list item - START */
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1 1;
+    text-align: left;
+}
+
+.field p {
+    font-size: 0.7rem;
+    font-weight: 300;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    margin: 0;
+}
+
+.field label {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-weight: 500;
+    font-size: 0.7rem;
+    color: dimgray;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    background-color: #eeeeee;
+    padding: 0.5rem;
+    border: 1px transparent;
+    border-radius: 8px;
+}
+
+.list-container p {
+    margin: 0;
+}
+
+/* user list item - END */
+
+.user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 0.5rem 0 0;
+}
+
+.user-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1 1;
+    flex-basis: 35%;
+}
+
+.field-label {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: dimgray;
+}
+
+@media screen and (max-width: 768px) {
+    .card {
+        margin: 1rem;
+    }
+
+    .field {
+        text-align: center;
+    }
+
+    .user-list-container {
+        flex-basis: 100%;
+    }
+}

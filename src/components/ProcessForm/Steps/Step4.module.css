@@ -1,0 +1,79 @@
+.list {
+    padding: 0.5rem 0;
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.list-container {
+    width: 100%;
+    align-content: center;
+}
+
+/* user list item - START */
+
+.field {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+}
+
+.field p {
+    font-size: 0.7rem;
+    font-weight: 300;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    margin: 0;
+}
+
+.field label {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-weight: 500;
+    font-size: 0.7rem;
+    color: dimgray;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+    gap: 4rem;
+    margin: 0 0.5rem;
+}
+
+.container p {
+    margin: 0;
+}
+
+.field-container {
+    display: flex;
+    flex-direction: column;
+    width: 7rem;
+}
+
+/* user list item - END */
+
+@media screen and (max-width: 768px) {
+    .container {
+        gap: 1rem;
+    }
+}

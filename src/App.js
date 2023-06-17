@@ -5,9 +5,9 @@ import ViewMe from './pages/Me/ViewMe';
 import EditMe from './pages/Me/EditMe';
 import EditUser from './pages/User/EditUser';
 import ListUser from './pages/User/ListUser';
+import Process from './pages/Process/Process';
 import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
-import ViewProcess from './pages/Process/ViewProcess';
 import ListRequest from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
 import ViewRequest from './pages/Request/ViewRequest';
@@ -43,8 +43,8 @@ const router = createBrowserRouter([
           {
             path: ':id',
             children: [
-              { index: true, element: <ViewProcess /> },
-              { path: 'edit', element: <EditProcess /> },
+              { index: true, element: <Process /> },
+              { path: 'edit', element: <Process /> },
             ],
           },
         ],
