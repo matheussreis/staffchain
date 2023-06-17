@@ -1,0 +1,9 @@
+.title {
+    margin: 0.5rem 0 0.5rem 0;
+}
+
+.title-link {
+    font-size: initial;
+    font-weight: initial;
+    text-decoration: none;
+}
