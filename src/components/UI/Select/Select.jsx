@@ -61,7 +61,7 @@ export default function Select({
     }),
     indicatorSeparator: (styles) => ({
       ...styles,
-      display: windowDimensions.innerWidth < 350 ? 'none' : styles.display,
+      display: windowDimensions.width < 350 ? 'none' : styles.display,
     }),
     dropdownIndicator: (styles) => ({
       ...styles,
