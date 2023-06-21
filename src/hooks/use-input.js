@@ -16,6 +16,14 @@ function inputStateReducer(state, action) {
     };
   }
 
+  if (action.type === 'INPUT_FILE') {
+    return {
+      value: action.value,
+      isTouched: true,
+      defaultValueSet: state.defaultValueSet,
+    };
+  }
+
   if (action.type === 'BLUR') {
     return {
       value: state.value,
@@ -65,6 +73,10 @@ export default function useInput(validator, defaultValue = undefined) {
     dispatch({ type: 'INPUT', value: value });
   }
 
+  function fileChangeHandler(value) {
+    dispatch({ type: 'INPUT_FILE', value: value });
+  }
+
   function inputBlurHandler(event) {
     dispatch({ type: 'BLUR' });
   }
@@ -80,6 +92,7 @@ export default function useInput(validator, defaultValue = undefined) {
     errorMessage,
     valueChangeHandler,
     selectValueChangeHandler,
+    fileChangeHandler,
     inputBlurHandler,
     reset,
   };

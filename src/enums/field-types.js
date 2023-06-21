@@ -5,6 +5,7 @@ const FIELD_TYPES = {
   DATE: 'date',
   EMAIL: 'email',
   PASSWORD: 'password',
+  FILE: 'file',
 };
 
 export default FIELD_TYPES;
