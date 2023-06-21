@@ -3,9 +3,9 @@
     font-weight: 350;
     text-decoration: underline;
     cursor: pointer;
-    color: var(--color-primary-300);
+    color: var(--color-primary-500);
 }
 
 .anchor:hover {
-    color: var(--color-primary-500);
+    color: var(--color-primary-300);
 }
