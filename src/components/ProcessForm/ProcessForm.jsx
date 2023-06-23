@@ -56,9 +56,7 @@ export default function ProcessForm() {
       goToNextStep={goToNextStep}
       isFormValid={getCurrentStepFormValidity(context, currentStep)}
       isCancelButton={true}
-      cancelRedirect={
-        isEdit ? location.pathname.replace('/edit', '') : '/process'
-      }
+      cancelRedirect={isEdit ? location.pathname.replace('/edit', '') : -1}
     />
   );
 }
