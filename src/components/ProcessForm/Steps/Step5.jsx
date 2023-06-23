@@ -3,7 +3,7 @@ import useEditPageCheck from '../../../hooks/use-edit-page-check';
 import classes from './Step5.module.css';
 
 export default function Step5() {
-  const isEdit = useEditPageCheck('process');
+  const isEdit = useEditPageCheck();
 
   return (
     <div className={classes.container}>

@@ -14,7 +14,7 @@ export default function UserForm() {
   const { steps, currentStep, goToNextStep, goToPreviousStep } =
     useMultiStepForm([Step1, Step2]);
 
-  const isEdit = useEditPageCheck('user');
+  const isEdit = useEditPageCheck();
 
   const submitFormHandler = (formData) => {
     console.log(formData);

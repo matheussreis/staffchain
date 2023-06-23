@@ -8,7 +8,7 @@ import UserFormView from '../../components/UserForm/UserFormView';
 export default function User() {
   const location = useLocation();
   const { id: userId } = useParams();
-  const isEdit = useEditPageCheck('user');
+  const isEdit = useEditPageCheck();
 
   const [fields, setFields] = useState({
     id: { value: '' },

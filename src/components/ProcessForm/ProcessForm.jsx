@@ -26,7 +26,7 @@ export default function ProcessForm() {
     useMultiStepForm([Step1, Step2, Step3, Step4, Step5]);
 
   let location = useLocation();
-  const isEdit = useEditPageCheck('process');
+  const isEdit = useEditPageCheck();
   const context = useContext(ProcessFormContext);
 
   const submitFormHandler = (formData) => {

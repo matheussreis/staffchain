@@ -1,7 +1,7 @@
 import { useLocation, useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 
-export default function useEditPageCheck(firstPathPart) {
+export default function useEditPageCheck() {
   let location = useLocation();
   const params = useParams();
 
@@ -10,6 +10,8 @@ export default function useEditPageCheck(firstPathPart) {
   useEffect(() => {
     const path = location.pathname;
     const hasId = 'id' in params;
+    const pathParts = path.split('/');
+    const firstPathPart = pathParts[1];
 
     let isEdit =
       path.startsWith(`/${firstPathPart}/`) && path.endsWith('/edit');
@@ -19,7 +21,7 @@ export default function useEditPageCheck(firstPathPart) {
     }
 
     setIsEdit(isEdit);
-  }, [firstPathPart, params, location]);
+  }, [params, location]);
 
   return isEdit;
 }

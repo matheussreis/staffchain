@@ -8,7 +8,7 @@ import ProcessFormView from '../../components/ProcessForm/ProcessFormView';
 export default function Process() {
   const location = useLocation();
   const { id: processId } = useParams();
-  const isEdit = useEditPageCheck('process');
+  const isEdit = useEditPageCheck();
 
   const [id, setId] = useState('');
   const [step1, setStep1] = useState({
