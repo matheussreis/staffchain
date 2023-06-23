@@ -3,19 +3,23 @@ import { useEffect, useState } from 'react';
 
 export default function useEditPageCheck(firstPathPart) {
   let location = useLocation();
-  const { id } = useParams();
+  const params = useParams();
 
   const [isEdit, setIsEdit] = useState();
 
   useEffect(() => {
     const path = location.pathname;
+    const hasId = 'id' in params;
 
-    const isEdit =
-      path.startsWith(`/${firstPathPart}/`) &&
-      path.endsWith('/edit') &&
-      `/${firstPathPart}/edit` !== path;
+    let isEdit =
+      path.startsWith(`/${firstPathPart}/`) && path.endsWith('/edit');
+
+    if (hasId) {
+      isEdit = isEdit && `/${firstPathPart}/edit` !== path;
+    }
+
     setIsEdit(isEdit);
-  }, [firstPathPart, id, location]);
+  }, [firstPathPart, params, location]);
 
   return isEdit;
 }
