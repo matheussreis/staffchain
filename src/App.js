@@ -12,6 +12,9 @@ import EditRequest from './pages/Request/EditRequest';
 import ViewRequest from './pages/Request/ViewRequest';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
+import 'primereact/resources/primereact.min.css';
+import './theme.css';
+
 const router = createBrowserRouter([
   {
     path: '/',
