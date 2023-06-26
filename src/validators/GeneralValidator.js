@@ -1,7 +1,6 @@
 import isEmpty from 'lodash.isempty';
 import isString from 'lodash.isstring';
 import BaseValidator from './BaseValidator';
-import isNumber from 'lodash.isnumber';
 
 export default class GeneralValidator extends BaseValidator {
   constructor() {
@@ -19,7 +18,7 @@ export default class GeneralValidator extends BaseValidator {
   }
 
   isValueNumber(value) {
-    return isNumber(value);
+    return !isNaN(value);
   }
 
   validate(value, fieldName) {
