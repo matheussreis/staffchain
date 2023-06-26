@@ -1,6 +1,6 @@
 import Button from '../Button/Button';
-import { useRef, useState } from 'react';
 import { BiUpload } from 'react-icons/bi';
+import { useEffect, useRef, useState } from 'react';
 import BUTTON_SIZES from '../../../enums/button-sizes';
 import useWindowDimensions from '../../../hooks/use-window-dimensions';
 
@@ -42,10 +42,17 @@ export default function FileUpload({
   hasError = false,
   errorMessage,
   onChange,
+  defaultValue,
 }) {
   const fileInputRef = useRef();
   const [file, setFile] = useState(undefined);
   const windowDimensions = useWindowDimensions();
+
+  useEffect(() => {
+    if (defaultValue) {
+      setFile(defaultValue);
+    }
+  }, [defaultValue]);
 
   const changeHandler = (event) => {
     const file = event.target.files[0];
@@ -54,9 +61,8 @@ export default function FileUpload({
       return;
     }
 
-    const fileToSet = file;
-    setFile(fileToSet);
-    typeof onChange === 'function' && onChange(fileToSet);
+    setFile(file);
+    typeof onChange === 'function' && onChange(event);
   };
 
   const removeFileHandler = () => {
@@ -82,7 +88,7 @@ export default function FileUpload({
       </Button>
       {file && (
         <UploadedFile
-          fileName={file.name}
+          fileName={file?.name || defaultValue}
           onRemoveFile={removeFileHandler}
           hasError={hasError}
           width={windowDimensions.width}
