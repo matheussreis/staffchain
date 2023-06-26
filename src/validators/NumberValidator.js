@@ -15,7 +15,7 @@ export default class NumberValidator extends GeneralValidator {
         this.errorMessage = 'Value must be a number';
         this.isValid = false;
         break;
-      case !this.#isValueNegative(value):
+      case this.#isValueNegative(value):
         this.errorMessage = 'Value must be a greater than 0';
         this.isValid = false;
         break;
