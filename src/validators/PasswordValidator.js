@@ -10,8 +10,11 @@ export default class PasswordValidator extends GeneralValidator {
     return this.isValueString(value) && value.length < this.minimumLength;
   }
 
-  validate(value, minimumLength) {
+  validate(value, minimumLength, fieldName = 'Password', isRequired = true) {
     this.minimumLength = minimumLength || this.minimumLength;
+
+    super.validate(value, fieldName, isRequired);
+    if (!this.isValid) return;
 
     switch (true) {
       case this.isValueEmpty(value):

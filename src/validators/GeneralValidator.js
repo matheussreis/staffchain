@@ -21,8 +21,8 @@ export default class GeneralValidator extends BaseValidator {
     return !isNaN(value);
   }
 
-  validate(value, fieldName) {
-    this.isValid = !this.isValueEmpty(value);
+  validate(value, fieldName, isRequired = true) {
+    this.isValid = isRequired && !this.isValueEmpty(value);
 
     if (this.isValid) {
       this.errorMessage = '';

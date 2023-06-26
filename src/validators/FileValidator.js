@@ -21,8 +21,13 @@ export default class FileValidator extends GeneralValidator {
     return matchingExtension.length < 1;
   }
 
-  validate(fileObject) {
+  validate(fileObject, fieldName = 'File', isRequired = true) {
     if (typeof fileObject !== 'object') {
+      if (isRequired) {
+        this.isValid = false;
+        this.errorMessage = `${fieldName} cannot be empty`;
+      }
+
       return;
     }
 

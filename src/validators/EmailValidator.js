@@ -8,12 +8,11 @@ export default class EmailValidator extends GeneralValidator {
     return this.isValueString(value) && !value.match(this.#EMAIL_PATTERN);
   }
 
-  validate(value) {
+  validate(value, fieldName = 'Email', isRequired = true) {
+    super.validate(value, fieldName, isRequired);
+    if (!this.isValid) return;
+
     switch (true) {
-      case this.isValueEmpty(value):
-        this.errorMessage = 'Email cannot be empty';
-        this.isValid = false;
-        break;
       case this.#hasEmailBadFormat(value):
         this.errorMessage = 'Invalid email';
         this.isValid = false;

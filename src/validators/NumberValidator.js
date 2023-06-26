@@ -5,18 +5,17 @@ export default class NumberValidator extends GeneralValidator {
     return this.isValueNumber(value) && value < 0;
   }
 
-  validate(value) {
+  validate(value, fieldName = 'Value', isRequired = true) {
+    super.validate(value, fieldName, isRequired);
+    if (!this.isValid) return;
+
     switch (true) {
-      case this.isValueEmpty(value):
-        this.errorMessage = 'Field cannot be empty';
-        this.isValid = false;
-        break;
       case !this.isValueNumber(value):
-        this.errorMessage = 'Value must be a number';
+        this.errorMessage = `${fieldName} must be a number`;
         this.isValid = false;
         break;
       case this.#isValueNegative(value):
-        this.errorMessage = 'Value must be a greater than 0';
+        this.errorMessage = `${fieldName} must be a greater than 0`;
         this.isValid = false;
         break;
       default:
