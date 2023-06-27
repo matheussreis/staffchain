@@ -8,6 +8,10 @@ const getFormattedContent = (content, type) => {
       const date = new Date(content);
       return date.toLocaleDateString();
     case FIELD_TYPES.FILE:
+      if (typeof content === 'object') {
+        return content.name;
+      }
+
       const fileName = content.substring(
         content.lastIndexOf('/') + 1,
         content.length
