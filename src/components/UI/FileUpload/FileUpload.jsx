@@ -43,6 +43,7 @@ export default function FileUpload({
   errorMessage,
   onChange,
   defaultValue,
+  className
 }) {
   const fileInputRef = useRef();
   const [file, setFile] = useState(undefined);
@@ -71,8 +72,18 @@ export default function FileUpload({
     typeof onChange === 'function' && onChange();
   };
 
+  const getCssClasses = (initialClass) => {
+    let cssClasses = classes[initialClass];
+
+    if (className) {
+      cssClasses += ` ${className}`;
+    }
+
+    return cssClasses;
+  };
+
   return (
-    <div className={classes.container}>
+    <div className={getCssClasses('container')}>
       {placeholder && (
         <label className={classes['field-name']}>{placeholder}:</label>
       )}
