@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -15,14 +16,9 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors({ origin: process.env.CLIENT_URL }));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-  );
-
   if (req.method === 'OPTIONS') {
     res.header(
       'Access-Control-Allow-Methods',
