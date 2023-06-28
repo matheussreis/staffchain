@@ -227,3 +227,18 @@ exports.update = async (req, res) => {
     });
   }
 };
+
+exports.delete = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.params.id);
+    await User.deleteOne({ _id: userId }).exec();
+
+    res.status(200).json({
+      message: 'User deleted successfully.',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};

@@ -9,6 +9,8 @@ router.get('/:id', checkAuth, controller.get);
 
 router.put('/:id', checkAuth, controller.update);
 
+router.delete('/:id', checkAuth, controller.delete);
+
 router.post('/signup', checkAuth, controller.signup);
 
 router.post('/login', controller.login);
