@@ -7,6 +7,10 @@ const findUserByEmail = async (email) => {
   return User.find({ email: email }).exec();
 };
 
+const findAllUsers = async () => {
+  return User.find({}).exec();
+};
+
 const hashPassword = async (password) => {
   return await bcrypt.hash(password, 10);
 };
@@ -117,6 +121,32 @@ exports.login = async (req, res) => {
 
     res.status(401).json({
       message: 'Please, ensure your credentials are correct.',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.getAll = async (req, res) => {
+  try {
+    const users = await findAllUsers();
+
+    res.status(200).json({
+      count: users.length,
+      users: users.map((user) => {
+        return {
+          id: user._id,
+          name: `${user.firstName} ${user.lastName}`,
+          bithdate: user.birthdate,
+          email: user.email,
+          department: user.department,
+          role: user.role,
+          type: user.type,
+          processes: user.processes.map((process) => process._id),
+        };
+      }),
     });
   } catch (error) {
     res.status(500).json({
