@@ -188,3 +188,42 @@ exports.get = async (req, res) => {
     });
   }
 };
+
+exports.update = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.params.id);
+    const userData = req.body;
+
+    for (const field in userData) {
+      if (!userData[field]) {
+        delete userData[field];
+      }
+    }
+
+    if (Object.keys(userData).length < 1) {
+      return res.status(200).json({
+        message: 'User updated successfully.',
+      });
+    }
+
+    userData.dateModified = new Date();
+
+    const user = await User.findByIdAndUpdate(userId, userData, {
+      new: true,
+    });
+
+    if (user) {
+      return res.status(200).json({
+        message: 'User updated successfully.',
+      });
+    }
+
+    res.status(404).json({
+      message: 'User not found.',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
