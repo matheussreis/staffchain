@@ -1,0 +1,72 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1rem;
+    padding: 2rem;
+}
+
+.title {
+    margin: 0 0 0.5rem 0;
+}
+
+.header-row {
+    justify-content: space-between;
+    margin: 0 0 0.5rem 0;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.button-container>button {
+    margin: 0;
+}
+
+.button {
+    width: initial;
+}
+
+.request-starter {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+}
+
+.request-starter label {
+    font-weight: 500;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.request-starter span {
+    font-weight: 400;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.tag {
+    font-size: small !important;
+    font-weight: 500 !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+@media screen and (max-width: 768px) {
+    .card {
+        margin: 1rem;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .button {
+        width: 100% !important;
+    }
+}

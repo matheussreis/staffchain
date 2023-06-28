@@ -1,0 +1,17 @@
+.text {
+    margin: 0;
+    font-size: smaller;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.container {
+    text-align: left;
+}
+
+@media screen and (max-width: 420px) {
+    .container {
+        text-align: center;
+    }
+}

@@ -9,7 +9,7 @@ import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
 import ListRequest from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
-import ViewRequest from './pages/Request/ViewRequest';
+import Request from './pages/Request/Request';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import 'primereact/resources/primereact.min.css';
@@ -60,8 +60,8 @@ const router = createBrowserRouter([
           {
             path: ':id',
             children: [
-              { index: true, element: <ViewRequest /> },
-              { path: 'edit', element: <EditRequest /> },
+              { index: true, element: <Request /> },
+              { path: 'edit', element: <Request /> },
             ],
           },
         ],
