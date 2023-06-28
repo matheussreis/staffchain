@@ -11,6 +11,10 @@ const findAllUsers = async () => {
   return User.find({}).exec();
 };
 
+const findUserById = async (id) => {
+  return User.findById(id).populate('processes').exec();
+};
+
 const hashPassword = async (password) => {
   return await bcrypt.hash(password, 10);
 };
@@ -147,6 +151,36 @@ exports.getAll = async (req, res) => {
           processes: user.processes.map((process) => process._id),
         };
       }),
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.get = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.params.id);
+    const user = await findUserById(userId);
+
+    if (user) {
+      res.status(200).json({
+        id: user._id,
+        name: `${user.firstName} ${user.lastName}`,
+        bithdate: user.birthdate,
+        email: user.email,
+        department: user.department,
+        role: user.role,
+        type: user.type,
+        processes: user.processes.map((process) => process._id),
+      });
+
+      return;
+    }
+
+    res.status(404).json({
+      message: 'User not found.',
     });
   } catch (error) {
     res.status(500).json({
