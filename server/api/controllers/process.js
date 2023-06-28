@@ -43,3 +43,15 @@ exports.add = async (req, res) => {
     });
   }
 };
+
+exports.getRequestTreeByProcessId = async (processId) => {
+  const process = await Process.findById(processId)
+    .select('requestTree')
+    .exec();
+
+  if (!process.requestTree) {
+    throw new Error('No request tree for the given process.');
+  }
+
+  return process.requestTree;
+};
