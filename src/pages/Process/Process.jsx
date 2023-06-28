@@ -26,10 +26,6 @@ export default function Process() {
   const UserComponent = isEdit ? EditProcess : ProcessFormView;
 
   useEffect(() => {
-    console.log('TEST');
-  }, []);
-
-  useEffect(() => {
     if (id !== '') {
       return;
     }
