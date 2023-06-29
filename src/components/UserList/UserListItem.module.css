@@ -12,6 +12,13 @@
 
 .field-container {
     display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.field {
     flex-direction: row;
-    gap: 1rem;
+    gap: 0.3rem;
+    font-size: small;
+    align-items: center;
 }

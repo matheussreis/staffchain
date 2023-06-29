@@ -9,8 +9,16 @@ import classes from './UserListItem.module.css';
 function ListItemContent({ user }) {
   return (
     <div className={classes['field-container']}>
-      <FieldView label="Department:" content={user.departmentName} />
-      <FieldView label="Role:" content={user.roleName} />
+      <FieldView
+        className={classes.field}
+        label="Department:"
+        content={user.departmentName}
+      />
+      <FieldView
+        className={classes.field}
+        label="Role:"
+        content={user.roleName}
+      />
     </div>
   );
 }
