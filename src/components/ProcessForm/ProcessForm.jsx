@@ -47,7 +47,7 @@ export default function ProcessForm() {
 
   return (
     <MultiStepForm
-      onSubmit={submitFormHandler(context, goToNextStep)}
+      onSubmit={submitFormHandler(context)}
       formTitle={`${isEdit ? 'Edit' : 'Create'} Process`}
       lastButtonName={`${isEdit ? 'Save' : 'Create'}`}
       steps={steps}
