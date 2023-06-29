@@ -11,6 +11,7 @@ import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
 import ListRequest from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
+import { action as logoutAction } from './pages/Logout';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import 'primereact/resources/primereact.min.css';
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
         path: 'login',
         id: 'login',
         element: <Login />,
+      },
+      {
+        path: 'logout',
+        action: logoutAction,
       },
       {
         path: '*',
