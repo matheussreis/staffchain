@@ -22,9 +22,24 @@ const getFormattedContent = (content, type) => {
   }
 };
 
-export default function FieldView({ label, content, type = FIELD_TYPES.TEXT }) {
+export default function FieldView({
+  label,
+  content,
+  className,
+  type = FIELD_TYPES.TEXT,
+}) {
+  const getCssClasses = (initialClass = '') => {
+    let cssClasses = classes[initialClass];
+
+    if (className) {
+      cssClasses += ` ${className}`;
+    }
+
+    return cssClasses;
+  };
+
   return (
-    <div className={classes.container}>
+    <div className={getCssClasses('container')}>
       <label>{label}</label>
       <p className={type === FIELD_TYPES.FILE ? classes['file-container'] : ''}>
         {getFormattedContent(content, type)}
