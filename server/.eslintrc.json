@@ -10,7 +10,6 @@
     "ecmaVersion": "latest"
   },
   "rules": {
-    "no-undef": 0,
     "semi": 1,
     "no-unused-vars": 0
   }
