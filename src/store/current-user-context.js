@@ -12,6 +12,7 @@ export const CurrentUserContext = React.createContext({
     role: '',
     type: '',
     processes: [],
+    isAdmin: false,
   },
   setUser: (user) => {},
 });
