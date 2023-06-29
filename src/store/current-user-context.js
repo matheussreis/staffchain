@@ -5,7 +5,7 @@ export const CurrentUserContext = React.createContext({
     id: '',
     firstName: '',
     lastName: '',
-    bithdate: '',
+    birthdate: '',
     email: '',
     phone: '',
     department: '',

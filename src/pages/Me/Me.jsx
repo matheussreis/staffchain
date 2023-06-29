@@ -32,7 +32,7 @@ export default function Me() {
       lastName: { value: user.lastName },
       email: { value: user.email },
       phone: { value: user.phone },
-      birthdate: { value: user.bithdate },
+      birthdate: { value: user.birthdate },
       isAdministrator: {
         value: {
           label: user.isAdmin ? 'Yes' : 'No',
