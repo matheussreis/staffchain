@@ -8,12 +8,14 @@ import { useContext, useRef } from 'react';
 import FormTitle from '../UI/Form/FormTitle';
 import Container from '../UI/Container/Container';
 import { LoginFormContext } from '../../store/login-form-context';
+import { CurrentUserContext } from '../../store/current-user-context';
 import { setAuthToken, setTokenExpiration } from '../../utils/auth-utils';
 
 import classes from './LoginForm.module.css';
 
 export default function LoginForm() {
   const { fields } = useContext(LoginFormContext);
+  const currentUserContext = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const toastRef = useRef(null);
 
@@ -30,14 +32,18 @@ export default function LoginForm() {
     const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
 
     try {
-      const response = await axios.post(`${API_URL}/user/login`, {
+      const loginResponse = await axios.post(`${API_URL}/user/login`, {
         email: fields.email.value,
         password: fields.password.value,
       });
 
-      const { token } = await response.data;
+      const { token } = await loginResponse.data;
       setAuthToken(token);
       setTokenExpiration();
+
+      const meResponse = await axios.get(`${API_URL}/user/me`);
+      const user = await meResponse.data;
+      currentUserContext.setUser(user);
 
       fields.email.resetField();
       fields.password.resetField();
