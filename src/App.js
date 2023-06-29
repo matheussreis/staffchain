@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Me from './pages/Me/Me';
 import Root from './pages/Root';
 import { useState } from 'react';
@@ -8,17 +9,32 @@ import EditUser from './pages/User/EditUser';
 import ListUser from './pages/User/ListUser';
 import Process from './pages/Process/Process';
 import Request from './pages/Request/Request';
-import { checkAuthLoader } from './utils/auth-utils';
 import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
 import ListRequest from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
 import { action as logoutAction } from './pages/Logout';
 import { CurrentUserContext } from './store/current-user-context';
+import { checkAuthLoader, getAuthToken } from './utils/auth-utils';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import 'primereact/resources/primereact.min.css';
 import './theme.css';
+
+axios.interceptors.request.use(
+  (config) => {
+    if (!config.headers.Authorization) {
+      const token = getAuthToken();
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 const router = createBrowserRouter([
   {
