@@ -51,8 +51,7 @@ export default function UserForm() {
         context.fields.email.isValid &&
         context.fields.isAdministrator.isValid &&
         context.fields.roleName.isValid &&
-        context.fields.departmentName.isValid &&
-        context.fields.password.isValid
+        context.fields.departmentName.isValid
       }
     />
   );

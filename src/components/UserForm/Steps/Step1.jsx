@@ -108,19 +108,6 @@ export default function Step1() {
           errorMessage={fields.roleName.errorMessage}
         />
       </FormRow>
-      <FormRow>
-        <Input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Password"
-          onBlur={fields.password.inputBlurHandler}
-          onChange={fields.password.valueChangeHandler}
-          value={fields.password.value}
-          hasError={fields.password.hasError}
-          errorMessage={fields.password.errorMessage}
-        />
-      </FormRow>
     </Container>
   );
 }

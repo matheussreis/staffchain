@@ -12,7 +12,6 @@ const DUMMY_USERS = [
     isAdministrator: { label: 'Yes', value: '1' },
     departmentName: 'Marketing',
     roleName: 'Manager',
-    password: '1234567890',
   },
   {
     id: '1001',
@@ -24,7 +23,6 @@ const DUMMY_USERS = [
     isAdministrator: { label: 'Yes', value: '1' },
     departmentName: 'Sales',
     roleName: 'Manager',
-    password: '0981234312',
   },
   {
     id: '1002',
@@ -36,7 +34,6 @@ const DUMMY_USERS = [
     isAdministrator: { label: 'Yes', value: '1' },
     departmentName: 'Development',
     roleName: 'Manager',
-    password: '9990008884',
   },
 ];
 

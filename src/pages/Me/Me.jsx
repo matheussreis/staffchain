@@ -17,7 +17,6 @@ export default function Me() {
     isAdministrator: { value: '' },
     departmentName: { value: '' },
     roleName: { value: '' },
-    password: { value: '' },
   });
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export default function Me() {
       isAdministrator: { value: { label: 'Yes', value: '1' } },
       roleName: { value: 'Manager' },
       departmentName: { value: 'Marketing' },
-      password: { value: '1234567890' },
     });
   }, [fields.id.value]);
 

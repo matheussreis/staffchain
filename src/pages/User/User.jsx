@@ -20,7 +20,6 @@ export default function User() {
     isAdministrator: { value: '' },
     departmentName: { value: '' },
     roleName: { value: '' },
-    password: { value: '' },
   });
 
   // Use this component as the parent of all user related views,
@@ -49,7 +48,6 @@ export default function User() {
         isAdministrator: { value: location.state.isAdministrator },
         roleName: { value: location.state.roleName },
         departmentName: { value: location.state.departmentName },
-        password: { value: location.state.password },
       });
     } else {
       // Call API using the user ID to fetch the user data.
@@ -64,7 +62,6 @@ export default function User() {
         isAdministrator: { value: { label: 'Yes', value: '1' } },
         roleName: { value: 'Manager' },
         departmentName: { value: 'Marketing' },
-        password: { value: '1234567890' },
       });
     }
   }, [userId, location.state, fields.id.value]);
