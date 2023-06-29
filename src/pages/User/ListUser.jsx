@@ -1,49 +1,35 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import UserList from '../../components/UserList/UserList';
-
-const DUMMY_USERS = [
-  {
-    id: '1000',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'johndoe@test.com',
-    phone: '123321123',
-    birthdate: '1997-01-01',
-    isAdministrator: { label: 'Yes', value: '1' },
-    departmentName: 'Marketing',
-    roleName: 'Manager',
-  },
-  {
-    id: '1001',
-    firstName: 'Emma',
-    lastName: 'Brown',
-    email: 'emmabrown@test.com',
-    phone: '321123321',
-    birthdate: '1997-01-02',
-    isAdministrator: { label: 'Yes', value: '1' },
-    departmentName: 'Sales',
-    roleName: 'Manager',
-  },
-  {
-    id: '1002',
-    firstName: 'Lucy',
-    lastName: 'White',
-    email: 'lucywhite@test.com',
-    phone: '444333222',
-    birthdate: '1997-01-03',
-    isAdministrator: { label: 'Yes', value: '1' },
-    departmentName: 'Development',
-    roleName: 'Manager',
-  },
-];
 
 export default function ListUser() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // call the API to fetch the list of users.
-    console.log(`FETCH USERS LIST TO DISPLAY`);
-    setUsers(DUMMY_USERS);
+    const fetchUsers = async () => {
+      const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
+      const userResponse = await axios.get(`${API_URL}/user`);
+      const { users: usersData } = await userResponse.data;
+
+      const users = usersData.map((user) => ({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phone,
+        birthdate: user.birthdate,
+        email: user.email,
+        isAdministrator: {
+          label: user.isAdmin ? 'Yes' : 'No',
+          value: user.isAdmin ? '1' : '0',
+        },
+        departmentName: user.department,
+        roleName: user.role,
+      }));
+
+      setUsers(users);
+    };
+
+    fetchUsers();
   }, []);
 
   return <UserList users={users} />;
