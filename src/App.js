@@ -1,5 +1,6 @@
 import Me from './pages/Me/Me';
 import Root from './pages/Root';
+import { useState } from 'react';
 import Login from './pages/Login';
 import User from './pages/User/User';
 import NotFound from './pages/NotFound';
@@ -13,6 +14,7 @@ import EditProcess from './pages/Process/EditProcess';
 import ListRequest from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
 import { action as logoutAction } from './pages/Logout';
+import { CurrentUserContext } from './store/current-user-context';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import 'primereact/resources/primereact.min.css';
@@ -99,5 +101,11 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  const [user, setUser] = useState({});
+
+  return (
+    <CurrentUserContext.Provider value={{ user: user, setUser: setUser }}>
+      <RouterProvider router={router} />;
+    </CurrentUserContext.Provider>
+  );
 }
