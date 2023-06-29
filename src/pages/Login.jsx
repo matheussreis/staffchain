@@ -12,7 +12,7 @@ export default function Login() {
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
     reset: resetEmail,
-  } = useInput([FIELD_TYPES.EMAIL, ['email']]);
+  } = useInput([FIELD_TYPES.EMAIL, ['Email']]);
 
   const {
     value: passwordValue,
