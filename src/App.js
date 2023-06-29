@@ -7,6 +7,7 @@ import EditUser from './pages/User/EditUser';
 import ListUser from './pages/User/ListUser';
 import Process from './pages/Process/Process';
 import Request from './pages/Request/Request';
+import { checkAuthLoader } from './utils/auth-utils';
 import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
 import ListRequest from './pages/Request/ListRequest';
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       {
         path: 'user',
         id: 'user',
+        loader: checkAuthLoader,
         children: [
           { index: true, element: <ListUser /> },
           { path: 'create', element: <EditUser /> },
@@ -41,6 +43,7 @@ const router = createBrowserRouter([
       {
         path: 'process',
         id: 'process',
+        loader: checkAuthLoader,
         children: [
           { index: true, element: <ListProcess /> },
           { path: 'create', element: <EditProcess /> },
@@ -56,6 +59,7 @@ const router = createBrowserRouter([
       {
         path: 'request',
         id: 'request',
+        loader: checkAuthLoader,
         children: [
           { index: true, element: <ListRequest /> },
           { path: 'create', element: <EditRequest /> },
@@ -71,6 +75,7 @@ const router = createBrowserRouter([
       {
         path: 'me',
         id: 'me',
+        loader: checkAuthLoader,
         children: [
           { index: true, element: <Me /> },
           { path: 'edit', element: <Me /> },
