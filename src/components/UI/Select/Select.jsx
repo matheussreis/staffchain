@@ -17,6 +17,7 @@ export default function Select({
   errorMessage,
   value,
   className,
+  disabled = false,
 }) {
   const windowDimensions = useWindowDimensions();
 
@@ -87,6 +88,7 @@ export default function Select({
     <div className={getContainerClasses()}>
       {useLabel && <label>{(label ??= placeholder)}:</label>}
       <ReactSelect
+        isDisabled={disabled}
         styles={selectStyles}
         name={name}
         options={options}
