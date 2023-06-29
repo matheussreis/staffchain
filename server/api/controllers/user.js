@@ -27,9 +27,9 @@ const createUser = async (userData) => {
     email,
     phone,
     password,
-    type,
     role,
     department,
+    isAdmin,
   } = userData;
 
   const hashedPassword = await hashPassword(password);
@@ -46,7 +46,7 @@ const createUser = async (userData) => {
     role: role,
   });
 
-  user.type ??= type;
+  user.isAdmin ??= isAdmin;
   await user.save();
 };
 
@@ -86,7 +86,7 @@ exports.signup = async (req, res) => {
       password: req.body.password,
       department: req.body.department,
       role: req.body.role,
-      type: req.body.type,
+      isAdmin: req.body.isAdmin,
     });
 
     res.status(201).json({
@@ -152,7 +152,7 @@ exports.getAll = async (req, res) => {
           email: user.email,
           department: user.department,
           role: user.role,
-          type: user.type,
+          isAdmin: user.isAdmin,
           processes: user.processes.map((process) => process._id),
         };
       }),
@@ -180,7 +180,7 @@ exports.get = async (req, res) => {
         phone: user.phone,
         department: user.department,
         role: user.role,
-        type: user.type,
+        isAdmin: user.isAdmin,
         processes: user.processes.map((process) => process._id),
       });
 

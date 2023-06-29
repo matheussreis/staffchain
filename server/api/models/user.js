@@ -14,11 +14,7 @@ const userSchema = mongoose.Schema({
   },
   phone: { type: String },
   password: { type: String, required: true },
-  type: {
-    type: String,
-    default: 'regular',
-    enum: ['regular', 'admin'],
-  },
+  isAdmin: { type: Boolean, default: false },
   department: { type: String },
   role: { type: String },
   processes: [
