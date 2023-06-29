@@ -52,8 +52,10 @@ export default function Root() {
       }
     };
 
-    setCurrentUserContext();
-  }, [currentUserContext]);
+    if (token && token !== 'EXPIRED') {
+      setCurrentUserContext();
+    }
+  }, [currentUserContext, token]);
 
   return (
     <>
