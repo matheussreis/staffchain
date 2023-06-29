@@ -161,13 +161,15 @@ exports.getAll = async (req, res) => {
 
 exports.get = async (req, res) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.params.id);
+    const id = req.params.id ?? req.userData.userId;
+    const userId = new mongoose.Types.ObjectId(id);
     const user = await findUserById(userId);
 
     if (user) {
       res.status(200).json({
         id: user._id,
-        name: `${user.firstName} ${user.lastName}`,
+        firstName: user.firstName,
+        lastName: user.lastName,
         bithdate: user.birthdate,
         email: user.email,
         department: user.department,
@@ -191,7 +193,8 @@ exports.get = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.params.id);
+    const id = req.params.id ?? req.userData.userId;
+    const userId = new mongoose.Types.ObjectId(id);
     const userData = req.body;
 
     for (const field in userData) {
