@@ -2,14 +2,15 @@ import Me from './pages/Me/Me';
 import Root from './pages/Root';
 import Login from './pages/Login';
 import User from './pages/User/User';
+import NotFound from './pages/NotFound';
 import EditUser from './pages/User/EditUser';
 import ListUser from './pages/User/ListUser';
 import Process from './pages/Process/Process';
+import Request from './pages/Request/Request';
 import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
 import ListRequest from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
-import Request from './pages/Request/Request';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import 'primereact/resources/primereact.min.css';
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
         path: 'login',
         id: 'login',
         element: <Login />,
+      },
+      {
+        path: '*',
+        element: <NotFound />,
       },
     ],
   },
