@@ -21,6 +21,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    flex-wrap: wrap;
 }
 
 .list a {
@@ -34,6 +35,8 @@
 .list a:hover,
 .list a.active {
     color: var(--color-on-primary-light);
+    opacity: 80%;
+    transform: scale(1.01);
 }
 
 @media screen and (max-width: 768px) {
