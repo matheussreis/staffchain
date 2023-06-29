@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Navbar from '../components/UI/Navbar/Navbar';
-import { Outlet, useLocation, useNavigate, useSubmit } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { CurrentUserContext } from '../store/current-user-context';
 import { getAuthToken, getTokenDuration } from '../utils/auth-utils';
+import { Outlet, useLocation, useNavigate, useSubmit } from 'react-router-dom';
 
 export default function Root() {
   const [showNavBar, setShowNavBar] = useState(false);
+  const currentUserContext = useContext(CurrentUserContext);
   let location = useLocation();
   const token = getAuthToken();
   const submit = useSubmit();
@@ -38,6 +41,19 @@ export default function Root() {
       submit(null, { action: '/logout', method: 'post' });
     }, tokenDuration);
   }, [location, navigate, submit, token]);
+
+  useEffect(() => {
+    const setCurrentUserContext = async () => {
+      if (Object.keys(currentUserContext.user).length < 1) {
+        const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
+        const meResponse = await axios.get(`${API_URL}/user/me`);
+        const user = await meResponse.data;
+        currentUserContext.setUser(user);
+      }
+    };
+
+    setCurrentUserContext();
+  }, [currentUserContext]);
 
   return (
     <>
