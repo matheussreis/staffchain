@@ -1,11 +1,13 @@
 import EditUser from '../User/EditUser';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import useEditPageCheck from '../../hooks/use-edit-page-check';
 import { UserFormContext } from '../../store/user-form-context';
 import UserFormView from '../../components/UserForm/UserFormView';
+import { CurrentUserContext } from '../../store/current-user-context';
 
 export default function Me() {
   const isEdit = useEditPageCheck();
+  const { user } = useContext(CurrentUserContext);
 
   const [fields, setFields] = useState({
     id: { value: '' },
@@ -20,24 +22,27 @@ export default function Me() {
   });
 
   useEffect(() => {
-    if (fields.id.value !== '') {
+    if (fields.id.value !== '' || !user.id) {
       return;
     }
 
-    // Call API using the user ID to fetch the user data.
-    console.log(`USE USER DATA FROM API`);
     setFields({
-      id: { value: '1000' },
-      firstName: { value: 'John' },
-      lastName: { value: 'Doe' },
-      email: { value: 'johndoe@test.com' },
-      phone: { value: '123321123' },
-      birthdate: { value: '1997-01-01' },
-      isAdministrator: { value: { label: 'Yes', value: '1' } },
-      roleName: { value: 'Manager' },
-      departmentName: { value: 'Marketing' },
+      id: { value: user.id },
+      firstName: { value: user.firstName },
+      lastName: { value: user.lastName },
+      email: { value: user.email },
+      phone: { value: user.phone },
+      birthdate: { value: user.bithdate },
+      isAdministrator: {
+        value: {
+          label: user.isAdmin ? 'Yes' : 'No',
+          value: user.isAdmin ? '1' : '0',
+        },
+      },
+      roleName: { value: user.role },
+      departmentName: { value: user.department },
     });
-  }, [fields.id.value]);
+  }, [fields.id.value, user]);
 
   const UserComponent = isEdit ? EditUser : UserFormView;
 
