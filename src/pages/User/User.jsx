@@ -1,14 +1,15 @@
+import axios from 'axios';
 import EditUser from './EditUser';
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router';
+import { json, useLoaderData, useLocation } from 'react-router';
 import useEditPageCheck from '../../hooks/use-edit-page-check';
 import { UserFormContext } from '../../store/user-form-context';
 import UserFormView from '../../components/UserForm/UserFormView';
 
 export default function User() {
-  const location = useLocation();
-  const { id: userId } = useParams();
   const isEdit = useEditPageCheck();
+  const user = useLoaderData();
+  const location = useLocation();
 
   const [fields, setFields] = useState({
     id: { value: '' },
@@ -22,22 +23,8 @@ export default function User() {
     roleName: { value: '' },
   });
 
-  // Use this component as the parent of all user related views,
-  // in other words, the parent of the view, edit and list views.
-  // Then, add logic to fetch a list or a single user depending
-  // on the URL. Lastly, add logic to select the component that
-  // should be rendered. In case the URL is for list, then a list
-  // of users should be rendered, in case the URL is for view, a
-  // single user should be rendered.
-
   useEffect(() => {
-    if (fields.id.value !== '') {
-      return;
-    }
-
     if (location.state) {
-      // Don't call the API, and use the given state.
-      console.log(`USER ID = ${userId} | USE USER DATA FROM STATE`);
       setFields({
         id: { value: location.state.id },
         firstName: { value: location.state.firstName },
@@ -49,22 +36,11 @@ export default function User() {
         roleName: { value: location.state.roleName },
         departmentName: { value: location.state.departmentName },
       });
-    } else {
-      // Call API using the user ID to fetch the user data.
-      console.log(`USER ID = ${userId} | USE USER DATA FROM API`);
-      setFields({
-        id: { value: '1000' },
-        firstName: { value: 'John' },
-        lastName: { value: 'Doe' },
-        email: { value: 'johndoe@test.com' },
-        phone: { value: '123321123' },
-        birthdate: { value: '1997-01-01' },
-        isAdministrator: { value: { label: 'Yes', value: '1' } },
-        roleName: { value: 'Manager' },
-        departmentName: { value: 'Marketing' },
-      });
+
+      return;
     }
-  }, [userId, location.state, fields.id.value]);
+    setFields(user);
+  }, [location.state, user]);
 
   const UserComponent = isEdit ? EditUser : UserFormView;
 
@@ -73,4 +49,55 @@ export default function User() {
       <UserComponent />
     </UserFormContext.Provider>
   );
+}
+
+const fetchUser = async (id) => {
+  const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
+  const userResponse = await axios.get(`${API_URL}/user/${id}`);
+  const user = userResponse.data;
+  return user;
+};
+
+export async function loader({ params }) {
+  const userId = params.id;
+  if (!userId) {
+    throw json({
+      title: 'User Not Found',
+      message: 'The user you are looking for does not exist.',
+    });
+  }
+
+  try {
+    const userId = params.id;
+    const user = await fetchUser(userId);
+
+    return {
+      id: { value: user.id },
+      firstName: { value: user.firstName },
+      lastName: { value: user.lastName },
+      email: { value: user.email },
+      phone: { value: user.phone },
+      birthdate: { value: user.birthdate },
+      isAdministrator: {
+        value: {
+          label: user.isAdmin ? 'Yes' : 'No',
+          value: user.isAdmin ? '1' : '0',
+        },
+      },
+      roleName: { value: user.role },
+      departmentName: { value: user.department },
+    };
+  } catch (error) {
+    if (error.response.status === 404) {
+      throw json({
+        title: error.response.data.title,
+        message: error.response.data.message,
+      });
+    }
+
+    throw json({
+      title: 'User Not Found',
+      message: error.message,
+    });
+  }
 }

@@ -2,7 +2,6 @@ import axios from 'axios';
 import Root from './pages/Root';
 import { useState } from 'react';
 import Login from './pages/Login';
-import User from './pages/User/User';
 import NotFound from './pages/NotFound';
 import EditUser from './pages/User/EditUser';
 import Process from './pages/Process/Process';
@@ -14,6 +13,7 @@ import ListRequest from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
 import Me, { loader as meLoader } from './pages/Me/Me';
 import { action as logoutAction } from './pages/Logout';
+import User, { loader as UserLoader } from './pages/User/User';
 import { CurrentUserContext } from './store/current-user-context';
 import { checkAuthLoader, getAuthToken } from './utils/auth-utils';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
@@ -54,7 +54,7 @@ const router = createBrowserRouter([
           {
             path: ':id',
             children: [
-              { index: true, element: <User /> },
+              { index: true, element: <User />, loader: UserLoader },
               { path: 'edit', element: <User /> },
             ],
           },
