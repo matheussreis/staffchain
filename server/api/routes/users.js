@@ -7,8 +7,6 @@ router.get('/', checkAuth, controller.getAll);
 
 router.get('/me', checkAuth, controller.get);
 
-router.put('/me', checkAuth, controller.update);
-
 router.get('/:id', checkAuth, controller.get);
 
 router.put('/:id', checkAuth, controller.update);
