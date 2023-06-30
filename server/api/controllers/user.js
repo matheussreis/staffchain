@@ -188,7 +188,8 @@ exports.get = async (req, res) => {
     }
 
     res.status(404).json({
-      message: 'User not found.',
+      title: 'User Not Found',
+      message: 'The user you are looking for does not exist.',
     });
   } catch (error) {
     res.status(500).json({
