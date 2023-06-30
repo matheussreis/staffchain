@@ -1,6 +1,8 @@
-import { useContext } from 'react';
+import axios from 'axios';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
+import { Toast } from 'primereact/toast';
+import { useContext, useRef } from 'react';
 import { useLocation } from 'react-router';
 import MultiStepForm from '../UI/MultiStepForm/MultiStepForm';
 import useMultiStepForm from '../../hooks/use-multi-step-form';
@@ -9,9 +11,10 @@ import { UserFormContext } from '../../store/user-form-context';
 import { CurrentUserContext } from '../../store/current-user-context';
 
 export default function UserForm() {
-  const { user } = useContext(CurrentUserContext);
   const { fields } = useContext(UserFormContext);
+  const { user } = useContext(CurrentUserContext);
   let location = useLocation();
+  const toastRef = useRef();
 
   const { steps, currentStep, goToNextStep, goToPreviousStep } =
     useMultiStepForm([Step1, Step2]);
@@ -37,34 +40,62 @@ export default function UserForm() {
     isFormValid = true;
   }
 
-  const submitFormHandler = (formData) => {
-    console.log(formData);
+  const submitFormHandler = async (event) => {
+    event.preventDefault();
 
-    // When calling the API to save the user data, check if the current
-    // form is being used to edit or create. If the form is being used
-    // to edit, send a PUT request with the user data, otherwise, if
-    // the form is being used to create, send a POST request with the
-    // user data.
+    if (!isFormValid) return;
 
-    return (event) => {
-      event.preventDefault();
-      console.log('Submit Form');
+    try {
+      const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
+      let url = `${API_URL}/user/${isEdit ? fields.id.value : 'signup'}`;
+      await axios(url, {
+        data: {
+          firstName: fields.firstName.value,
+          lastName: fields.lastName.value,
+          birthdate: fields.birthdate.value,
+          email: fields.email.value,
+          phone: fields.phone.value,
+          department: fields.departmentName.value,
+          role: fields.roleName.value,
+          isAdmin: fields.isAdministrator.value.value === '1',
+          password: fields.password.value,
+        },
+        method: isEdit ? 'PUT' : 'POST',
+      });
+
       goToNextStep();
-    };
+    } catch (error) {
+      const operation = isEdit ? 'Updating' : 'Creating';
+      toastRef.current.clear();
+      toastRef.current.show({
+        severity: 'error',
+        summary: `Failure ${operation} User`,
+        detail: error.message,
+        sticky: true,
+        style: { margin: '0.5rem' },
+      });
+    }
   };
 
   return (
-    <MultiStepForm
-      onSubmit={submitFormHandler(fields)}
-      formTitle={`${isEdit ? 'Edit' : 'Create'} User`}
-      lastButtonName={`${isEdit ? 'Save' : 'Create'}`}
-      steps={steps}
-      currentStep={currentStep}
-      goToPreviousStep={goToPreviousStep}
-      goToNextStep={goToNextStep}
-      isCancelButton={true}
-      cancelRedirect={isEdit ? location.pathname.replace('/edit', '') : -1}
-      isFormValid={isFormValid}
-    />
+    <>
+      <Toast
+        ref={toastRef}
+        position="top-center"
+        style={{ position: 'relative' }}
+      />
+      <MultiStepForm
+        onSubmit={submitFormHandler}
+        formTitle={`${isEdit ? 'Edit' : 'Create'} User`}
+        lastButtonName={`${isEdit ? 'Save' : 'Create'}`}
+        steps={steps}
+        currentStep={currentStep}
+        goToPreviousStep={goToPreviousStep}
+        goToNextStep={goToNextStep}
+        isCancelButton={true}
+        cancelRedirect={isEdit ? location.pathname.replace('/edit', '') : -1}
+        isFormValid={isFormValid}
+      />
+    </>
   );
 }
