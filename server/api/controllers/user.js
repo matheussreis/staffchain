@@ -8,7 +8,7 @@ const findUserByEmail = async (email) => {
 };
 
 const findAllUsers = async () => {
-  return User.find({}).exec();
+  return User.find({}).sort({ dateModified: -1 }).exec();
 };
 
 const findUserById = async (id) => {
@@ -205,8 +205,10 @@ exports.update = async (req, res) => {
     const userData = req.body;
 
     for (const field in userData) {
-      if (!userData[field]) {
+      if (typeof userData[field] !== 'boolean' && !userData[field]) {
         delete userData[field];
+      } else if (field === 'password') {
+        userData[field] = await hashPassword(userData[field]);
       }
     }
 
