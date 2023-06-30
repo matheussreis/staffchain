@@ -46,7 +46,25 @@ export default function UserFormView() {
         <FieldView label="Role Name" content={fields.roleName.value} />
       </FormRow>
       <FormRow>
-        <Button onClick={() => navigate('edit')}>Edit</Button>
+        <Button
+          onClick={() =>
+            navigate('edit', {
+              state: {
+                id: fields.id.value,
+                firstName: fields.firstName.value,
+                lastName: fields.lastName.value,
+                email: fields.email.value,
+                phone: fields.phone.value,
+                birthdate: fields.birthdate.value,
+                isAdministrator: fields.isAdministrator.value,
+                roleName: fields.roleName.value,
+                departmentName: fields.departmentName.value,
+              },
+            })
+          }
+        >
+          Edit
+        </Button>
       </FormRow>
     </Card>
   );
