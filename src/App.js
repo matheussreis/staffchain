@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Me from './pages/Me/Me';
 import Root from './pages/Root';
 import { useState } from 'react';
 import Login from './pages/Login';
@@ -13,6 +12,7 @@ import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
 import ListRequest from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
+import Me, { loader as meLoader } from './pages/Me/Me';
 import { action as logoutAction } from './pages/Logout';
 import { CurrentUserContext } from './store/current-user-context';
 import { checkAuthLoader, getAuthToken } from './utils/auth-utils';
@@ -42,12 +42,12 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     id: 'root',
+    errorElement: <GeneralError />,
     children: [
       {
         path: 'user',
         id: 'user',
         loader: checkAuthLoader,
-        errorElement: <GeneralError />,
         children: [
           { index: true, element: <ListUser />, loader: listUserLoader },
           { path: 'create', element: <EditUser /> },
@@ -97,7 +97,7 @@ const router = createBrowserRouter([
         id: 'me',
         loader: checkAuthLoader,
         children: [
-          { index: true, element: <Me /> },
+          { index: true, element: <Me />, loader: meLoader },
           { path: 'edit', element: <Me /> },
         ],
       },
