@@ -33,6 +33,10 @@ const findAllProcesses = async () => {
   return Process.find({}).sort({ dateModified: -1 }).exec();
 };
 
+const findProcessById = async (id) => {
+  return Process.findById(id).exec();
+};
+
 exports.add = async (req, res) => {
   try {
     const processId = await createProcess(req.body);
@@ -82,6 +86,41 @@ exports.getAll = async (req, res) => {
           })),
         };
       }),
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.get = async (req, res) => {
+  try {
+    const processId = new mongoose.Types.ObjectId(req.params.id);
+    const process = await findProcessById(processId);
+
+    if (process) {
+      res.status(200).json({
+        id: process._id,
+        name: process.name,
+        description: process.description,
+        fieldSet: process.fieldSet.map((field) => ({
+          id: field._id,
+          label: field.label,
+          type: field.type,
+        })),
+        requestTree: process.requestTree.map((item) => ({
+          userId: item.userId,
+          reportsToId: item.reportsTo,
+        })),
+      });
+
+      return;
+    }
+
+    res.status(404).json({
+      title: 'Process Not Found',
+      message: 'The process you are looking for does not exist.',
     });
   } catch (error) {
     res.status(500).json({

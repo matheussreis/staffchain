@@ -7,4 +7,6 @@ router.get('/', checkAuth, controller.getAll);
 
 router.post('/', checkAuth, controller.add);
 
+router.get('/:id', checkAuth, controller.get);
+
 module.exports = router;
