@@ -6,9 +6,9 @@ import Login from './pages/Login';
 import User from './pages/User/User';
 import NotFound from './pages/NotFound';
 import EditUser from './pages/User/EditUser';
-import ListUser from './pages/User/ListUser';
 import Process from './pages/Process/Process';
 import Request from './pages/Request/Request';
+import GeneralError from './pages/GeneralError';
 import ListProcess from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
 import ListRequest from './pages/Request/ListRequest';
@@ -17,6 +17,7 @@ import { action as logoutAction } from './pages/Logout';
 import { CurrentUserContext } from './store/current-user-context';
 import { checkAuthLoader, getAuthToken } from './utils/auth-utils';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import ListUser, { loader as listUserLoader } from './pages/User/ListUser';
 
 import 'primereact/resources/primereact.min.css';
 import './theme.css';
@@ -46,8 +47,9 @@ const router = createBrowserRouter([
         path: 'user',
         id: 'user',
         loader: checkAuthLoader,
+        errorElement: <GeneralError />,
         children: [
-          { index: true, element: <ListUser /> },
+          { index: true, element: <ListUser />, loader: listUserLoader },
           { path: 'create', element: <EditUser /> },
           {
             path: ':id',
