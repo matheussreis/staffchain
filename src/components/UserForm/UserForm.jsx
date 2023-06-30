@@ -6,15 +6,36 @@ import MultiStepForm from '../UI/MultiStepForm/MultiStepForm';
 import useMultiStepForm from '../../hooks/use-multi-step-form';
 import useEditPageCheck from '../../hooks/use-edit-page-check';
 import { UserFormContext } from '../../store/user-form-context';
+import { CurrentUserContext } from '../../store/current-user-context';
 
 export default function UserForm() {
-  const context = useContext(UserFormContext);
+  const { user } = useContext(CurrentUserContext);
+  const { fields } = useContext(UserFormContext);
   let location = useLocation();
 
   const { steps, currentStep, goToNextStep, goToPreviousStep } =
     useMultiStepForm([Step1, Step2]);
 
   const isEdit = useEditPageCheck();
+
+  let isFormValid = false;
+
+  if (
+    fields.firstName.isValid &&
+    fields.lastName.isValid &&
+    fields.phone.isValid &&
+    fields.birthdate.isValid &&
+    fields.email.isValid &&
+    fields.isAdministrator.isValid &&
+    fields.roleName.isValid &&
+    fields.departmentName.isValid &&
+    user.isAdmin &&
+    !isEdit
+      ? fields.password.isValid
+      : true
+  ) {
+    isFormValid = true;
+  }
 
   const submitFormHandler = (formData) => {
     console.log(formData);
@@ -34,7 +55,7 @@ export default function UserForm() {
 
   return (
     <MultiStepForm
-      onSubmit={submitFormHandler(context.fields)}
+      onSubmit={submitFormHandler(fields)}
       formTitle={`${isEdit ? 'Edit' : 'Create'} User`}
       lastButtonName={`${isEdit ? 'Save' : 'Create'}`}
       steps={steps}
@@ -43,16 +64,7 @@ export default function UserForm() {
       goToNextStep={goToNextStep}
       isCancelButton={true}
       cancelRedirect={isEdit ? location.pathname.replace('/edit', '') : -1}
-      isFormValid={
-        context.fields.firstName.isValid &&
-        context.fields.lastName.isValid &&
-        context.fields.phone.isValid &&
-        context.fields.birthdate.isValid &&
-        context.fields.email.isValid &&
-        context.fields.isAdministrator.isValid &&
-        context.fields.roleName.isValid &&
-        context.fields.departmentName.isValid
-      }
+      isFormValid={isFormValid}
     />
   );
 }

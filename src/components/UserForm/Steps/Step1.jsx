@@ -5,11 +5,13 @@ import Select from '../../UI/Select/Select';
 import yesNoDom from '../../../options/yes-no-dom';
 import Container from '../../UI/Container/Container';
 import { UserFormContext } from '../../../store/user-form-context';
+import { CurrentUserContext } from '../../../store/current-user-context';
 
 import classes from './Step1.module.css';
 
 export default function Step1() {
   const { fields } = useContext(UserFormContext);
+  const { user } = useContext(CurrentUserContext);
 
   return (
     <Container className={classes['input-container']}>
@@ -73,16 +75,18 @@ export default function Step1() {
           hasError={fields.birthdate.hasError}
           errorMessage={fields.birthdate.errorMessage}
         />
-        <Select
-          label="Is Administrator"
-          name="isadmin"
-          options={yesNoDom}
-          value={fields.isAdministrator.value}
-          onBlur={fields.isAdministrator.inputBlurHandler}
-          onChange={fields.isAdministrator.valueChangeHandler}
-          hasError={fields.isAdministrator.hasError}
-          errorMessage={fields.isAdministrator.errorMessage}
-        />
+        {user.isAdmin && (
+          <Select
+            label="Is Administrator"
+            name="isadmin"
+            options={yesNoDom}
+            value={fields.isAdministrator.value}
+            onBlur={fields.isAdministrator.inputBlurHandler}
+            onChange={fields.isAdministrator.valueChangeHandler}
+            hasError={fields.isAdministrator.hasError}
+            errorMessage={fields.isAdministrator.errorMessage}
+          />
+        )}
       </FormRow>
       <FormRow>
         <Input
@@ -108,19 +112,21 @@ export default function Step1() {
           errorMessage={fields.roleName.errorMessage}
         />
       </FormRow>
-      <FormRow>
-        <Input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Password"
-          onBlur={fields.password.inputBlurHandler}
-          onChange={fields.password.valueChangeHandler}
-          value={fields.password.value}
-          hasError={fields.password.hasError}
-          errorMessage={fields.password.errorMessage}
-        />
-      </FormRow>
+      {user.isAdmin && (
+        <FormRow>
+          <Input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            onBlur={fields.password.inputBlurHandler}
+            onChange={fields.password.valueChangeHandler}
+            value={fields.password.value}
+            hasError={fields.password.hasError}
+            errorMessage={fields.password.errorMessage}
+          />
+        </FormRow>
+      )}
     </Container>
   );
 }
