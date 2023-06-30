@@ -3,6 +3,8 @@ const router = express.Router();
 const controller = require('../controllers/process');
 const checkAuth = require('../middlewares/check-auth');
 
+router.get('/', checkAuth, controller.getAll);
+
 router.post('/', checkAuth, controller.add);
 
 module.exports = router;

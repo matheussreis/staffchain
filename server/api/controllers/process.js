@@ -29,6 +29,10 @@ const createProcess = async (requestData) => {
   return process._id;
 };
 
+const findAllProcesses = async () => {
+  return Process.find({}).sort({ dateModified: -1 }).exec();
+};
+
 exports.add = async (req, res) => {
   try {
     const processId = await createProcess(req.body);
@@ -54,4 +58,34 @@ exports.getRequestTreeByProcessId = async (processId) => {
   }
 
   return process.requestTree;
+};
+
+exports.getAll = async (req, res) => {
+  try {
+    const processes = await findAllProcesses();
+
+    res.status(200).json({
+      count: processes.length,
+      processes: processes.map((process) => {
+        return {
+          id: process._id,
+          name: process.name,
+          description: process.description,
+          fieldSet: process.fieldSet.map((field) => ({
+            id: field._id,
+            label: field.label,
+            type: field.type,
+          })),
+          requestTree: process.requestTree.map((item) => ({
+            userId: item.userId,
+            reportsToId: item.reportsTo,
+          })),
+        };
+      }),
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
 };
