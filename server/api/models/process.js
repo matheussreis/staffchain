@@ -6,7 +6,6 @@ const processSchema = mongoose.Schema({
   description: { type: String, required: false },
   fieldSet: [
     {
-      id: { type: String, required: true },
       label: { type: String, required: true },
       type: { type: String, required: true },
     },
