@@ -66,6 +66,15 @@ export default function EditUser() {
   );
 
   const {
+    value: passwordValue,
+    isValid: passwordIsValid,
+    hasError: passwordHasError,
+    errorMessage: passwordErrorMessage,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+  } = useInput([FIELD_TYPES.PASSWORD, [10]], fields.password?.value);
+
+  const {
     value: departmentNameValue,
     isValid: departmentNameIsValid,
     hasError: departmentNameHasError,
@@ -135,6 +144,14 @@ export default function EditUser() {
       valueChangeHandler: isAdministratorChangeHandler,
       inputBlurHandler: isAdministratorBlurHandler,
     },
+    password: {
+      value: passwordValue,
+      isValid: passwordIsValid,
+      hasError: passwordHasError,
+      errorMessage: passwordErrorMessage,
+      valueChangeHandler: passwordChangeHandler,
+      inputBlurHandler: passwordBlurHandler,
+    },
     departmentName: {
       value: departmentNameValue,
       isValid: departmentNameIsValid,
@@ -154,7 +171,9 @@ export default function EditUser() {
   };
 
   return (
-    <UserFormContext.Provider value={{ ...context, fields: providerValue }}>
+    <UserFormContext.Provider
+      value={{ fields: { ...providerValue, id: context.fields.id } }}
+    >
       <UserForm />
     </UserFormContext.Provider>
   );
