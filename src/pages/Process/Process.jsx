@@ -23,7 +23,7 @@ export default function Process() {
     requestTree: { availableUsers: [], selectedUsers: {} },
   });
 
-  const UserComponent = isEdit ? EditProcess : ProcessFormView;
+  const ProcessComponent = isEdit ? EditProcess : ProcessFormView;
 
   useEffect(() => {
     if (id !== '') {
@@ -186,7 +186,7 @@ export default function Process() {
         step4: step4,
       }}
     >
-      <UserComponent />
+      <ProcessComponent />
     </ProcessFormContext.Provider>
   );
 }
