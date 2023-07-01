@@ -204,7 +204,12 @@ exports.update = async (req, res) => {
     const userData = req.body;
 
     for (const field in userData) {
-      if (typeof userData[field] !== 'boolean' && !userData[field]) {
+      if (field === 'id' || field === '_id') {
+        delete userData[field];
+      } else if (
+        typeof userData[field] !== 'boolean' &&
+        !userData[field]
+      ) {
         delete userData[field];
       } else if (field === 'password') {
         userData[field] = await hashPassword(userData[field]);
