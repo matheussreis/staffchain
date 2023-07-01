@@ -51,7 +51,7 @@ export default function LoginForm() {
       navigate('/');
     } catch (error) {
       let errorMessage = error.message;
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         errorMessage = error.response.data.message;
       }
 
