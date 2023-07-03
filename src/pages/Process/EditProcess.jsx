@@ -1,27 +1,9 @@
-import { useContext, useState } from 'react';
+import axios from 'axios';
 import useInput from '../../hooks/use-input';
 import FIELD_TYPES from '../../enums/field-types';
-import { ProcessFormContext } from '../../store/process-form-context';
+import { useContext, useEffect, useState } from 'react';
 import ProcessForm from '../../components/ProcessForm/ProcessForm';
-
-const DUMMY_USERS = [
-  { id: 'u1', name: 'John Doe', role: 'CEO', department: 'Executive' },
-  { id: 'u2', name: 'Lucy White', role: 'CTO', department: 'Executive' },
-  { id: 'u3', name: 'Emma Brown', role: 'CFO', department: 'Executive' },
-  {
-    id: 'u4',
-    name: 'Thomas Stone',
-    role: 'Solutions Architect',
-    department: 'Delivery',
-  },
-  {
-    id: 'u5',
-    name: 'Julia Gray',
-    role: 'Junior Developer',
-    department: 'Delivery',
-  },
-  { id: 'u6', name: 'Jimmy Storm', role: 'Developer', department: 'Delivery' },
-];
+import { ProcessFormContext } from '../../store/process-form-context';
 
 export default function EditProcess() {
   const context = useContext(ProcessFormContext);
@@ -45,17 +27,46 @@ export default function EditProcess() {
     inputBlurHandler: descriptionBlurHandler,
   } = useInput([FIELD_TYPES.TEXT, ['Description']], fields.description.value);
 
-  const [processFields, setProcessFields] = useState(context.step2.processMetadata.fields || []);
-  const [processUsers, setProcessUsers] = useState(context.step3.processUsers.users || []);
-  const [requestTreeUsers, setRequestTreeUsers] = useState(context.step4.requestTree.selectedUsers || []);
+  const [processFields, setProcessFields] = useState(
+    context.step2.processMetadata.fields || []
+  );
+  const [processUsers, setProcessUsers] = useState(
+    context.step3.processUsers.users || []
+  );
+  const [requestTreeUsers, setRequestTreeUsers] = useState(
+    context.step4.requestTree.selectedUsers || []
+  );
   const [requestTreeAvailableUsers, setRequestTreeAvailableUsers] = useState(
     context.step4.requestTree.availableUsers || []
   );
-  const [systemUsers, setSystemUsers] = useState(DUMMY_USERS);
+  const [systemUsers, setSystemUsers] = useState([]);
   const [isStep1Valid, setIsStep1Valid] = useState(false);
   const [isStep2Valid, setIsStep2Valid] = useState(false);
   const [isStep3Valid, setIsStep3Valid] = useState(false);
   const [isStep4Valid, setIsStep4Valid] = useState(false);
+
+  useEffect(() => {
+    const setUsers = async () => {
+      const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
+      const userResponse = await axios.get(`${API_URL}/user`);
+      const { users: usersData } = userResponse.data;
+
+      const users = usersData.map((user) => ({
+        id: user.id,
+        name: `${user.firstName} ${user.lastName}`,
+        role: user.role,
+        department: user.department,
+      }));
+
+      setSystemUsers(users);
+    };
+
+    try {
+      setUsers();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   const providerValue = {
     step1: {
