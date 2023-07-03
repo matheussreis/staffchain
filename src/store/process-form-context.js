@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const ProcessFormContext = React.createContext({
+  id: '',
   step1: {
     fields: {
       name: {
