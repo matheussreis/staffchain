@@ -16,7 +16,7 @@ function UserList({ step4 }) {
       <label className={classes['field-label']}>Users</label>
       <List className={classes['user-list']} scrollable>
         {step4.requestTree.selectedUsers &&
-            Object.values(step4.requestTree.selectedUsers).map((user) => (
+          Object.values(step4.requestTree.selectedUsers).map((user) => (
             <li key={user.id} className={classes['list-container']}>
               <div className={classes.field}>
                 <label>Name:</label>
@@ -73,7 +73,7 @@ function FieldList({ step2 }) {
 
 export default function ProcessFormView() {
   const navigate = useNavigate();
-  const { step1, step2, step4 } = useContext(ProcessFormContext);
+  const { id, step1, step2, step3, step4 } = useContext(ProcessFormContext);
 
   return (
     <Card className={classes.card}>
@@ -91,7 +91,21 @@ export default function ProcessFormView() {
         <UserList step4={step4} />
       </FormRow>
       <FormRow>
-        <Button onClick={() => navigate('edit')}>Edit</Button>
+        <Button
+          onClick={() =>
+            navigate('edit', {
+              state: {
+                id: id,
+                step1: step1,
+                step2: step2,
+                step3: step3,
+                step4: step4,
+              },
+            })
+          }
+        >
+          Edit
+        </Button>
       </FormRow>
     </Card>
   );
