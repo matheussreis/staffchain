@@ -35,10 +35,7 @@ export default function Me() {
       phone: { value: user.phone },
       birthdate: { value: user.birthdate },
       isAdministrator: {
-        value: {
-          label: user.isAdministrator ? 'Yes' : 'No',
-          value: user.isAdministrator ? '1' : '0',
-        },
+        value: { ...user.isAdministrator },
       },
       roleName: { value: user.role },
       departmentName: { value: user.department },
