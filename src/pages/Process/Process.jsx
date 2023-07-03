@@ -1,13 +1,16 @@
 import EditProcess from './EditProcess';
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useLocation } from 'react-router';
 import useEditPageCheck from '../../hooks/use-edit-page-check';
 import { ProcessFormContext } from '../../store/process-form-context';
 import ProcessFormView from '../../components/ProcessForm/ProcessFormView';
+import { json, useLoaderData } from 'react-router';
+import axios from 'axios';
+import { translateOption } from '../../options/field-types-dom';
 
 export default function Process() {
   const location = useLocation();
-  const { id: processId } = useParams();
+  const processData = useLoaderData();
   const isEdit = useEditPageCheck();
 
   const [id, setId] = useState('');
@@ -26,160 +29,26 @@ export default function Process() {
   const ProcessComponent = isEdit ? EditProcess : ProcessFormView;
 
   useEffect(() => {
-    if (id !== '') {
-      return;
-    }
-
     if (location.state) {
-      // Don't call the API, and use the given state.
-      console.log(`PROCESS ID = ${processId} | USE PROCESS DATA FROM STATE`);
       setId(location.state.id);
       setStep1(location.state.step1);
       setStep2(location.state.step2);
       setStep3(location.state.step3);
       setStep4(location.state.step4);
-    } else {
-      // Call API using the process ID to fetch the process data.
-      console.log(`PROCESS ID = ${processId} | USE PROCESS DATA FROM API`);
-      setId(processId);
-      setStep1({
-        fields: {
-          name: { value: 'Request New Computers' },
-          description: {
-            value: 'Request new computers for the development team.',
-          },
-        },
-      });
-      setStep2({
-        processMetadata: {
-          fields: [
-            {
-              id: '416678a0-4835-4a6e-9353-440d2a6acc63',
-              name: 'Expense Amount (€)',
-              required: { value: '1', label: 'Yes' },
-              type: { value: 'number', label: 'Number' },
-            },
-            {
-              id: '0d057218-b01b-417b-93ee-def79e39024e',
-              name: 'Expense Date',
-              required: { value: '1', label: 'Yes' },
-              type: { value: 'date', label: 'Date' },
-            },
-            {
-              id: '78b82f08-aa46-44ab-bdb0-a10d78cb7c3d',
-              name: 'Expense Description',
-              required: { value: '1', label: 'Yes' },
-              type: { value: 'textarea', label: 'Text Area' },
-            },
-            {
-              id: '5f49af2f-e575-46f3-88ea-97a3a6915c4c',
-              name: 'Computer Specs',
-              required: { value: '1', label: 'Yes' },
-              type: { value: 'textarea', label: 'Text Area' },
-            },
-          ],
-        },
-      });
-      setStep3({
-        processUsers: {
-          users: [
-            {
-              id: 'u4',
-              name: 'Thomas Stone',
-              role: 'Solutions Architect',
-              department: 'Delivery',
-            },
-            {
-              id: 'u3',
-              name: 'Emma Brown',
-              role: 'CFO',
-              department: 'Executive',
-            },
-            {
-              id: 'u2',
-              name: 'Lucy White',
-              role: 'CTO',
-              department: 'Executive',
-            },
-            {
-              id: 'u1',
-              name: 'John Doe',
-              role: 'CEO',
-              department: 'Executive',
-            },
-          ],
-        },
-      });
-      setStep4({
-        requestTree: {
-          availableUsers: [
-            {
-              id: 'u1',
-              name: 'John Doe',
-              role: 'CEO',
-              department: 'Executive',
-              reportsTo: { id: 'u2', name: 'Lucy White' },
-            },
-            {
-              id: 'u2',
-              name: 'Lucy White',
-              role: 'CTO',
-              department: 'Executive',
-              reportsTo: { id: 'u4', name: 'Thomas Stone' },
-            },
-            {
-              id: 'u3',
-              name: 'Emma Brown',
-              role: 'CFO',
-              department: 'Executive',
-              reportsTo: { id: 'u4', name: 'Thomas Stone' },
-            },
-            {
-              id: 'u4',
-              name: 'Thomas Stone',
-              role: 'Solutions Architect',
-              department: 'Delivery',
-              reportsTo: { id: 'u4', name: 'Thomas Stone' },
-            },
-          ],
-          selectedUsers: {
-            u1: {
-              id: 'u1',
-              name: 'John Doe',
-              role: 'CEO',
-              department: 'Executive',
-              reportsTo: { id: 'u2', name: 'Lucy White' },
-            },
-            u2: {
-              id: 'u2',
-              name: 'Lucy White',
-              role: 'CTO',
-              department: 'Executive',
-              reportsTo: { id: 'u4', name: 'Thomas Stone' },
-            },
-            u3: {
-              id: 'u3',
-              name: 'Emma Brown',
-              role: 'CFO',
-              department: 'Executive',
-              reportsTo: { id: 'u4', name: 'Thomas Stone' },
-            },
-            u4: {
-              id: 'u4',
-              name: 'Thomas Stone',
-              role: 'Solutions Architect',
-              department: 'Delivery',
-              reportsTo: { id: 'u4', name: 'Thomas Stone' },
-            },
-          },
-        },
-      });
+      return;
     }
-  }, [id, location.state, processId]);
+
+    setId(processData.id);
+    setStep1(processData.step1);
+    setStep2(processData.step2);
+    setStep3(processData.step3);
+    setStep4(processData.step4);
+  }, [id, location.state, processData]);
 
   return (
     <ProcessFormContext.Provider
       value={{
+        id: id,
         step1: step1,
         step2: step2,
         step3: step3,
@@ -189,4 +58,84 @@ export default function Process() {
       <ProcessComponent />
     </ProcessFormContext.Provider>
   );
+}
+
+const fetchProcess = async (id) => {
+  const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
+  const processResponse = await axios.get(`${API_URL}/process/${id}`);
+  const processData = processResponse.data;
+  return processData;
+};
+
+export async function loader({ params }) {
+  const processId = params.id;
+  if (!processId) {
+    throw json({
+      title: 'Process Not Found',
+      message: 'The process you are looking for does not exist.',
+    });
+  }
+
+  try {
+    const process = await fetchProcess(processId);
+
+    return {
+      id: process.id,
+      step1: {
+        fields: {
+          name: { value: process.name },
+          description: {
+            value: process.description,
+          },
+        },
+      },
+      step2: {
+        processMetadata: {
+          fields: process.fieldSet.map((field) => ({
+            id: field.id,
+            name: field.label,
+            required: {
+              label: field.required ? 'Yes' : 'No',
+              value: field.required ? '1' : '0',
+            },
+            type: {
+              label: translateOption(field.type),
+              value: field.type,
+            },
+          })),
+        },
+      },
+      step3: {
+        processUsers: {
+          users: [...process.requestTree],
+        },
+      },
+      step4: {
+        requestTree: {
+          availableUsers: [...process.requestTree],
+          selectedUsers: {
+            ...process.requestTree.reduce(
+              (result, currentObject) => ({
+                ...result,
+                [currentObject.id]: { ...currentObject },
+              }),
+              {}
+            ),
+          },
+        },
+      },
+    };
+  } catch (error) {
+    if (error.response.status === 404) {
+      throw json({
+        title: error.response.data.title,
+        message: error.response.data.message,
+      });
+    }
+
+    throw json({
+      title: 'Process Not Found',
+      message: error.message,
+    });
+  }
 }

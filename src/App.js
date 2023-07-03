@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import EditUser from './pages/User/EditUser';
-import Process from './pages/Process/Process';
+import Process, { loader as processLoader } from './pages/Process/Process';
 import Request from './pages/Request/Request';
 import GeneralError from './pages/GeneralError';
 import ListProcess, {
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
           {
             path: ':id',
             children: [
-              { index: true, element: <Process /> },
+              { index: true, element: <Process />, loader: processLoader },
               { path: 'edit', element: <Process /> },
             ],
           },
