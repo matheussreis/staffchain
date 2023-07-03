@@ -9,7 +9,7 @@ import useInput from '../../../hooks/use-input';
 import yesNoDom from '../../../options/yes-no-dom';
 import FIELD_TYPES from '../../../enums/field-types';
 import Container from '../../UI/Container/Container';
-import fieldTypesDom from '../../../options/field-types-dom';
+import { fieldTypesDom } from '../../../options/field-types-dom';
 import { ProcessFormContext } from '../../../store/process-form-context';
 
 import classes from './Step2.module.css';
