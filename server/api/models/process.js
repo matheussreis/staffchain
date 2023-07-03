@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
 
+const requestTreeSchema = mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  reportsTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false,
+  },
+});
+
 const processSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   name: { type: String, required: true },
@@ -7,15 +20,11 @@ const processSchema = mongoose.Schema({
   fieldSet: [
     {
       label: { type: String, required: true },
+      required: { type: Boolean, default: true },
       type: { type: String, required: true },
     },
   ],
-  requestTree: [
-    {
-      userId: { type: String, required: true },
-      reportsTo: { type: String, required: false },
-    },
-  ],
+  requestTree: [requestTreeSchema],
   dateCreated: { type: Date, default: Date.now },
   dateModified: { type: Date, default: Date.now },
 });

@@ -41,35 +41,75 @@ const createProcess = async (requestData) => {
 };
 
 const findAllProcesses = async () => {
-  return Process.find({}).sort({ dateModified: -1 }).exec();
+  return Process.find({})
+    .populate([
+      {
+        path: 'requestTree.userId',
+        select: {
+          firstName: 1,
+          lastName: 1,
+          department: 1,
+          role: 1,
+        },
+      },
+      {
+        path: 'requestTree.reportsTo',
+        select: {
+          firstName: 1,
+          lastName: 1,
+        },
+      },
+    ])
+    .sort({ dateModified: -1 })
+    .exec();
 };
 
 const findProcessById = async (id) => {
-  return Process.findById(id).exec();
+  return Process.findById(id)
+    .populate([
+      {
+        path: 'requestTree.userId',
+        select: {
+          firstName: 1,
+          lastName: 1,
+          department: 1,
+          role: 1,
+        },
+      },
+      {
+        path: 'requestTree.reportsTo',
+        select: {
+          firstName: 1,
+          lastName: 1,
+        },
+      },
+    ])
+    .exec();
 };
 
 const requestTreeHasRoot = (requestTree) => {
-  const rootNode = requestTree.find(
-    (node) => node.userId === node.reportsTo,
+  const rootNode = requestTree.find((node) =>
+    node.userId.equals(node.reportsTo),
   );
 
   return !!rootNode;
 };
 
 const findRequestNode = (requestTree, userId) => {
-  return requestTree.find((node) => node.userId === userId);
+  return requestTree.find((node) => node.userId.equals(userId));
 };
 
 const findReportees = (requestTree, userId) => {
   return requestTree.filter(
     (node) =>
-      node.reportsTo === userId && node.reportsTo !== node.userId,
+      node.reportsTo.equals(userId) &&
+      !node.reportsTo.equals(node.userId),
   );
 };
 
 const reporteeExists = (requestTree, reportsTo) => {
-  const reportee = requestTree.find(
-    (node) => node.userId === reportsTo,
+  const reportee = requestTree.find((node) =>
+    node.userId.equals(reportsTo),
   );
 
   return !!reportee;
@@ -116,12 +156,21 @@ exports.getAll = async (req, res) => {
           fieldSet: process.fieldSet.map((field) => ({
             id: field._id,
             label: field.label,
+            required: field.required,
             type: field.type,
           })),
-          requestTree: process.requestTree.map((item) => ({
-            userId: item.userId,
-            reportsTo: item.reportsTo,
-          })),
+          requestTree: process.requestTree.map((item) => {
+            return {
+              id: item.userId._id,
+              name: `${item.userId.firstName} ${item.userId.lastName}`,
+              department: item.userId.department,
+              role: item.userId.role,
+              reportsTo: {
+                id: item.reportsTo._id,
+                name: `${item.reportsTo.firstName} ${item.reportsTo.lastName}`,
+              },
+            };
+          }),
         };
       }),
     });
@@ -145,12 +194,21 @@ exports.get = async (req, res) => {
         fieldSet: process.fieldSet.map((field) => ({
           id: field._id,
           label: field.label,
+          required: field.required,
           type: field.type,
         })),
-        requestTree: process.requestTree.map((item) => ({
-          userId: item.userId,
-          reportsTo: item.reportsTo,
-        })),
+        requestTree: process.requestTree.map((item) => {
+          return {
+            id: item.userId._id,
+            name: `${item.userId.firstName} ${item.userId.lastName}`,
+            department: item.userId.department,
+            role: item.userId.role,
+            reportsTo: {
+              id: item.reportsTo._id,
+              name: `${item.reportsTo.firstName} ${item.reportsTo.lastName}`,
+            },
+          };
+        }),
       });
 
       return;
@@ -187,7 +245,7 @@ exports.update = async (req, res) => {
       for (const field of fieldSet) {
         if (!field?.id) {
           // === START === CHECK FIELD PARAMETERS, CREATE FIELD, AND APPEND IT TO THE FIELDSET ===
-          if (!field?.type || !field?.label) {
+          if (!field?.type || !field?.label || !field?.required) {
             // return 400 error saying the fieldset object contains invalid values.
             return res.status(400).json({
               title: 'Fieldset Validation Error',
@@ -197,6 +255,7 @@ exports.update = async (req, res) => {
             // create the field and append it to the fieldset
             process.fieldSet.push({
               type: field.type,
+              required: field.required,
               label: field.label,
             });
           }
@@ -215,6 +274,10 @@ exports.update = async (req, res) => {
             if (storedField.label !== field.label) {
               storedField.label = field.label;
             }
+
+            if (storedField.required !== field.required) {
+              storedField.required = field.required;
+            }
           }
         }
       }
@@ -230,7 +293,13 @@ exports.update = async (req, res) => {
             message: 'Invalid request node provided.',
           });
         } else {
-          const { userId, reportsTo } = requestNode;
+          const userId = new mongoose.Types.ObjectId(
+            requestNode.userId,
+          );
+          const reportsTo = new mongoose.Types.ObjectId(
+            requestNode.reportsTo,
+          );
+
           const { requestTree } = process;
 
           // find the stored request node by the user id
@@ -245,7 +314,7 @@ exports.update = async (req, res) => {
 
           // does the user in the node report to itself?
           const rootExists = requestTreeHasRoot(requestTree);
-          const isNodeRoot = reportsTo === userId;
+          const isNodeRoot = reportsTo.equals(userId);
           if (rootExists && isNodeRoot) {
             return res.status(400).json({
               title: 'Request Tree Validation Error',
@@ -259,7 +328,7 @@ exports.update = async (req, res) => {
             const reportees = findReportees(requestTree, userId);
             if (reportees) {
               const nodeReportsToReportees = reportees.some(
-                (reportee) => reportee.userId === reportsTo,
+                (reportee) => reportee.userId.equals(reportsTo),
               );
 
               // does the user in the node report to one of its reportees?
@@ -272,7 +341,7 @@ exports.update = async (req, res) => {
               }
             }
 
-            storedNode.reportsTo = requestNode.reportsTo;
+            storedNode.reportsTo = reportsTo;
           } else {
             process.requestTree.push({
               userId: requestNode.userId,
