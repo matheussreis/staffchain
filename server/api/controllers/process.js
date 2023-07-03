@@ -87,14 +87,6 @@ const findProcessById = async (id) => {
     .exec();
 };
 
-const requestTreeHasRoot = (requestTree) => {
-  const rootNode = requestTree.find((node) =>
-    node.userId.equals(node.reportsTo),
-  );
-
-  return !!rootNode;
-};
-
 const findRequestNode = (requestTree, userId) => {
   return requestTree.find((node) => node.userId.equals(userId));
 };
@@ -243,48 +235,24 @@ exports.update = async (req, res) => {
     const fieldSet = processData['fieldSet'];
     if (fieldSet && Array.isArray(fieldSet)) {
       for (const field of fieldSet) {
-        if (!field?.id) {
-          // === START === CHECK FIELD PARAMETERS, CREATE FIELD, AND APPEND IT TO THE FIELDSET ===
-          if (!field?.type || !field?.label || !field?.required) {
-            // return 400 error saying the fieldset object contains invalid values.
-            return res.status(400).json({
-              title: 'Fieldset Validation Error',
-              message: 'Invalid field provided.',
-            });
-          } else {
-            // create the field and append it to the fieldset
-            process.fieldSet.push({
-              type: field.type,
-              required: field.required,
-              label: field.label,
-            });
-          }
-          // === END === CHECK FIELD PARAMETERS, CREATE FIELD, AND APPEND IT TO THE FIELDSET ===
-        } else {
-          // check field id, check field type and label and update the field values
-          const storedField = process.fieldSet.find(
-            (f) => f.id === field.id,
-          );
-          if (storedField) {
-            // check field label and field type
-            if (storedField.type !== field.type) {
-              storedField.type = field.type;
-            }
-
-            if (storedField.label !== field.label) {
-              storedField.label = field.label;
-            }
-
-            if (storedField.required !== field.required) {
-              storedField.required = field.required;
-            }
-          }
+        if (
+          !field?.type ||
+          !field?.label ||
+          typeof field?.required !== 'boolean'
+        ) {
+          return res.status(400).json({
+            title: 'Fieldset Validation Error',
+            message: 'Invalid field provided.',
+          });
         }
       }
+
+      process.fieldSet = fieldSet;
     }
 
     const requestTree = processData['requestTree'];
     if (requestTree && Array.isArray(requestTree)) {
+      let rootCount = 0;
       for (const requestNode of requestTree) {
         // check if the userId and reports to are set
         if (!requestNode?.userId || !requestNode?.reportsTo) {
@@ -292,64 +260,55 @@ exports.update = async (req, res) => {
             title: 'Request Tree Validation Error',
             message: 'Invalid request node provided.',
           });
-        } else {
-          const userId = new mongoose.Types.ObjectId(
-            requestNode.userId,
-          );
-          const reportsTo = new mongoose.Types.ObjectId(
-            requestNode.reportsTo,
-          );
+        }
 
-          const { requestTree } = process;
+        const userId = new mongoose.Types.ObjectId(
+          requestNode.userId,
+        );
+        const reportsTo = new mongoose.Types.ObjectId(
+          requestNode.reportsTo,
+        );
 
-          // find the stored request node by the user id
-          const storedNode = findRequestNode(requestTree, userId);
+        const { requestTree } = process;
+        if (!reporteeExists(requestTree, reportsTo)) {
+          return res.status(400).json({
+            title: 'Request Tree Validation Error',
+            message: "The reportee doesn't exist.",
+          });
+        }
 
-          if (!reporteeExists(requestTree, reportsTo)) {
-            return res.status(400).json({
-              title: 'Request Tree Validation Error',
-              message: "The reportee doesn't exist.",
-            });
-          }
+        const isNodeRoot = reportsTo.equals(userId);
+        if (isNodeRoot) {
+          rootCount += 1;
+        }
 
-          // does the user in the node report to itself?
-          const rootExists = requestTreeHasRoot(requestTree);
-          const isNodeRoot = reportsTo.equals(userId);
-          if (rootExists && isNodeRoot) {
-            return res.status(400).json({
-              title: 'Request Tree Validation Error',
-              message: 'The tree cannot have more than one root.',
-            });
-          }
+        if (rootCount > 1) {
+          return res.status(400).json({
+            title: 'Request Tree Validation Error',
+            message: 'The tree cannot have more than one root.',
+          });
+        }
 
-          // If the given node exists, check if the given node reports to one of its reportees.
-          if (storedNode) {
-            // find the given node's reportees
-            const reportees = findReportees(requestTree, userId);
-            if (reportees) {
-              const nodeReportsToReportees = reportees.some(
-                (reportee) => reportee.userId.equals(reportsTo),
-              );
+        const storedNode = findRequestNode(requestTree, userId);
+        if (storedNode) {
+          const reportees = findReportees(requestTree, userId);
+          if (reportees) {
+            const nodeReportsToReportees = reportees.some(
+              (reportee) => reportee.userId.equals(reportsTo),
+            );
 
-              // does the user in the node report to one of its reportees?
-              if (nodeReportsToReportees) {
-                return res.status(400).json({
-                  title: 'Request Tree Validation Error',
-                  message:
-                    'Node cannot report to one of its reportees.',
-                });
-              }
+            if (nodeReportsToReportees) {
+              return res.status(400).json({
+                title: 'Request Tree Validation Error',
+                message:
+                  'Node cannot report to one of its reportees.',
+              });
             }
-
-            storedNode.reportsTo = reportsTo;
-          } else {
-            process.requestTree.push({
-              userId: requestNode.userId,
-              reportsTo: requestNode.reportsTo,
-            });
           }
         }
       }
+
+      process.requestTree = requestTree;
     }
 
     const name = processData['name'];
