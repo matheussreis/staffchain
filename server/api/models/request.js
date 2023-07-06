@@ -19,10 +19,25 @@ const requestSchema = mongoose.Schema({
   },
   status: {
     type: String,
-    default: 'to-do',
-    enum: ['to-do', 'in-progress', 'done', 'rejected', 'closed'],
+    default: 'in-progress',
+    enum: ['in-progress', 'done', 'waiting-for-info', 'closed'],
   },
-  fieldSet: [{ id: { type: String }, value: { type: String } }],
+  fields: [
+    {
+      fieldSetId: { type: mongoose.SchemaTypes.ObjectId },
+      value: { type: String },
+    },
+  ],
+  comments: [
+    {
+      authorId: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      comment: { type: String },
+    },
+  ],
   dateCreated: { type: Date, default: Date.now },
   dateModified: { type: Date, default: Date.now },
 });
