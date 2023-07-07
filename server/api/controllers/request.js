@@ -31,6 +31,11 @@ const POPULATE_OPTIONS = [
   },
 ];
 
+const REQUEST_NOT_FOUND_RESPONSE = {
+  title: 'Request Not Found',
+  message: 'The request you are looking for does not exist.',
+};
+
 const createRequest = async (requestData) => {
   const { processId, starterId, fieldSet } = requestData;
 
@@ -146,4 +151,20 @@ exports.get = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+exports.getfieldsByRequestId = async (id) => {
+  const request = await Request.findById(id, 'process').populate({
+    path: 'process',
+    select: { fieldSet: 1 },
+  });
+
+  if (!request) {
+    throw new Error(REQUEST_NOT_FOUND_RESPONSE.title);
+  }
+
+  return request.process.fieldSet.map((field) => ({
+    id: field.id,
+    type: field.type,
+  }));
 };
