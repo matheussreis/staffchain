@@ -40,7 +40,7 @@ export default function FieldView({
 
   return (
     <div className={getCssClasses('container')}>
-      <label>{label}</label>
+      {label && <label>{label}</label>}
       <p className={type === FIELD_TYPES.FILE ? classes['file-container'] : ''}>
         {getFormattedContent(content, type)}
       </p>
