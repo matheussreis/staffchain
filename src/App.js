@@ -11,7 +11,9 @@ import ListProcess, {
   loader as listProcessLoader,
 } from './pages/Process/ListProcess';
 import EditProcess from './pages/Process/EditProcess';
-import ListRequest from './pages/Request/ListRequest';
+import ListRequest, {
+  loader as listRequestLoader,
+} from './pages/Request/ListRequest';
 import EditRequest from './pages/Request/EditRequest';
 import Me, { loader as meLoader } from './pages/Me/Me';
 import { action as logoutAction } from './pages/Logout';
@@ -83,7 +85,7 @@ const router = createBrowserRouter([
         id: 'request',
         loader: checkAuthLoader,
         children: [
-          { index: true, element: <ListRequest /> },
+          { index: true, element: <ListRequest />, loader: listRequestLoader },
           { path: 'create', element: <EditRequest /> },
           {
             path: ':id',
@@ -125,7 +127,7 @@ export default function App() {
 
   return (
     <CurrentUserContext.Provider value={{ user: user, setUser: setUser }}>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </CurrentUserContext.Provider>
   );
 }

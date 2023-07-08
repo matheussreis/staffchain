@@ -1,0 +1,41 @@
+import Card from '../UI/Card/Card';
+import { useNavigate } from 'react-router-dom';
+import FieldView from '../UI/FieldView/FieldView';
+import ListItemControls from '../UI/ListItem/ListItemControls';
+import ListItemHeader from '../UI/ListItem/ListItemHeader';
+
+import classes from './RequestListItem.module.css';
+
+const ListItemContent = ({ request }) => {
+  return (
+    <div className={classes['content-container']}>
+      <FieldView content={request.description} />
+      <div className={classes['field-container']}>
+        <FieldView label="Starter:" content={request.starter.name} />
+        <FieldView label="Reviewer:" content={request.reviewer.name} />
+      </div>
+    </div>
+  );
+};
+
+export default function RequestListItem({ request }) {
+  const navigate = useNavigate();
+
+  return (
+    <li className={classes.item}>
+      <Card className={classes.container}>
+        <div>
+          <ListItemHeader
+            title={request.name}
+            sendTo={request.id}
+            data={request}
+          />
+          <ListItemContent request={request} />
+        </div>
+        <ListItemControls
+          onClick={() => navigate(request.id, { state: { ...request } })}
+        />
+      </Card>
+    </li>
+  );
+}
