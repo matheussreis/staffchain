@@ -25,4 +25,6 @@ router.get(
 
 router.post('/:id/approve', checkAuth, controller.approve);
 
+router.post('/:id/moreinfo', checkAuth, controller.moreInfo);
+
 module.exports = router;

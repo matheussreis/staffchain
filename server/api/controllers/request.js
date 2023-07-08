@@ -126,6 +126,12 @@ const getReviewerNode = (reviewer, requestTree) => {
   );
 };
 
+const getPreviousReviewerNode = (reviewer, requestTree) => {
+  return requestTree.find(
+    (node) => `${node.reportsTo}` === `${reviewer}`,
+  );
+};
+
 exports.add = async (req, res) => {
   try {
     await createRequest(req.body);
@@ -300,6 +306,54 @@ exports.approve = async (req, res) => {
       requestModel.status = 'in-progress';
     }
 
+    await requestModel.save();
+    res.status(200).json({
+      message: 'Request Updated Successfully!',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.moreInfo = async (req, res) => {
+  try {
+    const requestId = new mongoose.Types.ObjectId(req.params.id);
+    const requestData = req.body;
+    const askStarter = requestData?.askStarter || false;
+    const reason = requestData?.reason || undefined;
+
+    const request = await Request.findById(requestId).populate({
+      path: 'process',
+      select: { requestTree: 1 },
+    });
+
+    if (!request) {
+      return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
+    }
+
+    const reviewerNode = getPreviousReviewerNode(
+      request.reviewer,
+      request.process.requestTree,
+    );
+
+    const requestModel = new Request(request);
+
+    if (reason) {
+      requestModel.comments.push({
+        authorId: `${reviewerNode.userId}`,
+        comment: reason,
+      });
+    }
+
+    if (askStarter) {
+      requestModel.reviewer = requestModel.starter;
+    } else {
+      requestModel.reviewer = reviewerNode.userId;
+    }
+
+    requestModel.status = 'waiting-for-info';
     await requestModel.save();
     res.status(200).json({
       message: 'Request Updated Successfully!',
