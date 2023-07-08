@@ -23,4 +23,6 @@ router.get(
   controller.download,
 );
 
+router.post('/:id/approve', checkAuth, controller.approve);
+
 module.exports = router;

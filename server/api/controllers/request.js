@@ -120,6 +120,12 @@ const getRequestResponse = (request) => {
   };
 };
 
+const getReviewerNode = (reviewer, requestTree) => {
+  return requestTree.find(
+    (node) => `${node.userId}` === `${reviewer}`,
+  );
+};
+
 exports.add = async (req, res) => {
   try {
     await createRequest(req.body);
@@ -263,6 +269,41 @@ exports.download = async (req, res) => {
     }
 
     res.status(200).download(filePath, file.value);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.approve = async (req, res) => {
+  try {
+    const requestId = new mongoose.Types.ObjectId(req.params.id);
+    const request = await Request.findById(requestId).populate({
+      path: 'process',
+      select: { requestTree: 1 },
+    });
+
+    if (!request) {
+      return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
+    }
+
+    const reviewer = request.reviewer;
+    const requestTree = request.process.requestTree;
+    const reviewerNode = getReviewerNode(reviewer, requestTree);
+
+    const requestModel = new Request(request);
+    if (reviewerNode.reportsTo.equals(reviewer)) {
+      requestModel.status = 'done';
+    } else {
+      requestModel.reviewer = reviewerNode.reportsTo;
+      requestModel.status = 'in-progress';
+    }
+
+    await requestModel.save();
+    res.status(200).json({
+      message: 'Request Updated Successfully!',
+    });
   } catch (error) {
     res.status(500).json({
       error: error.message,
