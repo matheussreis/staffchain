@@ -111,7 +111,7 @@ export default function RequestFormView() {
         <FormRow className={classes['header-row']}>
           <RequestFormHeader
             requestName={request.name}
-            requestStarter={request.createdBy.name}
+            requestStarter={request.starter.name}
           />
         </FormRow>
         {request.fields.map((field) => (

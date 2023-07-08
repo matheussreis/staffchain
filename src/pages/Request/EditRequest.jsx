@@ -13,8 +13,8 @@ export default function EditRequest() {
     name: request.name || '',
     fields: request.fields || [],
     status: request.status || '',
-    createdBy: request.createdBy || { id: '', name: '' },
-    assignedTo: request.assignedTo || { id: '', name: '' },
+    starter: request.starter || { id: '', name: '' },
+    reviewer: request.reviewer || { id: '', name: '' },
   });
 
   const providerValue = {

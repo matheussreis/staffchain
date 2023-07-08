@@ -17,8 +17,8 @@ export default function Request() {
     name: '',
     fields: [],
     status: '',
-    createdBy: { id: '', name: '' },
-    assignedTo: { id: '', name: '' },
+    starter: { id: '', name: '' },
+    reviewer: { id: '', name: '' },
   });
 
   const [isValid, setIsValid] = useState(true);
@@ -38,8 +38,8 @@ export default function Request() {
         description: location.state.description,
         fields: location.state.fields,
         status: location.state.status,
-        createdBy: location.state.createdBy,
-        assignedTo: location.state.assignedTo,
+        starter: location.state.starter,
+        reviewer: location.state.reviewer,
       });
       setComments(location.state.comments);
     } else {
@@ -90,8 +90,8 @@ export default function Request() {
           },
         ],
         status: 'Open',
-        createdBy: { id: '1001', name: 'Emma Brown' },
-        assignedTo: { id: '1000', name: 'John Doe' },
+        starter: { id: '1001', name: 'Emma Brown' },
+        reviewer: { id: '1000', name: 'John Doe' },
       });
 
       setComments([
