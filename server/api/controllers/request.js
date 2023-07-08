@@ -36,6 +36,11 @@ const REQUEST_NOT_FOUND_RESPONSE = {
   message: 'The request you are looking for does not exist.',
 };
 
+const INVALID_FIELD_RESPONSE = {
+  title: 'Invalid Field',
+  message: "The field you are trying to update doesn't exist.",
+};
+
 const createRequest = async (requestData) => {
   const { processId, starterId, fieldSet } = requestData;
 
@@ -167,4 +172,49 @@ exports.getfieldsByRequestId = async (id) => {
     id: field.id,
     type: field.type,
   }));
+};
+
+exports.updateFields = async (req, res) => {
+  try {
+    const requestId = new mongoose.Types.ObjectId(req.params.id);
+    const requestData = { ...req.body, ...req.files };
+
+    const request = await findRequestById(requestId);
+    if (!request) {
+      return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
+    }
+
+    const fieldsIds = request.fields.reduce(
+      (previous, current, index) => ({
+        ...previous,
+        [current.fieldSetId]: { index: index },
+      }),
+      {},
+    );
+
+    const requestModel = new Request(request);
+    for (const field in requestData) {
+      const fieldId = fieldsIds[field];
+      if (!fieldId) {
+        return res.status(400).json(INVALID_FIELD_RESPONSE);
+      }
+
+      let value = requestData[field];
+      if (Array.isArray(value)) {
+        value = requestData[field][0]?.originalname;
+      }
+
+      requestModel.fields[fieldId.index].value = value;
+    }
+
+    await requestModel.save();
+
+    res.status(200).json({
+      message: 'Request Updated Successfully!',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
 };
