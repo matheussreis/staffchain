@@ -9,10 +9,7 @@ import classes from './ProcessListItem.module.css';
 function ListItemContent({ process }) {
   return (
     <div className={classes['field-container']}>
-      <FieldView
-        label="Description:"
-        content={process.step1.fields.description.value}
-      />
+      <FieldView content={process.step1.fields.description.value} />
     </div>
   );
 }
