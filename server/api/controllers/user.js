@@ -258,3 +258,8 @@ exports.delete = async (req, res) => {
     });
   }
 };
+
+exports.userExists = async (userId) => {
+  const user = await findUserById(userId);
+  return !!user;
+};
