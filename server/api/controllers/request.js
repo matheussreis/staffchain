@@ -364,3 +364,43 @@ exports.moreInfo = async (req, res) => {
     });
   }
 };
+
+exports.close = async (req, res) => {
+  try {
+    const requestId = new mongoose.Types.ObjectId(req.params.id);
+    const reason = req.body?.reason || undefined;
+
+    const request = await Request.findById(requestId).populate({
+      path: 'process',
+      select: { requestTree: 1 },
+    });
+
+    if (!request) {
+      return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
+    }
+
+    const requestModel = new Request(request);
+
+    const reviewerNode = getPreviousReviewerNode(
+      request.reviewer,
+      request.process.requestTree,
+    );
+
+    if (reason) {
+      requestModel.comments.push({
+        authorId: `${reviewerNode.userId}`,
+        comment: reason,
+      });
+    }
+
+    requestModel.status = 'closed';
+    await requestModel.save();
+    res.status(200).json({
+      message: 'Request Updated Successfully!',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
