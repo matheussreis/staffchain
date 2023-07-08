@@ -1,3 +1,4 @@
+const fs = require('fs');
 const mongoose = require('mongoose');
 const Request = require('../models/request');
 const { getRequestTreeByProcessId } = require('./process');
@@ -34,6 +35,11 @@ const POPULATE_OPTIONS = [
 const REQUEST_NOT_FOUND_RESPONSE = {
   title: 'Request Not Found',
   message: 'The request you are looking for does not exist.',
+};
+
+const FILE_NOT_FOUND_RESPONSE = {
+  title: 'File not Found',
+  message: 'The file you are looking for does not exist.',
 };
 
 const INVALID_FIELD_RESPONSE = {
@@ -212,6 +218,51 @@ exports.updateFields = async (req, res) => {
     res.status(200).json({
       message: 'Request Updated Successfully!',
     });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.download = async (req, res) => {
+  try {
+    const requestId = new mongoose.Types.ObjectId(req.params.id);
+    const fileId = req.params.fileId;
+
+    const request = await Request.findById(requestId, [
+      'process',
+      'fields',
+    ]).populate({
+      path: 'process',
+      select: { fieldSet: 1 },
+    });
+
+    if (!request) {
+      return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
+    }
+
+    const fieldDefinition = request.process.fieldSet.find(
+      (field) => field.type === 'file' && field.id === fileId,
+    );
+
+    const file = request.fields.find(
+      (field) => `${field.fieldSetId}` === fileId,
+    );
+
+    if (!file || file?.value === '' || !fieldDefinition) {
+      return res.status(404).json(FILE_NOT_FOUND_RESPONSE);
+    }
+
+    const fileExtension = file.value.substring(
+      file.value.lastIndexOf('.') + 1,
+    );
+    const filePath = `uploads/${fileId}.${fileExtension}`;
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json(FILE_NOT_FOUND_RESPONSE);
+    }
+
+    res.status(200).download(filePath, file.value);
   } catch (error) {
     res.status(500).json({
       error: error.message,

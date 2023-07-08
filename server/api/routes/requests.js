@@ -17,4 +17,10 @@ router.put(
   controller.updateFields,
 );
 
+router.get(
+  '/:id/file/:fileId/download',
+  checkAuth,
+  controller.download,
+);
+
 module.exports = router;
