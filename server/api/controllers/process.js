@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Process = require('../models/process');
 const User = require('../models/user');
+const Request = require('../models/request');
 
 const assignProcessToUsersInTree = async (requestTree, processId) => {
   const users = requestTree.map(
@@ -105,6 +106,36 @@ const reporteeExists = (requestTree, reportsTo) => {
   );
 
   return !!reportee;
+};
+
+const addNewFieldsToRequest = async (process) => {
+  const requests = await Request.find({
+    process: process._id,
+  }).exec();
+
+  const processFields = process.fieldSet.map(
+    (field) => `${field._id}`,
+  );
+
+  for (const request of requests) {
+    const requestModel = new Request(request);
+    const requestFieldIds = request.fields.map(
+      (field) => `${field.fieldSetId}`,
+    );
+
+    const newFieldIds = processFields.filter(
+      (id) => !requestFieldIds.includes(id),
+    );
+
+    newFieldIds.forEach((fieldId) => {
+      requestModel.fields.push({
+        fieldSetId: fieldId,
+        value: '',
+      });
+    });
+
+    await requestModel.save();
+  }
 };
 
 exports.add = async (req, res) => {
@@ -324,6 +355,8 @@ exports.update = async (req, res) => {
     process.dateModified = new Date();
     const processModel = new Process(process);
     await processModel.save();
+
+    await addNewFieldsToRequest(process);
 
     res.status(200).json({
       message: 'Process Updated Successfully!',
