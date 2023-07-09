@@ -1,3 +1,4 @@
+const path = require('path');
 const multer = require('multer');
 const { getfieldsByRequestId } = require('../controllers/request');
 
@@ -6,11 +7,8 @@ const storage = multer.diskStorage({
     callback(null, 'uploads/');
   },
   filename: (req, file, callback) => {
-    const fileExtension = file.originalname.substring(
-      file.originalname.lastIndexOf('.') + 1,
-    );
-
-    const fileName = `${file.fieldname}.${fileExtension}`;
+    const fileExtension = path.extname(file.originalname);
+    const fileName = `${file.fieldname}${fileExtension}`;
     callback(null, fileName);
   },
 });
