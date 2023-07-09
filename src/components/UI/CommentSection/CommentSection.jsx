@@ -1,10 +1,12 @@
 import List from '../List/List';
 import Card from '../Card/Card';
 import { v4 as uuid } from 'uuid';
+import { useContext } from 'react';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
 import useInput from '../../../hooks/use-input';
 import FIELD_TYPES from '../../../enums/field-types';
+import { CurrentUserContext } from '../../../store/current-user-context';
 
 import classes from './CommentSection.module.css';
 
@@ -21,7 +23,7 @@ function CommentItem({ comment }) {
   return (
     <li className={classes['comment-container']}>
       <CommentItemHeader comment={comment} />
-      <p>{comment.content}</p>
+      <p>{comment.comment}</p>
     </li>
   );
 }
@@ -36,7 +38,11 @@ function CommentList({ comments }) {
   );
 }
 
-export default function CommentSection({ comments, updateComments }) {
+export default function CommentSection({
+  comments,
+  updateComments,
+  onAddComment,
+}) {
   const {
     value: commentValue,
     valueChangeHandler: commentChangeHandler,
@@ -45,18 +51,31 @@ export default function CommentSection({ comments, updateComments }) {
     reset: resetComment,
   } = useInput([FIELD_TYPES.TEXTAREA, ['Comment']]);
 
+  const currentUserContext = useContext(CurrentUserContext);
+
   const addCommentHandler = () => {
-    // Add logic to use the current user id and name as
-    // the author.
+    const { id, firstName, lastName } = currentUserContext.user;
+    const publishDate = new Date().toISOString().slice(0, 19);
+
     updateComments([
       {
         id: uuid(),
-        content: commentValue,
-        publishDate: new Date().toISOString().slice(0, 19),
-        author: { id: 1000, name: 'John Doe' },
+        comment: commentValue,
+        publishDate: publishDate,
+        author: {
+          id: id,
+          name: `${firstName} ${lastName}`,
+        },
       },
       ...comments,
     ]);
+
+    typeof onAddComment === 'function' &&
+      onAddComment({
+        comment: commentValue,
+        publishDate: publishDate,
+        authorId: id,
+      });
 
     resetComment();
   };
