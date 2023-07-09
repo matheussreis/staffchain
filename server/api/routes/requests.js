@@ -29,4 +29,6 @@ router.post('/:id/moreinfo', checkAuth, controller.moreInfo);
 
 router.post('/:id/close', checkAuth, controller.close);
 
+router.post('/:id/comment', checkAuth, controller.addComment);
+
 module.exports = router;

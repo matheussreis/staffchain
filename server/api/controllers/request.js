@@ -2,6 +2,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const Request = require('../models/request');
 const { getRequestTreeByProcessId } = require('./process');
+const { userExists } = require('./user');
 
 const POPULATE_OPTIONS = [
   {
@@ -30,11 +31,30 @@ const POPULATE_OPTIONS = [
       fieldSet: 1,
     },
   },
+  {
+    path: 'comments.authorId',
+    select: {
+      firstName: 1,
+      lastName: 1,
+      department: 1,
+      role: 1,
+    },
+  },
 ];
 
 const REQUEST_NOT_FOUND_RESPONSE = {
   title: 'Request Not Found',
   message: 'The request you are looking for does not exist.',
+};
+
+const AUTHOR_NOT_FOUND_RESPONSE = {
+  title: 'Author Not Found',
+  message: 'The provided author does not exist.',
+};
+
+const INVALID_COMMENT_FIELDS_REPONSE = {
+  title: 'Comment Validation Error',
+  message: 'Invalid comment field provided.',
 };
 
 const FILE_NOT_FOUND_RESPONSE = {
@@ -92,10 +112,21 @@ const getRequestResponse = (request) => {
     name: request.process.name,
     description: request.process.description,
     status: request.status,
-    comments: request.comments.map((comment) => ({
-      authorId: comment.authorId,
-      comment: comment.comment,
-    })),
+    comments: request.comments
+      .map((comment) => ({
+        id: comment.id,
+        author: {
+          id: comment.authorId.id,
+          name: `${comment.authorId.firstName} ${comment.authorId.lastName}`,
+          department: comment.authorId.department,
+          role: comment.authorId.role,
+        },
+        comment: comment.comment,
+        publishDate: comment.publishDate,
+      }))
+      .sort(
+        (a, b) => new Date(b.publishDate) - new Date(a.publishDate),
+      ),
     fields: request.process.fieldSet.map((field) => ({
       id: field._id,
       label: field.label,
@@ -397,6 +428,44 @@ exports.close = async (req, res) => {
     await requestModel.save();
     res.status(200).json({
       message: 'Request Updated Successfully!',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.addComment = async (req, res) => {
+  try {
+    const requestId = new mongoose.Types.ObjectId(req.params.id);
+
+    const request = await Request.findById(requestId);
+    if (!request) {
+      return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
+    }
+
+    const authorId = new mongoose.Types.ObjectId(req.body.authorId);
+    if (userExists(authorId) === false) {
+      return res.status(404).json(AUTHOR_NOT_FOUND_RESPONSE);
+    }
+
+    const comment = req.body.comment;
+    const publishDate = req.body.publishDate;
+    if (!comment || !publishDate) {
+      return res.status(400).json(INVALID_COMMENT_FIELDS_REPONSE);
+    }
+
+    const requestModel = new Request(request);
+    requestModel.comments.push({
+      authorId: authorId,
+      comment: comment,
+      publishDate: publishDate,
+    });
+
+    await requestModel.save();
+    res.status(200).json({
+      message: 'Comment Added Successfully!',
     });
   } catch (error) {
     res.status(500).json({
