@@ -9,3 +9,18 @@ export function getValidatorByInputType(type) {
   const factory = new ValidatorFactory(type);
   return factory.getValidator();
 }
+
+export function getTagSeverityByRequestStatus(status) {
+  switch (status) {
+    case 'in-progress':
+      return 'info';
+    case 'waiting-for-info':
+      return 'warning';
+    case 'done':
+      return 'success';
+    case 'closed':
+      return 'danger';
+    default:
+      return 'info';
+  }
+}
