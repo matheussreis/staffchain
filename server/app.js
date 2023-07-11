@@ -14,6 +14,8 @@ const userRoutes = require('./api/routes/users');
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGO_CONNECTION_STRING);
 
+app.use('/file', express.static('uploads'));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({ origin: process.env.CLIENT_URL }));

@@ -1,15 +1,21 @@
 const path = require('path');
 const multer = require('multer');
 const { getfieldsByRequestId } = require('../controllers/request');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'uploads/');
+    const folder = `uploads/${file.fieldname}/`;
+
+    const fileExists = fs.existsSync(folder);
+    if (!fileExists) {
+      return fs.mkdir(folder, (error) => callback(error, folder));
+    }
+
+    callback(null, folder);
   },
   filename: (req, file, callback) => {
-    const fileExtension = path.extname(file.originalname);
-    const fileName = `${file.fieldname}${fileExtension}`;
-    callback(null, fileName);
+    callback(null, file.originalname);
   },
 });
 

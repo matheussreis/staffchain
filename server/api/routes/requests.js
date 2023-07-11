@@ -17,12 +17,6 @@ router.put(
   controller.updateFields,
 );
 
-router.get(
-  '/:id/file/:fileId/download',
-  checkAuth,
-  controller.download,
-);
-
 router.post('/:id/approve', checkAuth, controller.approve);
 
 router.post('/:id/moreinfo', checkAuth, controller.moreInfo);
