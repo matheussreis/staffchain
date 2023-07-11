@@ -279,6 +279,7 @@ exports.updateFields = async (req, res) => {
       requestModel.fields[fieldId.index].value = value;
     }
 
+    requestModel.dateModified = new Date();
     await requestModel.save();
 
     res.status(200).json({
@@ -358,6 +359,7 @@ exports.approve = async (req, res) => {
       requestModel.status = 'in-progress';
     }
 
+    requestModel.dateModified = new Date();
     await requestModel.save();
     res.status(200).json({
       message: 'Request Updated Successfully!',
@@ -406,6 +408,7 @@ exports.moreInfo = async (req, res) => {
     }
 
     requestModel.status = 'waiting-for-info';
+    requestModel.dateModified = new Date();
     await requestModel.save();
     res.status(200).json({
       message: 'Request Updated Successfully!',
@@ -446,6 +449,7 @@ exports.close = async (req, res) => {
     }
 
     requestModel.status = 'closed';
+    requestModel.dateModified = new Date();
     await requestModel.save();
     res.status(200).json({
       message: 'Request Updated Successfully!',

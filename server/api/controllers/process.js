@@ -134,6 +134,7 @@ const addNewFieldsToRequest = async (process) => {
       });
     });
 
+    requestModel.dateModified = new Date();
     await requestModel.save();
   }
 };
