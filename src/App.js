@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import EditUser from './pages/User/EditUser';
 import Process, { loader as processLoader } from './pages/Process/Process';
-import Request from './pages/Request/Request';
+import Request, { loader as requestLoader } from './pages/Request/Request';
 import GeneralError from './pages/GeneralError';
 import ListProcess, {
   loader as listProcessLoader,
@@ -90,7 +90,7 @@ const router = createBrowserRouter([
           {
             path: ':id',
             children: [
-              { index: true, element: <Request /> },
+              { index: true, element: <Request />, loader: requestLoader },
               { path: 'edit', element: <Request /> },
             ],
           },
