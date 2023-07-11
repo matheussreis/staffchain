@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Request = require('../models/request');
 const { getRequestTreeByProcessId } = require('./process');
 const { userExists } = require('./user');
+const path = require('path');
 
 const POPULATE_OPTIONS = [
   {
@@ -248,7 +249,29 @@ exports.updateFields = async (req, res) => {
         return res.status(400).json(INVALID_FIELD_RESPONSE);
       }
 
+      const fieldDefinition = request.process.fieldSet.find(
+        (item) => item.id === field,
+      );
+
       let value = requestData[field];
+
+      if (fieldDefinition.type === 'file') {
+        const isString = typeof value === 'string';
+        const currentFile = isString ? value : value[0]?.filename;
+        const previousFile = request.fields[fieldId.index].value;
+
+        if (isString && currentFile === '' && previousFile !== '') {
+          const extension = path.extname(previousFile);
+          fs.unlinkSync(`uploads/${field}${extension}`);
+        } else if (!isString && currentFile && previousFile !== '') {
+          const currentExtension = path.extname(currentFile);
+          const previousExtension = path.extname(previousFile);
+          if (currentExtension !== previousExtension) {
+            fs.unlinkSync(`uploads/${field}${previousExtension}`);
+          }
+        }
+      }
+
       if (Array.isArray(value)) {
         value = requestData[field][0]?.originalname;
       }
@@ -297,10 +320,8 @@ exports.download = async (req, res) => {
       return res.status(404).json(FILE_NOT_FOUND_RESPONSE);
     }
 
-    const fileExtension = file.value.substring(
-      file.value.lastIndexOf('.') + 1,
-    );
-    const filePath = `uploads/${fileId}.${fileExtension}`;
+    const fileExtension = path.extname(file.value);
+    const filePath = `uploads/${fileId}${fileExtension}`;
     if (!fs.existsSync(filePath)) {
       return res.status(404).json(FILE_NOT_FOUND_RESPONSE);
     }
