@@ -24,7 +24,7 @@
     color: dimgray;
 }
 
-.file-container {
+.file {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;

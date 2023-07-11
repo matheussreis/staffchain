@@ -1,24 +1,43 @@
+import Anchor from '../Anchor/Anchor';
 import FIELD_TYPES from '../../../enums/field-types';
 
 import classes from './FieldView.module.css';
 
-const getFormattedContent = (content, type) => {
+const formatDateContent = (content) => {
+  const date = new Date(content);
+  return date.toLocaleDateString();
+};
+
+const formatFileContent = (content) => {
+  if (typeof content === 'object') {
+    return content.name;
+  }
+
+  const fileName = content.substring(
+    content.lastIndexOf('/') + 1,
+    content.length
+  );
+
+  return fileName;
+};
+
+const Field = ({ type, content, downloadUrl }) => {
   switch (type) {
     case FIELD_TYPES.DATE:
-      const date = new Date(content);
-      return date.toLocaleDateString();
+      return <p>{formatDateContent(content)}</p>;
     case FIELD_TYPES.FILE:
-      if (typeof content === 'object') {
-        return content.name;
-      }
-
-      const fileName = content.substring(
-        content.lastIndexOf('/') + 1,
-        content.length
+      return (
+        <Anchor
+          to={downloadUrl}
+          className={classes.file}
+          download={formatFileContent(content)}
+          target="_blank"
+        >
+          {formatFileContent(content)}
+        </Anchor>
       );
-      return fileName;
     default:
-      return content;
+      return <p>{content}</p>;
   }
 };
 
@@ -27,6 +46,7 @@ export default function FieldView({
   content,
   className,
   type = FIELD_TYPES.TEXT,
+  downloadUrl = undefined,
 }) {
   const getCssClasses = (initialClass = '') => {
     let cssClasses = classes[initialClass];
@@ -41,9 +61,7 @@ export default function FieldView({
   return (
     <div className={getCssClasses('container')}>
       {label && <label>{label}</label>}
-      <p className={type === FIELD_TYPES.FILE ? classes['file-container'] : ''}>
-        {getFormattedContent(content, type)}
-      </p>
+      <Field type={type} content={content} downloadUrl={downloadUrl} />
     </div>
   );
 }

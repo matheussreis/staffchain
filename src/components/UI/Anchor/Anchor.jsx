@@ -3,9 +3,22 @@ import { Link } from 'react-router-dom';
 
 import classes from './Anchor.module.css';
 
-export default React.memo(function Anchor({ to, className, state, children }) {
+export default React.memo(function Anchor({
+  to,
+  className,
+  state,
+  download = false,
+  target,
+  children,
+}) {
   return (
-    <Link className={`${classes.anchor} ${className}`} to={to} state={state}>
+    <Link
+      className={`${classes.anchor} ${className}`}
+      to={to}
+      state={state}
+      download={download}
+      target={target}
+    >
       {children}
     </Link>
   );

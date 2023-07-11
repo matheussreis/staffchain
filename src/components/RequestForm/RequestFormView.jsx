@@ -74,6 +74,11 @@ const items = [
   },
 ];
 
+const getFilePath = (fileId, fileName) => {
+  const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
+  return `${API_URL}/file/${fileId}/${fileName}`;
+};
+
 function RequestFormHeader() {
   const navigate = useNavigate();
   const { request } = useContext(RequestFormContext);
@@ -163,6 +168,11 @@ export default function RequestFormView() {
             label={`${field.name}:`}
             content={field.value}
             type={field.type}
+            downloadUrl={
+              field.type === 'file'
+                ? getFilePath(field.id, field.value)
+                : undefined
+            }
           />
         ))}
       </Card>
