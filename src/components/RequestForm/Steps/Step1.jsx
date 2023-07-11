@@ -19,8 +19,8 @@ export default function Step1() {
   });
 
   const validateField = (field, value) => {
-    const validator = getValidatorByInputType(field.type.value);
-    validator.validate(value, field.name, field.isRequired);
+    const validator = getValidatorByInputType(field.type);
+    validator.validate(value, field.name, field.required);
 
     setFormValues((current) => {
       const newFormFields = {
@@ -74,7 +74,7 @@ export default function Step1() {
   return (
     <Container className={classes['input-container']}>
       {request.fields.map((field, index) => {
-        const type = field.type.value;
+        const type = field.type;
 
         if (type === FIELD_TYPES.FILE) {
           return (

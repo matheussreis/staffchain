@@ -43,7 +43,7 @@ export default function ProcessForm() {
           name: context.step1.fields.name.value,
           description: context.step1.fields.description.value,
           fieldSet: context.step2.processMetadata.fields.map((field) => ({
-            id: field.id,
+            _id: field.id,
             label: field.name,
             type: field.type.value,
             required: field.required.value === '1',
