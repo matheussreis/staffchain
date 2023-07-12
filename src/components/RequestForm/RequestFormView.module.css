@@ -12,7 +12,7 @@
 
 .header-row {
     justify-content: space-between;
-    margin: 0 0 0.5rem 0;
+    gap: 0.5rem;
 }
 
 .button-container {
@@ -31,20 +31,26 @@
     width: initial;
 }
 
-.request-starter {
+.request-people {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.request-person {
     display: flex;
     flex-direction: row;
     gap: 0.3rem;
 }
 
-.request-starter label {
+.request-person label {
     font-weight: 500;
     user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
 }
 
-.request-starter span {
+.request-person span {
     font-weight: 400;
     user-select: none;
     -webkit-user-select: none;
@@ -59,14 +65,37 @@
     -ms-user-select: none;
 }
 
+.line {
+    background-color: black;
+    width: 100%;
+}
+
 @media screen and (max-width: 768px) {
     .card {
         margin: 1rem;
+    }
+
+    .request-people {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .button-container {
+        margin-top: 0.5rem;
     }
 }
 
 @media screen and (max-width: 420px) {
     .button {
         width: 100% !important;
+    }
+
+    .request-people {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .button-container {
+        margin-top: 0.5rem;
     }
 }
