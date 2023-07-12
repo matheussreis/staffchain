@@ -329,6 +329,7 @@ exports.approve = async (req, res) => {
 
 exports.moreInfo = async (req, res) => {
   try {
+    const currentUserId = req.userData.userId;
     const requestId = new mongoose.Types.ObjectId(req.params.id);
     const requestData = req.body;
     const askStarter = requestData?.askStarter || false;
@@ -352,7 +353,7 @@ exports.moreInfo = async (req, res) => {
 
     if (reason) {
       requestModel.comments.push({
-        authorId: `${reviewerNode.userId}`,
+        authorId: `${currentUserId}`,
         comment: reason,
       });
     }
@@ -378,6 +379,7 @@ exports.moreInfo = async (req, res) => {
 
 exports.close = async (req, res) => {
   try {
+    const currentUserId = req.userData.userId;
     const requestId = new mongoose.Types.ObjectId(req.params.id);
     const reason = req.body?.reason || undefined;
 
@@ -392,14 +394,9 @@ exports.close = async (req, res) => {
 
     const requestModel = new Request(request);
 
-    const reviewerNode = getPreviousReviewerNode(
-      request.reviewer,
-      request.process.requestTree,
-    );
-
     if (reason) {
       requestModel.comments.push({
-        authorId: `${reviewerNode.userId}`,
+        authorId: currentUserId,
         comment: reason,
       });
     }
