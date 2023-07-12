@@ -26,6 +26,10 @@ const Field = ({ type, content, downloadUrl }) => {
     case FIELD_TYPES.DATE:
       return <p>{formatDateContent(content)}</p>;
     case FIELD_TYPES.FILE:
+      if (content === '') {
+        return <p className={classes.file}>{content}</p>;
+      }
+
       return (
         <Anchor
           to={downloadUrl}
