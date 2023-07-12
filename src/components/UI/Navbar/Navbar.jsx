@@ -33,7 +33,9 @@ export default function Navbar() {
           {token && (
             <>
               <li>
-                <NavLink to="/me">Profile</NavLink>
+                <NavLink to="/me" className={classes.profile}>
+                  {`${user.firstName} ${user.lastName}`}
+                </NavLink>
               </li>
               <li>
                 <NavLink to="/" onClick={() => logoutAction()}>
