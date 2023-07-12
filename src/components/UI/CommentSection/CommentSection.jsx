@@ -42,6 +42,7 @@ export default function CommentSection({
   comments,
   updateComments,
   onAddComment,
+  showCommentControls = true,
 }) {
   const {
     value: commentValue,
@@ -82,20 +83,22 @@ export default function CommentSection({
 
   return (
     <Card className={classes.card}>
-      <div>
-        <h2 className={classes.title}>Comments</h2>
-        <Input
-          placeholder="Add a comment..."
-          type={FIELD_TYPES.TEXTAREA}
-          useLabel={false}
-          value={commentValue}
-          onChange={commentChangeHandler}
-          onBlur={commentBlurHandler}
-        />
-        <Button disabled={!commentIsValid} onClick={addCommentHandler}>
-          Add Comment
-        </Button>
-      </div>
+      {showCommentControls && (
+        <div>
+          <h2 className={classes.title}>Comments</h2>
+          <Input
+            placeholder="Add a comment..."
+            type={FIELD_TYPES.TEXTAREA}
+            useLabel={false}
+            value={commentValue}
+            onChange={commentChangeHandler}
+            onBlur={commentBlurHandler}
+          />
+          <Button disabled={!commentIsValid} onClick={addCommentHandler}>
+            Add Comment
+          </Button>
+        </div>
+      )}
       <CommentList comments={comments} />
     </Card>
   );
