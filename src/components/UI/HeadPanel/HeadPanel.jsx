@@ -8,6 +8,7 @@ export default function HeadPanel({
   recordCount = 0,
   onClick,
   buttonText = 'New',
+  showButton = true,
 }) {
   return (
     <div className={classes.container}>
@@ -15,14 +16,16 @@ export default function HeadPanel({
         <h2>
           {moduleName} ({recordCount})
         </h2>
-        <Button
-          className={classes.button}
-          size={BUTTON_SIZES.MEDIUM}
-          onClick={onClick}
-          isAlt={true}
-        >
-          {buttonText}
-        </Button>
+        {showButton && (
+          <Button
+            className={classes.button}
+            size={BUTTON_SIZES.MEDIUM}
+            onClick={onClick}
+            isAlt={true}
+          >
+            {buttonText}
+          </Button>
+        )}
       </div>
     </div>
   );
