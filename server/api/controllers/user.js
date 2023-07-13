@@ -2,6 +2,33 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/user');
+const Process = require('../models/process');
+const Request = require('../models/request');
+
+const REQUEST_POPULATE_OPTIONS = [
+  {
+    path: 'starter',
+    select: {
+      firstName: 1,
+      lastName: 1,
+    },
+  },
+  {
+    path: 'reviewer',
+    select: {
+      firstName: 1,
+      lastName: 1,
+    },
+  },
+  {
+    path: 'process',
+    select: {
+      name: 1,
+      description: 1,
+      fieldSet: 1,
+    },
+  },
+];
 
 const findUserByEmail = async (email) => {
   return User.find({ email: email }).exec();
@@ -63,6 +90,39 @@ const getSignedToken = (userId, userEmail) => {
   );
 
   return token;
+};
+
+const findUserProcesses = async (id) => {
+  return Process.find({
+    requestTree: {
+      $elemMatch: {
+        userId: id,
+      },
+    },
+  })
+    .select('id name description')
+    .sort({ dateModified: -1 })
+    .exec();
+};
+
+const findUserStartedRequests = async (userId) => {
+  return Request.find({
+    starter: userId,
+  })
+    .populate(REQUEST_POPULATE_OPTIONS)
+    .select('starter reviewer process')
+    .sort({ dateModified: -1 })
+    .exec();
+};
+
+const findUserRequestsToReview = async (userId) => {
+  return Request.find({
+    reviewer: userId,
+  })
+    .populate(REQUEST_POPULATE_OPTIONS)
+    .select('starter reviewer process')
+    .sort({ dateModified: -1 })
+    .exec();
 };
 
 exports.signup = async (req, res) => {
@@ -262,4 +322,80 @@ exports.delete = async (req, res) => {
 exports.userExists = async (userId) => {
   const user = await findUserById(userId);
   return !!user;
+};
+
+exports.availableProcesses = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.userData.userId);
+    const processes = await findUserProcesses(userId);
+
+    res.status(200).json({
+      count: processes.length,
+      processes: processes.map((process) => ({
+        id: process.id,
+        name: process.name,
+        description: process.description,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.startedRequests = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.userData.userId);
+    const requests = await findUserStartedRequests(userId);
+
+    res.status(200).json({
+      count: requests.length,
+      requests: requests.map((request) => ({
+        id: request.id,
+        name: request.process.name,
+        description: request.process.description,
+        starter: {
+          id: request.starter.id,
+          name: `${request.starter.firstName} ${request.starter.lastName}`,
+        },
+        reviewer: {
+          id: request.reviewer.id,
+          name: `${request.reviewer.firstName} ${request.reviewer.lastName}`,
+        },
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+exports.requestsToReview = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.userData.userId);
+    const requests = await findUserRequestsToReview(userId);
+
+    res.status(200).json({
+      count: requests.length,
+      requests: requests.map((request) => ({
+        id: request.id,
+        name: request.process.name,
+        description: request.process.description,
+        starter: {
+          id: request.starter.id,
+          name: `${request.starter.firstName} ${request.starter.lastName}`,
+        },
+        reviewer: {
+          id: request.reviewer.id,
+          name: `${request.reviewer.firstName} ${request.reviewer.lastName}`,
+        },
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
 };

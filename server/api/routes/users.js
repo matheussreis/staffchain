@@ -7,6 +7,20 @@ router.get('/', checkAuth, controller.getAll);
 
 router.get('/me', checkAuth, controller.get);
 
+router.get('/processes', checkAuth, controller.availableProcesses);
+
+router.get(
+  '/started-requests',
+  checkAuth,
+  controller.startedRequests,
+);
+
+router.get(
+  '/requests-to-review',
+  checkAuth,
+  controller.requestsToReview,
+);
+
 router.get('/:id', checkAuth, controller.get);
 
 router.put('/:id', checkAuth, controller.update);
