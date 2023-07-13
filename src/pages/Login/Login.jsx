@@ -1,7 +1,7 @@
-import useInput from '../hooks/use-input';
-import FIELD_TYPES from '../enums/field-types';
-import { LoginFormContext } from '../store/login-form-context';
-import LoginForm from '../components/LoginForm/LoginForm';
+import useInput from '../../hooks/use-input';
+import FIELD_TYPES from '../../enums/field-types';
+import { LoginFormContext } from '../../store/login-form-context';
+import LoginForm from '../../components/LoginForm/LoginForm';
 
 export default function Login() {
   const {

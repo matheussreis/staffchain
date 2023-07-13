@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Root from './pages/Root';
 import { useState } from 'react';
-import Login from './pages/Login';
+import Login from './pages/Login/Login';
 import NotFound from './pages/NotFound';
 import EditUser from './pages/User/EditUser';
 import Process, { loader as processLoader } from './pages/Process/Process';
