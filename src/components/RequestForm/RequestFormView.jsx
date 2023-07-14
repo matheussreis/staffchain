@@ -24,8 +24,8 @@ import classes from './RequestFormView.module.css';
 
 const { REACT_APP_SERVER_API_URL: API_URL } = process.env;
 
-const getFilePath = (fileId, fileName) => {
-  return `${API_URL}/file/${fileId}/${fileName}`;
+const getFilePath = (requestId, fileId, fileName) => {
+  return `${API_URL}/file/${requestId}/${fileId}/${fileName}`;
 };
 
 function ReasonModal({ visible, setVisible, isMoreInfo, onConfirm }) {
@@ -331,7 +331,7 @@ export default function RequestFormView() {
             type={field.type}
             downloadUrl={
               field.type === 'file'
-                ? getFilePath(field.id, field.value)
+                ? getFilePath(request.id, field.id, field.value)
                 : undefined
             }
           />
