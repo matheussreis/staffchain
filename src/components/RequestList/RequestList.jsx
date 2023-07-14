@@ -5,15 +5,16 @@ import HeadPanel from '../UI/HeadPanel/HeadPanel';
 
 import classes from './RequestList.module.css';
 
-export default function RequestList({ requests = [] }) {
+export default function RequestList({ title = 'Requests', requests = [] }) {
   const navigate = useNavigate();
 
   return (
     <main>
       <HeadPanel
-        moduleName="Requests"
+        moduleName={title}
         recordCount={requests.length}
         onClick={() => navigate('create')}
+        showButton={false}
       />
       <List className={classes.list}>
         {requests.map((request) => (

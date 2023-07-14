@@ -27,14 +27,11 @@ export default function RequestListItem({ request }) {
         <div>
           <ListItemHeader
             title={request.name}
-            sendTo={request.id}
-            data={request}
+            sendTo={`/request/${request.id}`}
           />
           <ListItemContent request={request} />
         </div>
-        <ListItemControls
-          onClick={() => navigate(request.id, { state: { ...request } })}
-        />
+        <ListItemControls onClick={() => navigate(`/request/${request.id}`)} />
       </Card>
     </li>
   );

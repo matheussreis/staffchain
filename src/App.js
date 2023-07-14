@@ -96,6 +96,16 @@ const router = createBrowserRouter([
           { index: true, element: <ListRequest />, loader: listRequestLoader },
           { path: 'create', element: <EditRequest /> },
           {
+            path: 'started',
+            element: <ListRequest />,
+            loader: listRequestLoader,
+          },
+          {
+            path: 'to-review',
+            element: <ListRequest />,
+            loader: listRequestLoader,
+          },
+          {
             path: ':id',
             children: [
               { index: true, element: <Request />, loader: requestLoader },
