@@ -1,8 +1,11 @@
 import Card from '../UI/Card/Card';
+import { Tag } from 'primereact/tag';
 import { useNavigate } from 'react-router-dom';
 import FieldView from '../UI/FieldView/FieldView';
-import ListItemControls from '../UI/ListItem/ListItemControls';
+import { translateEnum } from '../../enums/request-status';
 import ListItemHeader from '../UI/ListItem/ListItemHeader';
+import ListItemControls from '../UI/ListItem/ListItemControls';
+import { getTagSeverityByRequestStatus } from '../../utils/enum-utils';
 
 import classes from './RequestListItem.module.css';
 
@@ -25,6 +28,11 @@ export default function RequestListItem({ request }) {
     <li className={classes.item}>
       <Card className={classes.container}>
         <div>
+          <Tag
+            value={translateEnum(request.status)}
+            severity={getTagSeverityByRequestStatus(request.status)}
+            className={classes.tag}
+          />
           <ListItemHeader
             title={request.name}
             sendTo={`/request/${request.id}`}
