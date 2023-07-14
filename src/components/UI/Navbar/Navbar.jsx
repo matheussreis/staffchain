@@ -17,7 +17,7 @@ export default function Navbar() {
           {process.env.REACT_APP_NAME}
         </Link>
         <ul className={classes.list}>
-          {user.isAdmin && (
+          {user.isAdmin && token && (
             <>
               <li>
                 <NavLink to="/user">Users</NavLink>
@@ -32,6 +32,15 @@ export default function Navbar() {
           )}
           {token && (
             <>
+              <li>
+                <NavLink to="/process/available">Available Processes</NavLink>
+              </li>
+              <li>
+                <NavLink to="/request/to-review">Requests to Review</NavLink>
+              </li>
+              <li>
+                <NavLink to="/request/started">Started Requests</NavLink>
+              </li>
               <li>
                 <NavLink to="/me" className={classes.profile}>
                   {`${user.firstName} ${user.lastName}`}
