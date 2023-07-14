@@ -132,6 +132,7 @@ const findRequestById = async (id) => {
 const getRequestResponse = (request) => {
   return {
     id: request.id,
+    processId: request.process.id,
     name: request.process.name,
     description: request.process.description,
     status: request.status,

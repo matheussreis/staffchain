@@ -4,6 +4,7 @@ export const RequestFormContext = React.createContext({
   request: {
     id: '',
     name: '',
+    processId: '',
     description: '',
     fields: [],
     status: '',

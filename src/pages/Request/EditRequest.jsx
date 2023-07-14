@@ -12,6 +12,8 @@ export default function EditRequest() {
     id: request.id || '',
     name: request.name || '',
     fields: request.fields || [],
+    description: request.description || '',
+    processId: request.processId || '',
     status: request.status || '',
     starter: request.starter || { id: '', name: '' },
     reviewer: request.reviewer || { id: '', name: '' },

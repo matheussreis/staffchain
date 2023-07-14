@@ -16,6 +16,8 @@ export default function Request() {
   const [metadata, setMetadata] = useState({
     id: '',
     name: '',
+    description: '',
+    processId: '',
     fields: [],
     status: '',
     starter: { id: '', name: '' },
@@ -30,6 +32,7 @@ export default function Request() {
         id: location.state.id,
         name: location.state.name,
         description: location.state.description,
+        processId: location.state.processId,
         fields: location.state.fields,
         status: location.state.status,
         starter: location.state.starter,
@@ -41,6 +44,7 @@ export default function Request() {
         id: requestData.id,
         name: requestData.name,
         description: requestData.description,
+        processId: requestData.processId,
         fields: requestData.fields,
         status: requestData.status,
         starter: requestData.starter,
@@ -93,6 +97,7 @@ export async function loader({ params }) {
       id: request.id,
       name: request.name,
       description: request.description,
+      processId: request.processId,
       fields: request.fields.map((field) => ({
         id: field.id,
         name: field.label,

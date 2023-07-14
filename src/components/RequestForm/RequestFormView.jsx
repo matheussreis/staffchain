@@ -189,6 +189,7 @@ function RequestFormHeader({ setShowReasonModal, setIsMoreInfo, onApprove }) {
                     id: request.id,
                     name: request.name,
                     description: request.description,
+                    processId: request.processId,
                     fields: request.fields,
                     status: request.status,
                     comments: request.comments,
