@@ -1,14 +1,18 @@
 const fs = require('fs');
 const multer = require('multer');
 const { getfieldsByRequestId } = require('../controllers/request');
+const { getfieldsByProcessId } = require('../controllers/process');
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    const folder = `uploads/${file.fieldname}/`;
+    const mainFolder = req.params.id ?? req.requestId;
+    const folder = `uploads/${mainFolder}/${file.fieldname}/`;
 
-    const fileExists = fs.existsSync(folder);
-    if (!fileExists) {
-      return fs.mkdir(folder, (error) => callback(error, folder));
+    const folderExists = fs.existsSync(folder);
+    if (!folderExists) {
+      return fs.mkdir(folder, { recursive: true }, (error) =>
+        callback(error, folder),
+      );
     }
 
     callback(null, folder);
@@ -44,11 +48,22 @@ const upload = multer({
   },
 });
 
+const getFieldsHandler = async (params) => {
+  if (params.id) {
+    return getfieldsByRequestId(params.id);
+  }
+
+  if (params.processId) {
+    return getfieldsByProcessId(params.processId);
+  }
+
+  throw new Error('Invalid Id field.');
+};
+
 module.exports = async (req, res, next) => {
   try {
-    const requestId = req.params.id;
-    const requestFields = await getfieldsByRequestId(requestId);
-    const fields = requestFields.map((field) => ({
+    const fieldsData = await getFieldsHandler(req.params);
+    const fields = fieldsData.map((field) => ({
       name: field.id,
       maxCount: field.type === 'file' ? 1 : 0,
     }));

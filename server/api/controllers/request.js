@@ -1,7 +1,10 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const Request = require('../models/request');
-const { getRequestTreeByProcessId } = require('./process');
+const {
+  getRequestTreeByProcessId,
+  getfieldsByProcessId,
+} = require('./process');
 const { userExists } = require('./user');
 const path = require('path');
 
@@ -58,39 +61,58 @@ const INVALID_COMMENT_FIELDS_REPONSE = {
   message: 'Invalid comment field provided.',
 };
 
-const FILE_NOT_FOUND_RESPONSE = {
-  title: 'File not Found',
-  message: 'The file you are looking for does not exist.',
-};
-
 const INVALID_FIELD_RESPONSE = {
   title: 'Invalid Field',
   message: "The field you are trying to update doesn't exist.",
 };
 
 const createRequest = async (requestData) => {
-  const { processId, starterId, fieldSet } = requestData;
+  const { processId, fields, currentUserId, requestId } = requestData;
+  const processFields = await getfieldsByProcessId(processId);
 
-  if (!Array.isArray(fieldSet)) {
-    throw new Error('Field set must be an array.');
+  const fieldsToCreate = [];
+  for (const field of processFields) {
+    let newFieldValue = fields[field.id];
+    if (!newFieldValue && field.required) {
+      throw new Error('Required Field Missing.');
+    }
+
+    if (field.type === 'file') {
+      newFieldValue = newFieldValue[0]?.filename ?? '';
+    }
+
+    fieldsToCreate.push({
+      fieldSetId: field.id,
+      value: newFieldValue,
+    });
   }
 
   const requestTree = await getRequestTreeByProcessId(processId);
-  const starterNode = requestTree.find(
-    (requestLeaf) => requestLeaf.userId === starterId,
+  const starterNode = requestTree.find((requestNode) =>
+    requestNode.userId.equals(currentUserId),
   );
 
-  const userHasNoBoss = starterNode.reportsTo === '';
-  const reviewer = userHasNoBoss ? starterId : starterNode.reportsTo;
-  const status = userHasNoBoss ? 'approved' : 'in-progress';
+  if (!starterNode) {
+    throw new Error(
+      'User cannot create an instance of this process.',
+    );
+  }
+
+  const isStarterUserRoot = starterNode.reportsTo.equals(
+    starterNode.userId,
+  );
+
+  const reviewer = isStarterUserRoot
+    ? currentUserId
+    : starterNode.reportsTo;
 
   const request = new Request({
-    _id: new mongoose.Types.ObjectId(),
+    _id: requestId,
     process: new mongoose.Types.ObjectId(processId),
-    starter: new mongoose.Types.ObjectId(starterId),
+    starter: new mongoose.Types.ObjectId(currentUserId),
     reviewer: new mongoose.Types.ObjectId(reviewer),
-    fieldSet: fieldSet,
-    status: status,
+    fields: fieldsToCreate,
+    status: isStarterUserRoot ? 'done' : 'in-progress',
   });
 
   await request.save();
@@ -164,14 +186,35 @@ const getPreviousReviewerNode = (reviewer, requestTree) => {
   );
 };
 
+const removeUploadedFiles = (requestId) => {
+  const folderPath = `uploads/${requestId}`;
+
+  if (fs.existsSync(folderPath)) {
+    fs.rmSync(folderPath, { recursive: true });
+  }
+};
+
 exports.add = async (req, res) => {
   try {
-    await createRequest(req.body);
+    const processId = req.params.processId;
+    const fields = { ...req.body, ...req.files };
+    const currentUserId = new mongoose.Types.ObjectId(
+      req.userData.userId,
+    );
+
+    await createRequest({
+      processId,
+      fields,
+      currentUserId,
+      requestId: req.requestId,
+    });
 
     res.status(200).json({
       message: 'Request created successfully!',
     });
   } catch (error) {
+    removeUploadedFiles(req.requestId);
+
     res.status(500).json({
       error: error.message,
     });

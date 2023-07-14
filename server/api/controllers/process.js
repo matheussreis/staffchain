@@ -159,6 +159,10 @@ exports.getRequestTreeByProcessId = async (processId) => {
     .select('requestTree')
     .exec();
 
+  if (!process) {
+    throw new Error("Process doesn't exist");
+  }
+
   if (!process.requestTree) {
     throw new Error('No request tree for the given process.');
   }
@@ -385,4 +389,18 @@ exports.delete = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+exports.getfieldsByProcessId = async (id) => {
+  const process = await Process.findById(id, 'fieldSet');
+
+  if (!process) {
+    throw new Error('Process not found.');
+  }
+
+  return process.fieldSet.map((field) => ({
+    id: field.id,
+    type: field.type,
+    required: field.required,
+  }));
 };

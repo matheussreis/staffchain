@@ -3,10 +3,17 @@ const router = express.Router();
 const controller = require('../controllers/request');
 const checkAuth = require('../middlewares/check-auth');
 const fileUpload = require('../middlewares/file-upload');
+const prepareRequest = require('../middlewares/prepare-request');
 
 router.get('/', checkAuth, controller.getAll);
 
-router.post('/', checkAuth, controller.add);
+router.post(
+  '/:processId',
+  checkAuth,
+  prepareRequest,
+  fileUpload,
+  controller.add,
+);
 
 router.get('/:id', checkAuth, controller.get);
 
