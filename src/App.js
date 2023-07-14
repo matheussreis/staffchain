@@ -22,6 +22,9 @@ import { CurrentUserContext } from './store/current-user-context';
 import { checkAuthLoader, getAuthToken } from './utils/auth-utils';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import ListUser, { loader as listUserLoader } from './pages/User/ListUser';
+import ListAvailableProcess, {
+  loader as listAvailableProcessLoader,
+} from './pages/AvailableProcess/ListAvailableProcess';
 
 import 'primereact/resources/primereact.min.css';
 import './theme.css';
@@ -71,6 +74,11 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <ListProcess />, loader: listProcessLoader },
           { path: 'create', element: <EditProcess /> },
+          {
+            path: 'available',
+            element: <ListAvailableProcess />,
+            loader: listAvailableProcessLoader,
+          },
           {
             path: ':id',
             children: [
