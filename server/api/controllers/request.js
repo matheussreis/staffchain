@@ -228,9 +228,17 @@ exports.getAll = async (req, res) => {
 
     res.status(200).json({
       count: requests.length,
-      requests: requests.map((request) =>
-        getRequestResponse(request),
-      ),
+      requests: requests
+        .map((request) => getRequestResponse(request))
+        .sort((a, b) => {
+          const statusOrder = {
+            'in-progress': 0,
+            'waiting-for-review': 1,
+            closed: 2,
+            done: 3,
+          };
+          return statusOrder[a.status] - statusOrder[b.status];
+        }),
     });
   } catch (error) {
     res.status(500).json({
