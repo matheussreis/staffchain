@@ -110,7 +110,7 @@ const findUserStartedRequests = async (userId) => {
     starter: userId,
   })
     .populate(REQUEST_POPULATE_OPTIONS)
-    .select('starter reviewer process')
+    .select('status starter reviewer process')
     .sort({ dateModified: -1 })
     .exec();
 };
@@ -118,9 +118,10 @@ const findUserStartedRequests = async (userId) => {
 const findUserRequestsToReview = async (userId) => {
   return Request.find({
     reviewer: userId,
+    status: { $in: ['in-progress', 'waiting-for-info'] },
   })
     .populate(REQUEST_POPULATE_OPTIONS)
-    .select('starter reviewer process')
+    .select('status starter reviewer process')
     .sort({ dateModified: -1 })
     .exec();
 };
@@ -363,6 +364,7 @@ exports.startedRequests = async (req, res) => {
         id: request.id,
         name: request.process.name,
         description: request.process.description,
+        status: request.status,
         starter: {
           id: request.starter.id,
           name: `${request.starter.firstName} ${request.starter.lastName}`,
@@ -390,6 +392,7 @@ exports.requestsToReview = async (req, res) => {
       requests: requests.map((request) => ({
         id: request.id,
         name: request.process.name,
+        status: request.status,
         description: request.process.description,
         starter: {
           id: request.starter.id,
