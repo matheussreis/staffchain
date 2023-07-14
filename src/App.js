@@ -109,7 +109,7 @@ const router = createBrowserRouter([
             path: ':id',
             children: [
               { index: true, element: <Request />, loader: requestLoader },
-              { path: 'edit', element: <Request /> },
+              { path: 'edit', element: <Request />, loader: requestLoader },
             ],
           },
         ],

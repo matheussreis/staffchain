@@ -100,7 +100,7 @@ const findUserProcesses = async (id) => {
       },
     },
   })
-    .select('id name description')
+    .select('id name description fieldSet')
     .sort({ dateModified: -1 })
     .exec();
 };
@@ -335,6 +335,14 @@ exports.availableProcesses = async (req, res) => {
         id: process.id,
         name: process.name,
         description: process.description,
+        fields: process.fieldSet
+          ? process.fieldSet.map((field) => ({
+              id: field._id,
+              label: field.label,
+              required: field.required,
+              type: field.type,
+            }))
+          : [],
       })),
     });
   } catch (error) {
