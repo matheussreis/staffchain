@@ -153,7 +153,8 @@ function RequestFormHeader({ setShowReasonModal, setIsMoreInfo, onApprove }) {
     },
   ];
 
-  const isRequestNotClosed = request.status !== 'closed';
+  const isRequestStatusValid =
+    request.status !== 'closed' && request.status !== 'done';
   const isCurrentUserReviewer = user.id === request.reviewer.id;
   const isCurrentUserAdmin = user.isAdmin;
 
@@ -173,7 +174,7 @@ function RequestFormHeader({ setShowReasonModal, setIsMoreInfo, onApprove }) {
       </div>
 
       <div className={classes['button-container']}>
-        {isCurrentUserReviewer && isRequestNotClosed && (
+        {isCurrentUserReviewer && isRequestStatusValid && (
           <ActionButton
             className={classes.button}
             label="Options"
@@ -181,7 +182,7 @@ function RequestFormHeader({ setShowReasonModal, setIsMoreInfo, onApprove }) {
           />
         )}
         {(isCurrentUserReviewer || isCurrentUserAdmin) &&
-          isRequestNotClosed && (
+          isRequestStatusValid && (
             <Button
               onClick={() =>
                 navigate('edit', {
