@@ -10,12 +10,11 @@ import classes from './Step1.module.css';
 
 export default function Step1() {
   const { request } = useContext(RequestFormContext);
-
   const [originalFieldValues, setOriginalFieldValues] = useState();
 
   const [formValues, setFormValues] = useState({
     fields: {},
-    overallValidity: true,
+    overallValidity: false,
   });
 
   const validateField = (field, value) => {
@@ -27,6 +26,7 @@ export default function Step1() {
         ...current.fields,
         [field.id]: {
           isValid: validator.isValid,
+          isTouched: true,
           errorMessage: validator.errorMessage,
         },
       };
@@ -62,6 +62,31 @@ export default function Step1() {
   };
 
   useEffect(() => {
+    if (
+      request.fields.length > 0 &&
+      Object.keys(formValues.fields).length === 0
+    ) {
+      const formValues = { fields: {} };
+      request.fields.forEach((field) => {
+        formValues.fields[field.id] = {
+          isValid: !!field.value || !field.required,
+          isTouched: !!field.value,
+          errorMessage: '',
+        };
+      });
+
+      const fieldsValidity = Object.values(formValues.fields).every(
+        (value) => typeof value === 'object' && value.isValid
+      );
+
+      formValues.overallValidity = fieldsValidity;
+      setFormValues(formValues);
+    }
+  }, [formValues.fields, request.fields]);
+
+  console.log(formValues);
+
+  useEffect(() => {
     request.setIsValid(formValues.overallValidity);
   }, [formValues.overallValidity, request]);
 
@@ -83,7 +108,10 @@ export default function Step1() {
               className={classes.file}
               placeholder={field.name}
               onChange={handleChange(field, index)}
-              hasError={formValues.fields[field.id]?.isValid === false || false}
+              hasError={
+                formValues.fields[field.id]?.isValid === false &&
+                formValues.fields[field.id]?.isTouched === true
+              }
               errorMessage={formValues.fields[field.id]?.errorMessage || ''}
               defaultValue={field?.value}
               isSingleLine
@@ -94,11 +122,15 @@ export default function Step1() {
         return (
           <Input
             onChange={handleChange(field, index)}
+            onBlur={handleChange(field, index)}
             placeholder={field.name}
             type={type}
             key={field.id}
             value={field.value}
-            hasError={formValues.fields[field.id]?.isValid === false || false}
+            hasError={
+              formValues.fields[field.id]?.isValid === false &&
+              formValues.fields[field.id]?.isTouched === true
+            }
             errorMessage={formValues.fields[field.id]?.errorMessage || ''}
             isSingleLine
           />
