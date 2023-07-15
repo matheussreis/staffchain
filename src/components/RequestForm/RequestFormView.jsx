@@ -136,6 +136,7 @@ function RequestFormHeader({ setShowReasonModal, setIsMoreInfo, onApprove }) {
       },
     },
     {
+      disabled: request.starter.id === (user.id || false),
       label: 'More Info',
       command: () => {
         const onMoreInfo = () => {
