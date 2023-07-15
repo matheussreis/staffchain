@@ -342,7 +342,7 @@ export default function RequestFormView() {
         comments={request.comments}
         updateComments={request.updateComments}
         onAddComment={addComment}
-        showCommentControls={request.status !== 'closed'}
+        showCommentControls={['closed', 'done'].includes(request.status)}
       />
     </>
   );

@@ -82,24 +82,28 @@ export default function CommentSection({
   };
 
   return (
-    <Card className={classes.card}>
-      {showCommentControls && (
-        <div>
-          <h2 className={classes.title}>Comments</h2>
-          <Input
-            placeholder="Add a comment..."
-            type={FIELD_TYPES.TEXTAREA}
-            useLabel={false}
-            value={commentValue}
-            onChange={commentChangeHandler}
-            onBlur={commentBlurHandler}
-          />
-          <Button disabled={!commentIsValid} onClick={addCommentHandler}>
-            Add Comment
-          </Button>
-        </div>
+    <>
+      {(comments.length > 0 || showCommentControls) && (
+        <Card className={classes.card}>
+          {showCommentControls && (
+            <div>
+              <h2 className={classes.title}>Comments</h2>
+              <Input
+                placeholder="Add a comment..."
+                type={FIELD_TYPES.TEXTAREA}
+                useLabel={false}
+                value={commentValue}
+                onChange={commentChangeHandler}
+                onBlur={commentBlurHandler}
+              />
+              <Button disabled={!commentIsValid} onClick={addCommentHandler}>
+                Add Comment
+              </Button>
+            </div>
+          )}
+          <CommentList comments={comments} />
+        </Card>
       )}
-      <CommentList comments={comments} />
-    </Card>
+    </>
   );
 }
