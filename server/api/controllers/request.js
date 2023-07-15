@@ -44,7 +44,25 @@ const POPULATE_OPTIONS = [
       role: 1,
     },
   },
+  {
+    path: 'timeline.author',
+    select: {
+      firstName: 1,
+      lastName: 1,
+    },
+  },
 ];
+
+const ACTION_TEXT = {
+  CREATE: 'created the request',
+  UPDATE: 'updated the form',
+  APPROVE: 'approved the request',
+  MOREINFO: 'asked for more information',
+  CLOSE: 'closed the request',
+  RESEND: 'resent the request for approval',
+  COMMENT: 'added a comment',
+  COMPLETE: 'completed the request',
+};
 
 const REQUEST_NOT_FOUND_RESPONSE = {
   title: 'Request Not Found',
@@ -116,6 +134,7 @@ const createRequest = async (requestData) => {
   });
 
   await request.save();
+  return request.id;
 };
 
 const findAllRequests = async () => {
@@ -151,6 +170,21 @@ const getRequestResponse = (request) => {
       .sort(
         (a, b) => new Date(b.publishDate) - new Date(a.publishDate),
       ),
+    timeline: request.timeline
+      ? request.timeline
+          .map((event) => ({
+            id: event.id,
+            author: {
+              id: event.author.id,
+              name: `${event.author.firstName || ''} ${
+                event.author.lastName || ''
+              }`,
+            },
+            date: event.date,
+            action: event.action,
+          }))
+          .sort((a, b) => a.order - b.order)
+      : [],
     fields: request.process.fieldSet.map((field) => ({
       id: field._id,
       label: field.label,
@@ -189,6 +223,47 @@ const removeUploadedFiles = (requestId) => {
   }
 };
 
+const addTimelineEvent = async (timelineData) => {
+  const { requestId, authorId, action } = timelineData;
+  const request = await findRequestById(requestId);
+
+  if (!request) {
+    throw new Error(REQUEST_NOT_FOUND_RESPONSE.title);
+  }
+
+  const timeline = request.timeline;
+  const eventOrder =
+    request.timeline.length === 0 ? 0 : request.timeline.length;
+
+  timeline.push({
+    author: authorId,
+    date: new Date(),
+    action: action,
+    order: eventOrder,
+  });
+
+  await Request.updateOne(
+    { _id: requestId },
+    { $set: { timeline: timeline } },
+  );
+};
+
+const addComment = async (requestModel, data) => {
+  requestModel.comments.push({
+    authorId: `${data.authorId}`,
+    comment: data.comment,
+    publishDate: data.publishDate || new Date(),
+  });
+
+  await requestModel.save();
+
+  await addTimelineEvent({
+    requestId: requestModel.id,
+    authorId: data.authorId,
+    action: ACTION_TEXT.COMMENT,
+  });
+};
+
 exports.add = async (req, res) => {
   try {
     const processId = req.params.processId;
@@ -197,11 +272,17 @@ exports.add = async (req, res) => {
       req.userData.userId,
     );
 
-    await createRequest({
+    const requestId = await createRequest({
       processId,
       fields,
       currentUserId,
       requestId: req.requestId,
+    });
+
+    await addTimelineEvent({
+      requestId: requestId,
+      authorId: currentUserId,
+      action: ACTION_TEXT.CREATE,
     });
 
     res.status(200).json({
@@ -272,6 +353,7 @@ exports.getfieldsByRequestId = async (id) => {
 
 exports.updateFields = async (req, res) => {
   try {
+    const currentUserId = req.userData.userId;
     const requestId = new mongoose.Types.ObjectId(req.params.id);
     const requestData = { ...req.body, ...req.files };
 
@@ -327,6 +409,12 @@ exports.updateFields = async (req, res) => {
     requestModel.dateModified = new Date();
     await requestModel.save();
 
+    await addTimelineEvent({
+      requestId: requestId,
+      authorId: currentUserId,
+      action: ACTION_TEXT.UPDATE,
+    });
+
     res.status(200).json({
       message: 'Request Updated Successfully!',
     });
@@ -339,6 +427,7 @@ exports.updateFields = async (req, res) => {
 
 exports.approve = async (req, res) => {
   try {
+    const currentUserId = req.userData.userId;
     const requestId = new mongoose.Types.ObjectId(req.params.id);
     const request = await Request.findById(requestId).populate({
       path: 'process',
@@ -353,6 +442,10 @@ exports.approve = async (req, res) => {
     const requestTree = request.process.requestTree;
     const reviewerNode = getReviewerNode(reviewer, requestTree);
 
+    const isStarterReSendingRequest = request.starter.equals(
+      request.reviewer,
+    );
+
     const requestModel = new Request(request);
     if (reviewerNode.reportsTo.equals(reviewer)) {
       requestModel.status = 'done';
@@ -363,6 +456,25 @@ exports.approve = async (req, res) => {
 
     requestModel.dateModified = new Date();
     await requestModel.save();
+
+    const action = isStarterReSendingRequest
+      ? ACTION_TEXT.RESEND
+      : ACTION_TEXT.APPROVE;
+
+    await addTimelineEvent({
+      requestId: requestId,
+      authorId: currentUserId,
+      action: action,
+    });
+
+    if (requestModel.status === 'done') {
+      await addTimelineEvent({
+        requestId: requestId,
+        authorId: currentUserId,
+        action: ACTION_TEXT.COMPLETE,
+      });
+    }
+
     res.status(200).json({
       message: 'Request Updated Successfully!',
     });
@@ -392,8 +504,8 @@ exports.moreInfo = async (req, res) => {
     const requestModel = new Request(request);
 
     if (reason) {
-      requestModel.comments.push({
-        authorId: `${currentUserId}`,
+      await addComment(requestModel, {
+        authorId: currentUserId,
         comment: reason,
       });
     }
@@ -402,6 +514,12 @@ exports.moreInfo = async (req, res) => {
     requestModel.status = 'waiting-for-info';
     requestModel.dateModified = new Date();
     await requestModel.save();
+
+    await addTimelineEvent({
+      requestId: requestId,
+      authorId: currentUserId,
+      action: ACTION_TEXT.MOREINFO,
+    });
 
     res.status(200).json({
       message: 'Request Updated Successfully!',
@@ -431,7 +549,7 @@ exports.close = async (req, res) => {
     const requestModel = new Request(request);
 
     if (reason) {
-      requestModel.comments.push({
+      await addComment(requestModel, {
         authorId: currentUserId,
         comment: reason,
       });
@@ -440,6 +558,13 @@ exports.close = async (req, res) => {
     requestModel.status = 'closed';
     requestModel.dateModified = new Date();
     await requestModel.save();
+
+    await addTimelineEvent({
+      requestId: requestId,
+      authorId: currentUserId,
+      action: ACTION_TEXT.CLOSE,
+    });
+
     res.status(200).json({
       message: 'Request Updated Successfully!',
     });
@@ -452,6 +577,7 @@ exports.close = async (req, res) => {
 
 exports.addComment = async (req, res) => {
   try {
+    const currentUserId = req.userData.userId;
     const requestId = new mongoose.Types.ObjectId(req.params.id);
 
     const request = await Request.findById(requestId);
@@ -471,13 +597,12 @@ exports.addComment = async (req, res) => {
     }
 
     const requestModel = new Request(request);
-    requestModel.comments.push({
-      authorId: authorId,
+    await addComment(requestModel, {
+      authorId: currentUserId,
       comment: comment,
       publishDate: publishDate,
     });
 
-    await requestModel.save();
     res.status(200).json({
       message: 'Comment Added Successfully!',
     });

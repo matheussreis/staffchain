@@ -22,6 +22,7 @@ export default function Request() {
     status: '',
     starter: { id: '', name: '' },
     reviewer: { id: '', name: '' },
+    timeline: [],
   });
 
   const [isValid, setIsValid] = useState(true);
@@ -37,6 +38,7 @@ export default function Request() {
         status: location.state.status,
         starter: location.state.starter,
         reviewer: location.state.reviewer,
+        timeline: location.state.timeline,
       });
       setComments(location.state.comments);
     } else {
@@ -49,6 +51,7 @@ export default function Request() {
         status: requestData.status,
         starter: requestData.starter,
         reviewer: requestData.reviewer,
+        timeline: requestData.timeline,
       });
 
       setComments(requestData.comments);
@@ -109,6 +112,7 @@ export async function loader({ params }) {
       starter: request.starter,
       reviewer: request.reviewer,
       comments: request.comments,
+      timeline: request.timeline,
     };
   } catch (error) {
     if (error.response.status === 404) {

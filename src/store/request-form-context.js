@@ -9,6 +9,7 @@ export const RequestFormContext = React.createContext({
     fields: [],
     status: '',
     comments: [],
+    timeline: [],
     updateComments: (comments) => {},
     starter: { id: '', name: '' },
     reviewer: { id: '', name: '' },

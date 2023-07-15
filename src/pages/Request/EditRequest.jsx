@@ -17,6 +17,7 @@ export default function EditRequest() {
     description: request.description || '',
     processId: request.processId || '',
     status: request.status || '',
+    timeline: request.timeline || [],
     starter: request.starter || { id: '', name: '' },
     reviewer: request.reviewer || { id: '', name: '' },
   });
@@ -43,6 +44,7 @@ export default function EditRequest() {
         status: location.state.status,
         starter: location.state.starter,
         reviewer: location.state.reviewer,
+        timeline: location.state.timeline,
       });
 
       setComments(location.state.comments || []);

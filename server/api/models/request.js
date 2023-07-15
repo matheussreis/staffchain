@@ -39,6 +39,18 @@ const requestSchema = mongoose.Schema({
       publishDate: { type: Date, default: Date.now },
     },
   ],
+  timeline: [
+    {
+      author: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      date: { type: Date, default: Date.now },
+      action: { type: String, required: true },
+      order: { type: Number, required: true },
+    },
+  ],
   dateCreated: { type: Date, default: Date.now },
   dateModified: { type: Date, default: Date.now },
 });
