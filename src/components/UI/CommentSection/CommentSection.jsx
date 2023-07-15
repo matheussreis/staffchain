@@ -1,5 +1,4 @@
 import List from '../List/List';
-import Card from '../Card/Card';
 import { v4 as uuid } from 'uuid';
 import { useContext } from 'react';
 import Input from '../Input/Input';
@@ -35,6 +34,30 @@ function CommentList({ comments }) {
         <CommentItem id={comment.id} key={comment.id} comment={comment} />
       ))}
     </List>
+  );
+}
+
+function CommentControls({
+  value,
+  onChange,
+  onBlur,
+  onAddComment,
+  buttonDisabled,
+}) {
+  return (
+    <div className={classes['comment-controls']}>
+      <Input
+        placeholder="Add a comment..."
+        type={FIELD_TYPES.TEXTAREA}
+        useLabel={false}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+      />
+      <Button disabled={buttonDisabled} onClick={onAddComment}>
+        Add Comment
+      </Button>
+    </div>
   );
 }
 
@@ -82,28 +105,20 @@ export default function CommentSection({
   };
 
   return (
-    <>
-      {(comments.length > 0 || showCommentControls) && (
-        <Card className={classes.card}>
-          {showCommentControls && (
-            <div>
-              <h2 className={classes.title}>Comments</h2>
-              <Input
-                placeholder="Add a comment..."
-                type={FIELD_TYPES.TEXTAREA}
-                useLabel={false}
-                value={commentValue}
-                onChange={commentChangeHandler}
-                onBlur={commentBlurHandler}
-              />
-              <Button disabled={!commentIsValid} onClick={addCommentHandler}>
-                Add Comment
-              </Button>
-            </div>
-          )}
-          <CommentList comments={comments} />
-        </Card>
+    <div className={classes.container}>
+      {showCommentControls && (
+        <CommentControls
+          value={commentValue}
+          onChange={commentChangeHandler}
+          onBlur={commentBlurHandler}
+          onAddComment={addCommentHandler}
+          buttonDisabled={!commentIsValid}
+        />
       )}
-    </>
+
+      {(comments.length > 0 || showCommentControls) && (
+        <CommentList comments={comments} />
+      )}
+    </div>
   );
 }

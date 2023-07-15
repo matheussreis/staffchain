@@ -7,10 +7,12 @@ import FormRow from '../UI/Form/FormRow';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
 import useInput from '../../hooks/use-input';
+import { Timeline } from 'primereact/timeline';
 import FIELD_TYPES from '../../enums/field-types';
 import FieldView from '../UI/FieldView/FieldView';
 import BUTTON_SIZES from '../../enums/button-sizes';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { TabView, TabPanel } from 'primereact/tabview';
 import { translateEnum } from '../../enums/request-status';
 import ActionButton from '../UI/ActionButton/ActionButton';
 import { useNavigate, useRevalidator } from 'react-router-dom';
@@ -214,6 +216,106 @@ function RequestFormHeader({ setShowReasonModal, setIsMoreInfo, onApprove }) {
   );
 }
 
+function TimelineItem({ author, action, date }) {
+  return (
+    <div className={classes['timeline-item-container']}>
+      <span>
+        {author} {action}
+      </span>
+      <small>at {new Date(date).toLocaleString()}</small>
+    </div>
+  );
+}
+
+function MainPanel({ onApprove, setShowReasonModal, setIsMoreInfo }) {
+  const { request } = useContext(RequestFormContext);
+
+  return (
+    <Card className={classes.card}>
+      <FormRow className={classes['header-row']}>
+        <RequestFormHeader
+          setShowReasonModal={setShowReasonModal}
+          setIsMoreInfo={setIsMoreInfo}
+          onApprove={onApprove}
+        />
+      </FormRow>
+      {request.fields.map((field) => (
+        <FieldView
+          key={field.id}
+          label={`${field.name}:`}
+          content={field.value}
+          type={field.type}
+          downloadUrl={
+            field.type === 'file'
+              ? getFilePath(request.id, field.id, field.value)
+              : undefined
+          }
+        />
+      ))}
+    </Card>
+  );
+}
+
+function SecondaryPanel({ onAddComment }) {
+  const { request } = useContext(RequestFormContext);
+  const [showCommentControls, setShowCommentControls] = useState(false);
+  const [showTabs, setShowTabs] = useState(false);
+  const [showCommentsTab, setShowCommentsTab] = useState(false);
+  const [showTimelineTab, setShowTimelineTab] = useState(false);
+
+  useEffect(() => {
+    setShowCommentControls(!['closed', 'done'].includes(request.status));
+  }, [request.status]);
+
+  useEffect(() => {
+    const areThereComments = request.comments.length > 0;
+    const areThereEvents = request.timeline.length > 0;
+    setShowTabs(areThereComments || areThereEvents || showCommentControls);
+  }, [request.comments.length, request.timeline.length, showCommentControls]);
+
+  useEffect(() => {
+    setShowCommentsTab(showCommentControls || request.comments.length > 0);
+  }, [request.comments.length, showCommentControls]);
+
+  useEffect(() => {
+    setShowTimelineTab(request.timeline.length > 0);
+  }, [request.timeline.length]);
+
+  return (
+    showTabs && (
+      <Card className={classes.card}>
+        <TabView className={classes['tab-view-panel']}>
+          {showCommentsTab > 0 && (
+            <TabPanel header="Comments">
+              <CommentSection
+                comments={request.comments}
+                updateComments={request.updateComments}
+                onAddComment={onAddComment}
+                showCommentControls={showCommentControls}
+              />
+            </TabPanel>
+          )}
+          {showTimelineTab > 0 && (
+            <TabPanel header="Timeline">
+              <Timeline
+                value={request.timeline}
+                align="alternate"
+                content={(item) => (
+                  <TimelineItem
+                    author={item.author.name}
+                    action={item.action}
+                    date={item.date}
+                  />
+                )}
+              />
+            </TabPanel>
+          )}
+        </TabView>
+      </Card>
+    )
+  );
+}
+
 export default function RequestFormView() {
   const { request } = useContext(RequestFormContext);
   const toastRef = useRef(null);
@@ -230,6 +332,7 @@ export default function RequestFormView() {
         comment: comment.comment,
         publishDate: comment.publishDate,
       });
+      revalidator.revalidate();
     } catch (error) {
       toastRef.current.clear();
       toastRef.current.show({
@@ -316,34 +419,12 @@ export default function RequestFormView() {
         onConfirm={confirmReasonModalHandler}
       />
       <ConfirmDialog />
-      <Card className={classes.card}>
-        <FormRow className={classes['header-row']}>
-          <RequestFormHeader
-            setShowReasonModal={setShowReasonModal}
-            setIsMoreInfo={setIsMoreInfo}
-            onApprove={approveRequestHandler}
-          />
-        </FormRow>
-        {request.fields.map((field) => (
-          <FieldView
-            key={field.id}
-            label={`${field.name}:`}
-            content={field.value}
-            type={field.type}
-            downloadUrl={
-              field.type === 'file'
-                ? getFilePath(request.id, field.id, field.value)
-                : undefined
-            }
-          />
-        ))}
-      </Card>
-      <CommentSection
-        comments={request.comments}
-        updateComments={request.updateComments}
-        onAddComment={addComment}
-        showCommentControls={['closed', 'done'].includes(request.status)}
+      <MainPanel
+        onApprove={approveRequestHandler}
+        setShowReasonModal={setShowReasonModal}
+        setIsMoreInfo={setIsMoreInfo}
       />
+      <SecondaryPanel onAddComment={addComment} />
     </>
   );
 }

@@ -70,6 +70,24 @@
     width: 100%;
 }
 
+.tab-view-panel>[class~="p-tabview-panels"] {
+    padding: 0.5rem 0 !important;
+}
+
+.timeline-item-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.timeline-item-container span {
+    font-weight: 500;
+}
+
+.timeline-item-container small {
+    font-weight: 300;
+}
+
 @media screen and (max-width: 768px) {
     .card {
         margin: 1rem;

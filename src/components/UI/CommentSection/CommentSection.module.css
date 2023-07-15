@@ -24,10 +24,6 @@
     padding: 1rem;
 }
 
-.comment-container button {
-    margin: 0;
-}
-
 .comment-container p {
     margin: 0;
 }
@@ -36,6 +32,10 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+.comment-controls button {
+    margin: 0;
 }
 
 .comment-header {
@@ -54,4 +54,10 @@
 .comment-header p {
     font-weight: 300;
     margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem
 }
