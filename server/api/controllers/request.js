@@ -181,12 +181,6 @@ const getReviewerNode = (reviewer, requestTree) => {
   );
 };
 
-const getPreviousReviewerNode = (reviewer, requestTree) => {
-  return requestTree.find(
-    (node) => `${node.reportsTo}` === `${reviewer}`,
-  );
-};
-
 const removeUploadedFiles = (requestId) => {
   const folderPath = `uploads/${requestId}`;
 
@@ -384,7 +378,6 @@ exports.moreInfo = async (req, res) => {
     const currentUserId = req.userData.userId;
     const requestId = new mongoose.Types.ObjectId(req.params.id);
     const requestData = req.body;
-    const askStarter = requestData?.askStarter || false;
     const reason = requestData?.reason || undefined;
 
     const request = await Request.findById(requestId).populate({
@@ -396,11 +389,6 @@ exports.moreInfo = async (req, res) => {
       return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
     }
 
-    const reviewerNode = getPreviousReviewerNode(
-      request.reviewer,
-      request.process.requestTree,
-    );
-
     const requestModel = new Request(request);
 
     if (reason) {
@@ -410,15 +398,11 @@ exports.moreInfo = async (req, res) => {
       });
     }
 
-    if (askStarter) {
-      requestModel.reviewer = requestModel.starter;
-    } else {
-      requestModel.reviewer = reviewerNode.userId;
-    }
-
+    requestModel.reviewer = requestModel.starter;
     requestModel.status = 'waiting-for-info';
     requestModel.dateModified = new Date();
     await requestModel.save();
+
     res.status(200).json({
       message: 'Request Updated Successfully!',
     });
