@@ -22,7 +22,7 @@ export default class GeneralValidator extends BaseValidator {
   }
 
   validate(value, fieldName, isRequired = true) {
-    this.isValid = isRequired && !this.isValueEmpty(value);
+    this.isValid = !isRequired || !this.isValueEmpty(value);
 
     if (this.isValid) {
       this.errorMessage = '';
