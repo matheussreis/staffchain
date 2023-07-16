@@ -33,7 +33,12 @@ const createProcess = async (requestData) => {
     _id: new mongoose.Types.ObjectId(),
     name: name,
     description: description,
-    fieldSet: fieldSet,
+    fieldSet: fieldSet.map((field) => ({
+      _id: new mongoose.Types.ObjectId(),
+      label: field.label,
+      required: field.required,
+      type: field.type,
+    })),
     requestTree: requestTree,
   });
 
