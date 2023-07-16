@@ -84,8 +84,6 @@ export default function Step1() {
     }
   }, [formValues.fields, request.fields]);
 
-  console.log(formValues);
-
   useEffect(() => {
     request.setIsValid(formValues.overallValidity);
   }, [formValues.overallValidity, request]);
