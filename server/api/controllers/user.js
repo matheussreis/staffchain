@@ -92,7 +92,7 @@ const getSignedToken = (userId, userEmail) => {
   return token;
 };
 
-const findUserProcesses = async (id) => {
+const findUserProcesses = async (id, limit) => {
   return Process.find({
     requestTree: {
       $elemMatch: {
@@ -100,26 +100,29 @@ const findUserProcesses = async (id) => {
       },
     },
   })
+    .limit(limit)
     .select('id name description fieldSet')
     .sort({ dateModified: -1 })
     .exec();
 };
 
-const findUserStartedRequests = async (userId) => {
+const findUserStartedRequests = async (userId, limit) => {
   return Request.find({
     starter: userId,
   })
+    .limit(limit)
     .populate(REQUEST_POPULATE_OPTIONS)
     .select('status starter reviewer process')
     .sort({ dateModified: -1 })
     .exec();
 };
 
-const findUserRequestsToReview = async (userId) => {
+const findUserRequestsToReview = async (userId, limit) => {
   return Request.find({
     reviewer: userId,
     status: { $in: ['in-progress', 'waiting-for-info'] },
   })
+    .limit(limit)
     .populate(REQUEST_POPULATE_OPTIONS)
     .select('status starter reviewer process')
     .sort({ dateModified: -1 })
@@ -327,8 +330,9 @@ exports.userExists = async (userId) => {
 
 exports.availableProcesses = async (req, res) => {
   try {
+    const limit = req.query?.limit || undefined;
     const userId = new mongoose.Types.ObjectId(req.userData.userId);
-    const processes = await findUserProcesses(userId);
+    const processes = await findUserProcesses(userId, limit);
 
     res.status(200).json({
       count: processes.length,
@@ -355,8 +359,9 @@ exports.availableProcesses = async (req, res) => {
 
 exports.startedRequests = async (req, res) => {
   try {
+    const limit = req.query?.limit || undefined;
     const userId = new mongoose.Types.ObjectId(req.userData.userId);
-    const requests = await findUserStartedRequests(userId);
+    const requests = await findUserStartedRequests(userId, limit);
 
     res.status(200).json({
       count: requests.length,
@@ -384,8 +389,9 @@ exports.startedRequests = async (req, res) => {
 
 exports.requestsToReview = async (req, res) => {
   try {
+    const limit = req.query?.limit || undefined;
     const userId = new mongoose.Types.ObjectId(req.userData.userId);
-    const requests = await findUserRequestsToReview(userId);
+    const requests = await findUserRequestsToReview(userId, limit);
 
     res.status(200).json({
       count: requests.length,
