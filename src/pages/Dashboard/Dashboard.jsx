@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import { getAuthToken } from '../../utils/auth-utils';
 import Container from '../../components/UI/Container/Container';
 import RequestList from '../../components/RequestList/RequestList';
+import NoListItems from '../../components/UI/NoListItems/NoListItems';
 import DashboardPanel from '../../components/DashboardPanel/DashboardPanel';
 import AvailableProcessList from '../../components/AvailableProcessList/AvailableProcessList';
-import DashboardPanelNoItems from '../../components/DashboardPanel/DashboardPanelNoItems';
 
 export default function Dashboard() {
   const toastRef = useRef();
@@ -54,7 +54,7 @@ export default function Dashboard() {
             <RequestList requests={data.startedRequests} />
           )}
           {data.startedRequests.length < 1 && (
-            <DashboardPanelNoItems
+            <NoListItems
               title="No Started Requests"
               message="You have no started requests at the moment."
             />
@@ -68,7 +68,7 @@ export default function Dashboard() {
             <AvailableProcessList processes={data.availableProcesses} />
           )}
           {data.availableProcesses.length < 1 && (
-            <DashboardPanelNoItems
+            <NoListItems
               title="No Available Processes"
               message="You have no available processes at the moment."
             />
@@ -82,7 +82,7 @@ export default function Dashboard() {
             <RequestList requests={data.requestsToReview} />
           )}
           {data.requestsToReview.length < 1 && (
-            <DashboardPanelNoItems
+            <NoListItems
               title="No Requests to Review"
               message="You have no requests to review at the moment."
             />
