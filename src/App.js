@@ -1,30 +1,31 @@
 import axios from 'axios';
 import Root from './pages/Root';
 import { useState } from 'react';
-import Login from './pages/Login/Login';
-import NotFound from './pages/NotFound';
-import EditUser from './pages/User/EditUser';
-import Process, { loader as processLoader } from './pages/Process/Process';
-import Request, { loader as requestLoader } from './pages/Request/Request';
-import GeneralError from './pages/GeneralError';
 import ListProcess, {
   loader as listProcessLoader,
 } from './pages/Process/ListProcess';
-import EditProcess from './pages/Process/EditProcess';
 import ListRequest, {
   loader as listRequestLoader,
 } from './pages/Request/ListRequest';
+import Login from './pages/Login/Login';
+import NotFound from './pages/NotFound';
+import EditUser from './pages/User/EditUser';
+import GeneralError from './pages/GeneralError';
+import Dashboard from './pages/Dashboard/Dashboard';
+import EditProcess from './pages/Process/EditProcess';
 import EditRequest from './pages/Request/EditRequest';
 import Me, { loader as meLoader } from './pages/Me/Me';
+import ListAvailableProcess, {
+  loader as listAvailableProcessLoader,
+} from './pages/AvailableProcess/ListAvailableProcess';
 import { action as logoutAction } from './pages/Logout';
 import User, { loader as UserLoader } from './pages/User/User';
 import { CurrentUserContext } from './store/current-user-context';
 import { checkAuthLoader, getAuthToken } from './utils/auth-utils';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import ListUser, { loader as listUserLoader } from './pages/User/ListUser';
-import ListAvailableProcess, {
-  loader as listAvailableProcessLoader,
-} from './pages/AvailableProcess/ListAvailableProcess';
+import Process, { loader as processLoader } from './pages/Process/Process';
+import Request, { loader as requestLoader } from './pages/Request/Request';
 
 import 'primereact/resources/primereact.min.css';
 import './theme.css';
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
     id: 'root',
     errorElement: <GeneralError />,
     children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
       {
         path: 'user',
         id: 'user',
