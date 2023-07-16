@@ -1,20 +1,32 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { json, useLoaderData } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 import { translateOption } from '../../options/field-types-dom';
+import HeadPanel from '../../components/UI/HeadPanel/HeadPanel';
 import ProcessList from '../../components/ProcessList/ProcessList';
+import { json, useLoaderData, useNavigate } from 'react-router-dom';
+import { CurrentUserContext } from '../../store/current-user-context';
 
 export default function ListProcess() {
   const [processes, setProcesses] = useState([]);
   const processData = useLoaderData();
+  const navigate = useNavigate();
+  const { user } = useContext(CurrentUserContext);
 
   useEffect(() => {
-    // call the API to fetch the list of processes.
-    console.log(`FETCH PROCESSES LIST TO DISPLAY`);
     setProcesses(processData);
   }, [processData]);
 
-  return <ProcessList processes={processes} />;
+  return (
+    <main>
+      <HeadPanel
+        moduleName="Processes"
+        recordCount={processes.length}
+        onClick={() => navigate('create')}
+        showButton={user.isAdmin}
+      />
+      <ProcessList processes={processes} />
+    </main>
+  );
 }
 
 const fetchProcesses = async () => {

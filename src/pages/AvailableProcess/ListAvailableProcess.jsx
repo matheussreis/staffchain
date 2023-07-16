@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { json, useLoaderData } from 'react-router-dom';
+import HeadPanel from '../../components/UI/HeadPanel/HeadPanel';
 import AvailableProcessList from '../../components/AvailableProcessList/AvailableProcessList';
 
 export default function ListAvailableProcess() {
@@ -11,7 +12,16 @@ export default function ListAvailableProcess() {
     setProcesses(processData);
   }, [processData]);
 
-  return <AvailableProcessList processes={processes} />;
+  return (
+    <main>
+      <HeadPanel
+        moduleName="Available Processes"
+        recordCount={processes.length}
+        showButton={false}
+      />
+      <AvailableProcessList processes={processes} />
+    </main>
+  );
 }
 
 const fetchAvailableProcesses = async () => {

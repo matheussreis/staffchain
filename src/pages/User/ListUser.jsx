@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { json, useLoaderData } from 'react-router';
 import UserList from '../../components/UserList/UserList';
+import { json, useLoaderData, useNavigate } from 'react-router';
+import HeadPanel from '../../components/UI/HeadPanel/HeadPanel';
 
 export default function ListUser() {
   const [users, setUsers] = useState([]);
   const usersData = useLoaderData();
+  const navigate = useNavigate;
 
   useEffect(() => {
     if (users.length < 1) {
@@ -13,7 +15,16 @@ export default function ListUser() {
     }
   }, [users, usersData]);
 
-  return <UserList users={users} />;
+  return (
+    <main>
+      <HeadPanel
+        moduleName="Users"
+        recordCount={users.length}
+        onClick={() => navigate('create')}
+      />
+      <UserList users={users} />
+    </main>
+  );
 }
 
 const fetchUsers = async () => {

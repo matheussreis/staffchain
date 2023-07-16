@@ -1,12 +1,19 @@
+import {
+  json,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { json, useLoaderData, useLocation } from 'react-router-dom';
+import HeadPanel from '../../components/UI/HeadPanel/HeadPanel';
 import RequestList from '../../components/RequestList/RequestList';
 
 export default function ListRequest() {
   const [requests, setRequests] = useState([]);
   const requestData = useLoaderData();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const getPageTitle = () => {
     switch (location.pathname) {
@@ -23,7 +30,17 @@ export default function ListRequest() {
     setRequests(requestData);
   }, [requestData]);
 
-  return <RequestList title={getPageTitle()} requests={requests} />;
+  return (
+    <main>
+      <HeadPanel
+        moduleName={getPageTitle()}
+        recordCount={requests.length}
+        onClick={() => navigate('create')}
+        showButton={false}
+      />
+      <RequestList requests={requests} />
+    </main>
+  );
 }
 
 const getApiUrl = (pageUrl) => {
