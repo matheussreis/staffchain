@@ -28,5 +28,3 @@ header.header button {
 .content ul {
     padding: unset !important;
 }
-
-@media screen and (max-width: 768px) {}
