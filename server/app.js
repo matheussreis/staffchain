@@ -14,7 +14,7 @@ const userRoutes = require('./api/routes/users');
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGO_CONNECTION_STRING);
 
-app.use('/file', express.static('uploads'));
+app.use('/file', express.static(process.env.UPLOAD_DIR_PATH));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

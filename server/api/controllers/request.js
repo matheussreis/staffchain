@@ -216,7 +216,7 @@ const getReviewerNode = (reviewer, requestTree) => {
 };
 
 const removeUploadedFiles = (requestId) => {
-  const folderPath = `uploads/${requestId}`;
+  const folderPath = `${process.env.UPLOAD_DIR_PATH}/${requestId}`;
 
   if (fs.existsSync(folderPath)) {
     fs.rmSync(folderPath, { recursive: true });
@@ -389,12 +389,16 @@ exports.updateFields = async (req, res) => {
         const previousFile = request.fields[fieldId.index].value;
 
         if (isString && currentFile === '' && previousFile !== '') {
-          fs.unlinkSync(`uploads/${field}/${previousFile}`);
+          fs.unlinkSync(
+            `${process.env.UPLOAD_DIR_PATH}/${field}/${previousFile}`,
+          );
         } else if (!isString && currentFile && previousFile !== '') {
           const currentExtension = path.extname(currentFile);
           const previousExtension = path.extname(previousFile);
           if (currentExtension !== previousExtension) {
-            fs.unlinkSync(`uploads/${field}/${previousFile}`);
+            fs.unlinkSync(
+              `${process.env.UPLOAD_DIR_PATH}/${field}/${previousFile}`,
+            );
           }
         }
       }

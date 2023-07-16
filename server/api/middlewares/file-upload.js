@@ -6,7 +6,7 @@ const { getfieldsByProcessId } = require('../controllers/process');
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     const mainFolder = req.params.id ?? req.requestId;
-    const folder = `uploads/${mainFolder}/${file.fieldname}/`;
+    const folder = `${process.env.UPLOAD_DIR_PATH}/${mainFolder}/${file.fieldname}/`;
 
     const folderExists = fs.existsSync(folder);
     if (!folderExists) {
