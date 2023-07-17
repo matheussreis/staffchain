@@ -14,7 +14,8 @@ export default function Navbar() {
     <header>
       <nav className={classes.nav}>
         <Link className={classes['site-name']} to="/">
-          {process.env.REACT_APP_NAME}
+          <span className={classes.first}>Staff</span>
+          <span className={classes.second}>Chain</span>
         </Link>
         <ul className={classes.list}>
           {user.isAdmin && token && (

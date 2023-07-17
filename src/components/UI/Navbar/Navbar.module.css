@@ -5,14 +5,22 @@
     font-weight: 800;
 }
 
+.site-name>.first {
+    color: var(--color-primary-500);
+}
+
+.site-name>.second {
+    color: var(--color-secondary-500)
+}
+
 .nav {
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     gap: 2rem;
     padding: 1rem;
-    background-color: var(--color-primary-500);
-    color: var(--color-on-primary-light);
+    background-color: white;
+    color: black;
 }
 
 .list {
@@ -35,8 +43,8 @@
 
 .list a:hover,
 .list a.active {
-    color: var(--color-on-primary-light);
-    opacity: 80%;
+    color: black;
+    opacity: 60%;
     transform: scale(1.01);
 }
 
@@ -45,6 +53,7 @@
     border: 1px solid var(--color-secondary-500);
     border-radius: 8px;
     padding: 0.5rem !important;
+    color: var(--color-on-primary-light) !important;
 }
 
 @media screen and (max-width: 768px) {
