@@ -69,7 +69,6 @@ export default function RequestForm() {
         summary: `Failure ${operation} Process`,
         detail: error.message,
         sticky: true,
-        style: { margin: '0.5rem' },
       });
     }
   };

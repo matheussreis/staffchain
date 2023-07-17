@@ -72,18 +72,13 @@ export default function UserForm() {
         summary: `Failure ${operation} User`,
         detail: error.message,
         sticky: true,
-        style: { margin: '0.5rem' },
       });
     }
   };
 
   return (
     <>
-      <Toast
-        ref={toastRef}
-        position="top-center"
-        style={{ position: 'relative' }}
-      />
+      <Toast ref={toastRef} position="top-center" />
       <MultiStepForm
         onSubmit={submitFormHandler}
         formTitle={`${isEdit ? 'Edit' : 'Create'} User`}

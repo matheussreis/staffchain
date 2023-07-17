@@ -334,13 +334,13 @@ export default function RequestFormView() {
       });
       revalidator.revalidate();
     } catch (error) {
+      request.updateComments(request.comments);
       toastRef.current.clear();
       toastRef.current.show({
         severity: 'error',
         summary: 'Add Comment Failure',
         detail: error.message,
         sticky: true,
-        style: { margin: '0.5rem' },
       });
     }
   };
@@ -366,9 +366,9 @@ export default function RequestFormView() {
         summary: 'Success',
         detail: message,
         sticky: true,
-        style: { margin: '0.5rem' },
       });
     } catch (error) {
+      setShowReasonModal(false);
       const summary = isMoreInfo
         ? 'Failure Asking for More Information'
         : 'Failure Closing Request';
@@ -379,7 +379,6 @@ export default function RequestFormView() {
         summary: summary,
         detail: error.message,
         sticky: true,
-        style: { margin: '0.5rem' },
       });
     }
   };
@@ -395,7 +394,6 @@ export default function RequestFormView() {
         summary: 'Success',
         detail: 'Request Approved Successfully!',
         sticky: true,
-        style: { margin: '0.5rem' },
       });
     } catch (error) {
       toastRef.current.clear();
@@ -404,7 +402,6 @@ export default function RequestFormView() {
         summary: 'Failure Approving Request',
         detail: error.message,
         sticky: true,
-        style: { margin: '0.5rem' },
       });
     }
   };
