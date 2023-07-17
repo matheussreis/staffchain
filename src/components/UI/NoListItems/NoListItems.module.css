@@ -8,8 +8,7 @@
     opacity: 45%;
 }
 
-.container h4,
-p {
+.content {
     margin: 0;
     user-select: none;
     -webkit-user-select: none;
