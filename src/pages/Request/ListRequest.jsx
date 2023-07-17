@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import HeadPanel from '../../components/UI/HeadPanel/HeadPanel';
 import RequestList from '../../components/RequestList/RequestList';
+import NoListItems from '../../components/UI/NoListItems/NoListItems';
 
 export default function ListRequest() {
   const [requests, setRequests] = useState([]);
@@ -38,7 +39,14 @@ export default function ListRequest() {
         onClick={() => navigate('create')}
         showButton={false}
       />
-      <RequestList requests={requests} />
+      {requests.length > 0 && <RequestList requests={requests} />}
+      {requests.length < 1 && (
+        <NoListItems
+          title="No Requests"
+          message="There are no requests to be displayed."
+          isPageContent={true}
+        />
+      )}
     </main>
   );
 }

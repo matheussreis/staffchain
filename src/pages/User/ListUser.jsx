@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import UserList from '../../components/UserList/UserList';
 import { json, useLoaderData, useNavigate } from 'react-router';
 import HeadPanel from '../../components/UI/HeadPanel/HeadPanel';
+import NoListItems from '../../components/UI/NoListItems/NoListItems';
 
 export default function ListUser() {
   const [users, setUsers] = useState([]);
@@ -22,7 +23,14 @@ export default function ListUser() {
         recordCount={users.length}
         onClick={() => navigate('create')}
       />
-      <UserList users={users} />
+      {users.length > 0 && <UserList users={users} />}
+      {users.length < 1 && (
+        <NoListItems
+          title="No Users"
+          message="There are no users to be displayed."
+          isPageContent={true}
+        />
+      )}
     </main>
   );
 }

@@ -5,6 +5,7 @@ import HeadPanel from '../../components/UI/HeadPanel/HeadPanel';
 import ProcessList from '../../components/ProcessList/ProcessList';
 import { json, useLoaderData, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../store/current-user-context';
+import NoListItems from '../../components/UI/NoListItems/NoListItems';
 
 export default function ListProcess() {
   const [processes, setProcesses] = useState([]);
@@ -24,7 +25,14 @@ export default function ListProcess() {
         onClick={() => navigate('create')}
         showButton={user.isAdmin}
       />
-      <ProcessList processes={processes} />
+      {processes.length > 0 && <ProcessList processes={processes} />}
+      {processes.length < 1 && (
+        <NoListItems
+          title="No Processes"
+          message="There are no processes to be displayed."
+          isPageContent={true}
+        />
+      )}
     </main>
   );
 }

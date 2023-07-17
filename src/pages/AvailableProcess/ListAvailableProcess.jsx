@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { json, useLoaderData } from 'react-router-dom';
 import HeadPanel from '../../components/UI/HeadPanel/HeadPanel';
+import NoListItems from '../../components/UI/NoListItems/NoListItems';
 import AvailableProcessList from '../../components/AvailableProcessList/AvailableProcessList';
 
 export default function ListAvailableProcess() {
@@ -19,7 +20,14 @@ export default function ListAvailableProcess() {
         recordCount={processes.length}
         showButton={false}
       />
-      <AvailableProcessList processes={processes} />
+      {processes.length > 0 && <AvailableProcessList processes={processes} />}
+      {processes.length < 1 && (
+        <NoListItems
+          title="No Processes"
+          message="There are no processes to be displayed."
+          isPageContent={true}
+        />
+      )}
     </main>
   );
 }
