@@ -6,6 +6,9 @@
     cursor: pointer;
     font-size: medium;
     height: fit-content;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 .button.regular {
