@@ -39,7 +39,7 @@ const findAllUsers = async () => {
 };
 
 const findUserById = async (id) => {
-  return User.findById(id).populate('processes').exec();
+  return User.findById(id).exec();
 };
 
 const hashPassword = async (password) => {
@@ -217,7 +217,6 @@ exports.getAll = async (req, res) => {
           department: user.department,
           role: user.role,
           isAdmin: user.isAdmin,
-          processes: user.processes.map((process) => process._id),
         };
       }),
     });
@@ -245,7 +244,6 @@ exports.get = async (req, res) => {
         department: user.department,
         role: user.role,
         isAdmin: user.isAdmin,
-        processes: user.processes.map((process) => process._id),
       });
 
       return;

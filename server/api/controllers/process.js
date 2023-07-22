@@ -3,18 +3,6 @@ const Process = require('../models/process');
 const User = require('../models/user');
 const Request = require('../models/request');
 
-const assignProcessToUsersInTree = async (requestTree, processId) => {
-  const users = requestTree.map(
-    (user) => new mongoose.Types.ObjectId(user.userId),
-  );
-
-  users.forEach(async (userId) => {
-    await User.findByIdAndUpdate(userId, {
-      $push: { processes: processId },
-    }).populate('processes');
-  });
-};
-
 const removeProcessFromUsers = async (processId) => {
   return User.updateMany(
     { 'processes._id': processId },
@@ -146,9 +134,7 @@ const addNewFieldsToRequest = async (process) => {
 
 exports.add = async (req, res) => {
   try {
-    const processId = await createProcess(req.body);
-    await assignProcessToUsersInTree(req.body.requestTree, processId);
-
+    await createProcess(req.body);
     res.status(200).json({
       message: 'Process created successfully!',
     });

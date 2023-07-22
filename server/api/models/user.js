@@ -17,9 +17,6 @@ const userSchema = mongoose.Schema({
   isAdmin: { type: Boolean, default: false },
   department: { type: String },
   role: { type: String },
-  processes: [
-    { id: { type: mongoose.SchemaTypes.ObjectId, ref: 'Process' } },
-  ],
   dateCreated: { type: Date, default: Date.now },
   dateModified: { type: Date, default: Date.now },
 });
