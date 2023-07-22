@@ -73,8 +73,6 @@ const fetchRequests = async (apiUrl) => {
 
 export async function loader({ request }) {
   try {
-    debugger;
-
     const apiUrl = getApiUrl(request.url);
     const requests = await fetchRequests(apiUrl);
     const requestsData = requests.map((requestData) => ({
