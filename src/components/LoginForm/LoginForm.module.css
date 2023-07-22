@@ -23,3 +23,15 @@
     font-size: 14px;
     font-weight: 350;
 }
+
+.first {
+    color: var(--color-primary-500);
+    font-size: xx-large;
+    font-weight: 800;
+}
+
+.second {
+    color: var(--color-secondary-500);
+    font-size: xx-large;
+    font-weight: 800;
+}

@@ -75,7 +75,10 @@ export default function LoginForm() {
       />
       <Container className={classes['form-container']}>
         <Form className={classes.form} onSubmit={submitFormHandler}>
-          <FormTitle text="Please Login" />
+          <FormTitle>
+            <span className={classes.first}>Staff</span>
+            <span className={classes.second}>Chain</span>
+          </FormTitle>
           <Container className={classes['input-container']}>
             <Input
               type="email"
