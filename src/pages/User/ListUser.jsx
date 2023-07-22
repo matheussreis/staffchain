@@ -8,7 +8,7 @@ import NoListItems from '../../components/UI/NoListItems/NoListItems';
 export default function ListUser() {
   const [users, setUsers] = useState([]);
   const usersData = useLoaderData();
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (users.length < 1) {
