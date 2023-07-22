@@ -1,4 +1,5 @@
 import React from 'react';
+import { Password } from 'primereact/password';
 import FIELD_TYPES from '../../../enums/field-types';
 
 import classes from './Input.module.css';
@@ -46,6 +47,19 @@ export default function Input({
             onChange={onChange}
             onBlur={onBlur}
             value={value}
+          />
+        );
+      case FIELD_TYPES.PASSWORD:
+        return (
+          <Password
+            name={name}
+            placeholder={placeholder}
+            onChange={onChange}
+            onBlur={onBlur}
+            value={value}
+            className={classes.password}
+            feedback={false}
+            toggleMask
           />
         );
       default:

@@ -19,6 +19,11 @@
     font-family: inherit;
 }
 
+.password {
+    display: inherit;
+    flex-direction: inherit;
+}
+
 .container input:hover {
     color: rgb(89, 88, 88);
     transform: scale(1.002);
