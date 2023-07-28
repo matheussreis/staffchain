@@ -24,6 +24,10 @@
     flex-direction: inherit;
 }
 
+.password>[class~="p-inputtext"]:enabled:hover {
+    border-color: lightgray;
+}
+
 .container input:hover {
     color: rgb(89, 88, 88);
     transform: scale(1.002);
