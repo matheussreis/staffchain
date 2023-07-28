@@ -22,7 +22,7 @@ export default function Login() {
     valueChangeHandler: passwordChangeHandler,
     inputBlurHandler: passwordBlurHandler,
     reset: resetPassword,
-  } = useInput([FIELD_TYPES.PASSWORD, [10]]);
+  } = useInput([FIELD_TYPES.PASSWORD, [10, true]]);
 
   const fields = {
     email: {
