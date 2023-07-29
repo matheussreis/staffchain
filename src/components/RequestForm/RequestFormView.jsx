@@ -262,6 +262,7 @@ function SecondaryPanel({ onAddComment }) {
   const [showTabs, setShowTabs] = useState(false);
   const [showCommentsTab, setShowCommentsTab] = useState(false);
   const [showTimelineTab, setShowTimelineTab] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     setShowCommentControls(!['closed', 'done'].includes(request.status));
@@ -281,35 +282,40 @@ function SecondaryPanel({ onAddComment }) {
     setShowTimelineTab(request.timeline.length > 0);
   }, [request.timeline.length]);
 
+  useEffect(() => {
+    setActiveIndex(showCommentsTab ? 0 : showTimelineTab ? 1 : 0);
+  }, [showCommentsTab, showTimelineTab]);
+
   return (
     showTabs && (
       <Card className={classes.card}>
-        <TabView className={classes['tab-view-panel']}>
-          {showCommentsTab > 0 && (
-            <TabPanel header="Comments">
-              <CommentSection
-                comments={request.comments}
-                updateComments={request.updateComments}
-                onAddComment={onAddComment}
-                showCommentControls={showCommentControls}
-              />
-            </TabPanel>
-          )}
-          {showTimelineTab > 0 && (
-            <TabPanel header="Timeline">
-              <Timeline
-                value={request.timeline}
-                align="alternate"
-                content={(item) => (
-                  <TimelineItem
-                    author={item.author.name}
-                    action={item.action}
-                    date={item.date}
-                  />
-                )}
-              />
-            </TabPanel>
-          )}
+        <TabView
+          activeIndex={activeIndex}
+          onTabChange={(e) => setActiveIndex(e.index)}
+          className={classes['tab-view-panel']}
+        >
+          <TabPanel header="Comments" disabled={!showCommentsTab}>
+            <CommentSection
+              comments={request.comments}
+              updateComments={request.updateComments}
+              onAddComment={onAddComment}
+              showCommentControls={showCommentControls}
+            />
+          </TabPanel>
+
+          <TabPanel header="Timeline" disabled={!showTimelineTab}>
+            <Timeline
+              value={request.timeline}
+              align="alternate"
+              content={(item) => (
+                <TimelineItem
+                  author={item.author.name}
+                  action={item.action}
+                  date={item.date}
+                />
+              )}
+            />
+          </TabPanel>
         </TabView>
       </Card>
     )
