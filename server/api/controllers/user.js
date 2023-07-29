@@ -414,3 +414,7 @@ exports.requestsToReview = async (req, res) => {
     });
   }
 };
+
+exports.getUserDetailsById = async (id) => {
+  return User.findById(id).select('firstName lastName email').exec();
+};

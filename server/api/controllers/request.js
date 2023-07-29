@@ -5,8 +5,14 @@ const {
   getRequestTreeByProcessId,
   getfieldsByProcessId,
 } = require('./process');
-const { userExists } = require('./user');
+const { userExists, getUserDetailsById } = require('./user');
 const path = require('path');
+const {
+  notifyDoneRequest,
+  notifyRequestToReview,
+  notifyMoreInfoRequest,
+  notifyCloseRequest,
+} = require('./email');
 
 const POPULATE_OPTIONS = [
   {
@@ -134,7 +140,7 @@ const createRequest = async (requestData) => {
   });
 
   await request.save();
-  return request.id;
+  return request;
 };
 
 const findAllRequests = async () => {
@@ -264,6 +270,14 @@ const addComment = async (requestModel, data) => {
   });
 };
 
+const getDetailsForEmail = (user, requestId) => {
+  return {
+    toEmail: user.email,
+    toName: `${user.firstName} ${user.lastName}`,
+    requestId: requestId,
+  };
+};
+
 exports.add = async (req, res) => {
   try {
     const processId = req.params.processId;
@@ -272,7 +286,7 @@ exports.add = async (req, res) => {
       req.userData.userId,
     );
 
-    const requestId = await createRequest({
+    const request = await createRequest({
       processId,
       fields,
       currentUserId,
@@ -280,10 +294,15 @@ exports.add = async (req, res) => {
     });
 
     await addTimelineEvent({
-      requestId: requestId,
+      requestId: request.id,
       authorId: currentUserId,
       action: ACTION_TEXT.CREATE,
     });
+
+    const reviewer = await getUserDetailsById(request.reviewer);
+    await notifyRequestToReview(
+      getDetailsForEmail(reviewer, request.id),
+    );
 
     res.status(200).json({
       message: 'Request created successfully!',
@@ -433,21 +452,31 @@ exports.approve = async (req, res) => {
   try {
     const currentUserId = req.userData.userId;
     const requestId = new mongoose.Types.ObjectId(req.params.id);
-    const request = await Request.findById(requestId).populate({
-      path: 'process',
-      select: { requestTree: 1 },
-    });
+    const request = await Request.findById(requestId).populate([
+      {
+        path: 'process',
+        select: { requestTree: 1 },
+      },
+      {
+        path: 'starter',
+        select: { firstName: 1, lastName: 1, email: 1 },
+      },
+      {
+        path: 'reviewer',
+        select: { firstName: 1, lastName: 1, email: 1 },
+      },
+    ]);
 
     if (!request) {
       return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
     }
 
-    const reviewer = request.reviewer;
+    const reviewer = request.reviewer._id;
     const requestTree = request.process.requestTree;
     const reviewerNode = getReviewerNode(reviewer, requestTree);
 
-    const isStarterReSendingRequest = request.starter.equals(
-      request.reviewer,
+    const isStarterReSendingRequest = request.starter._id.equals(
+      request.reviewer._id,
     );
 
     const requestModel = new Request(request);
@@ -477,6 +506,14 @@ exports.approve = async (req, res) => {
         authorId: currentUserId,
         action: ACTION_TEXT.COMPLETE,
       });
+
+      await notifyDoneRequest(
+        getDetailsForEmail(request.starter, request.id),
+      );
+    } else {
+      await notifyRequestToReview(
+        getDetailsForEmail(request.reviewer, request.id),
+      );
     }
 
     res.status(200).json({
@@ -496,10 +533,16 @@ exports.moreInfo = async (req, res) => {
     const requestData = req.body;
     const reason = requestData?.reason || undefined;
 
-    const request = await Request.findById(requestId).populate({
-      path: 'process',
-      select: { requestTree: 1 },
-    });
+    const request = await Request.findById(requestId).populate([
+      {
+        path: 'process',
+        select: { requestTree: 1 },
+      },
+      {
+        path: 'starter',
+        select: { firstName: 1, lastName: 1, email: 1 },
+      },
+    ]);
 
     if (!request) {
       return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
@@ -514,7 +557,7 @@ exports.moreInfo = async (req, res) => {
       });
     }
 
-    requestModel.reviewer = requestModel.starter;
+    requestModel.reviewer = requestModel.starter._id;
     requestModel.status = 'waiting-for-info';
     requestModel.dateModified = new Date();
     await requestModel.save();
@@ -524,6 +567,10 @@ exports.moreInfo = async (req, res) => {
       authorId: currentUserId,
       action: ACTION_TEXT.MOREINFO,
     });
+
+    await notifyMoreInfoRequest(
+      getDetailsForEmail(request.starter, request.id),
+    );
 
     res.status(200).json({
       message: 'Request Updated Successfully!',
@@ -541,10 +588,16 @@ exports.close = async (req, res) => {
     const requestId = new mongoose.Types.ObjectId(req.params.id);
     const reason = req.body?.reason || undefined;
 
-    const request = await Request.findById(requestId).populate({
-      path: 'process',
-      select: { requestTree: 1 },
-    });
+    const request = await Request.findById(requestId).populate([
+      {
+        path: 'process',
+        select: { requestTree: 1 },
+      },
+      {
+        path: 'starter',
+        select: { firstName: 1, lastName: 1, email: 1 },
+      },
+    ]);
 
     if (!request) {
       return res.status(404).json(REQUEST_NOT_FOUND_RESPONSE);
@@ -568,6 +621,12 @@ exports.close = async (req, res) => {
       authorId: currentUserId,
       action: ACTION_TEXT.CLOSE,
     });
+
+    if (currentUserId !== request.starter.id) {
+      await notifyCloseRequest(
+        getDetailsForEmail(request.starter, request.id),
+      );
+    }
 
     res.status(200).json({
       message: 'Request Updated Successfully!',
