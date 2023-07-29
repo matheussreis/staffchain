@@ -12,6 +12,7 @@ import AvailableProcessList from '../../components/AvailableProcessList/Availabl
 export default function Dashboard() {
   const toastRef = useRef();
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [data, setData] = useState({
     availableProcesses: [],
     requestsToReview: [],
@@ -29,7 +30,10 @@ export default function Dashboard() {
     try {
       const token = getAuthToken();
       if (token && token !== 'EXPIRED') {
+        setIsAuthenticated(true);
         setValues();
+      } else {
+        setIsAuthenticated(false);
       }
     } catch (error) {
       toastRef.current.clear();
@@ -45,50 +49,52 @@ export default function Dashboard() {
   return (
     <>
       <Toast ref={toastRef} position="top-center" />
-      <Container>
-        <DashboardPanel
-          title="Started Requests"
-          onViewMoreClick={() => navigate('request/started')}
-        >
-          {data.startedRequests.length > 0 && (
-            <RequestList requests={data.startedRequests} />
-          )}
-          {data.startedRequests.length < 1 && (
-            <NoListItems
-              title="No Started Requests"
-              message="You have no started requests at the moment."
-            />
-          )}
-        </DashboardPanel>
-        <DashboardPanel
-          title="Available Processes"
-          onViewMoreClick={() => navigate('process/available')}
-        >
-          {data.availableProcesses.length > 0 && (
-            <AvailableProcessList processes={data.availableProcesses} />
-          )}
-          {data.availableProcesses.length < 1 && (
-            <NoListItems
-              title="No Available Processes"
-              message="You have no available processes at the moment."
-            />
-          )}
-        </DashboardPanel>
-        <DashboardPanel
-          title="Requests to Review"
-          onViewMoreClick={() => navigate('request/to-review')}
-        >
-          {data.requestsToReview.length > 0 && (
-            <RequestList requests={data.requestsToReview} />
-          )}
-          {data.requestsToReview.length < 1 && (
-            <NoListItems
-              title="No Requests to Review"
-              message="You have no requests to review at the moment."
-            />
-          )}
-        </DashboardPanel>
-      </Container>
+      {isAuthenticated && (
+        <Container>
+          <DashboardPanel
+            title="Started Requests"
+            onViewMoreClick={() => navigate('request/started')}
+          >
+            {data.startedRequests.length > 0 && (
+              <RequestList requests={data.startedRequests} />
+            )}
+            {data.startedRequests.length < 1 && (
+              <NoListItems
+                title="No Started Requests"
+                message="You have no started requests at the moment."
+              />
+            )}
+          </DashboardPanel>
+          <DashboardPanel
+            title="Available Processes"
+            onViewMoreClick={() => navigate('process/available')}
+          >
+            {data.availableProcesses.length > 0 && (
+              <AvailableProcessList processes={data.availableProcesses} />
+            )}
+            {data.availableProcesses.length < 1 && (
+              <NoListItems
+                title="No Available Processes"
+                message="You have no available processes at the moment."
+              />
+            )}
+          </DashboardPanel>
+          <DashboardPanel
+            title="Requests to Review"
+            onViewMoreClick={() => navigate('request/to-review')}
+          >
+            {data.requestsToReview.length > 0 && (
+              <RequestList requests={data.requestsToReview} />
+            )}
+            {data.requestsToReview.length < 1 && (
+              <NoListItems
+                title="No Requests to Review"
+                message="You have no requests to review at the moment."
+              />
+            )}
+          </DashboardPanel>
+        </Container>
+      )}
     </>
   );
 }
