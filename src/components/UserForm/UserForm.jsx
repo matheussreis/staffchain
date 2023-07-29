@@ -2,8 +2,8 @@ import axios from 'axios';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
 import { Toast } from 'primereact/toast';
-import { useContext, useRef } from 'react';
 import { useLocation } from 'react-router';
+import { useContext, useEffect, useRef, useState } from 'react';
 import MultiStepForm from '../UI/MultiStepForm/MultiStepForm';
 import useMultiStepForm from '../../hooks/use-multi-step-form';
 import useEditPageCheck from '../../hooks/use-edit-page-check';
@@ -13,6 +13,7 @@ import { CurrentUserContext } from '../../store/current-user-context';
 export default function UserForm() {
   const { fields } = useContext(UserFormContext);
   const { user } = useContext(CurrentUserContext);
+  const [isFormValid, setIsFormValid] = useState(false);
   let location = useLocation();
   const toastRef = useRef();
 
@@ -21,24 +22,31 @@ export default function UserForm() {
 
   const isEdit = useEditPageCheck();
 
-  let isFormValid = false;
-
-  if (
-    fields.firstName.isValid &&
-    fields.lastName.isValid &&
-    fields.phone.isValid &&
-    fields.birthdate.isValid &&
-    fields.email.isValid &&
-    fields.isAdministrator.isValid &&
-    fields.roleName.isValid &&
-    fields.departmentName.isValid &&
-    user.isAdmin &&
-    !isEdit
-      ? fields.password.isValid
-      : true
-  ) {
-    isFormValid = true;
-  }
+  useEffect(() => {
+    setIsFormValid(
+      fields.firstName.isValid &&
+        fields.lastName.isValid &&
+        fields.phone.isValid &&
+        fields.birthdate.isValid &&
+        fields.email.isValid &&
+        fields.isAdministrator.isValid &&
+        fields.roleName.isValid &&
+        fields.departmentName.isValid &&
+        (user.isAdmin && !isEdit ? fields.password.isValid : true)
+    );
+  }, [
+    fields.birthdate.isValid,
+    fields.departmentName.isValid,
+    fields.email.isValid,
+    fields.firstName.isValid,
+    fields.isAdministrator.isValid,
+    fields.lastName.isValid,
+    fields.password.isValid,
+    fields.phone.isValid,
+    fields.roleName.isValid,
+    isEdit,
+    user.isAdmin,
+  ]);
 
   const submitFormHandler = async (event) => {
     event.preventDefault();
