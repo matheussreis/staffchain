@@ -299,10 +299,23 @@ exports.add = async (req, res) => {
       action: ACTION_TEXT.CREATE,
     });
 
-    const reviewer = await getUserDetailsById(request.reviewer);
-    await notifyRequestToReview(
-      getDetailsForEmail(reviewer, request.id),
-    );
+    if (request.status === 'done') {
+      await addTimelineEvent({
+        requestId: request.id,
+        authorId: currentUserId,
+        action: ACTION_TEXT.COMPLETE,
+      });
+
+      const starter = await getUserDetailsById(request.starter);
+      await notifyDoneRequest(
+        getDetailsForEmail(starter, request.id),
+      );
+    } else {
+      const reviewer = await getUserDetailsById(request.reviewer);
+      await notifyRequestToReview(
+        getDetailsForEmail(reviewer, request.id),
+      );
+    }
 
     res.status(200).json({
       message: 'Request created successfully!',
