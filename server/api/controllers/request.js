@@ -317,7 +317,7 @@ exports.add = async (req, res) => {
       );
     }
 
-    res.status(200).json({
+    res.status(201).json({
       message: 'Request created successfully!',
     });
   } catch (error) {
@@ -501,7 +501,11 @@ exports.approve = async (req, res) => {
     }
 
     requestModel.dateModified = new Date();
-    await requestModel.save();
+    const updateResult = await requestModel.save();
+    const updatedRequest = await updateResult.populate({
+      path: 'reviewer',
+      select: { firstName: 1, lastName: 1, email: 1 },
+    });
 
     const action = isStarterReSendingRequest
       ? ACTION_TEXT.RESEND
@@ -525,7 +529,7 @@ exports.approve = async (req, res) => {
       );
     } else {
       await notifyRequestToReview(
-        getDetailsForEmail(request.reviewer, request.id),
+        getDetailsForEmail(updatedRequest.reviewer, request.id),
       );
     }
 
