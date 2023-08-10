@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Input from '../../UI/Input/Input';
 import FormRow from '../../UI/Form/FormRow';
 import Select from '../../UI/Select/Select';
@@ -12,6 +12,45 @@ import classes from './Step1.module.css';
 export default function Step1() {
   const { fields } = useContext(UserFormContext);
   const { user } = useContext(CurrentUserContext);
+  const [confirmPassword, setConfirmPassword] = useState({
+    value: '',
+    hasError: false,
+    errorMessage: "Password doesn't match.",
+  });
+
+  const passwordChangeHandler = (event) => {
+    let passwordDoesNotMatch = false;
+
+    if (event.target.value.trim() !== confirmPassword.value) {
+      passwordDoesNotMatch = true;
+    }
+
+    if (confirmPassword.value.length < 1) {
+      passwordDoesNotMatch = false;
+    }
+
+    setConfirmPassword((prev) => ({
+      ...prev,
+      hasError: passwordDoesNotMatch,
+    }));
+
+    fields.password.valueChangeHandler(event);
+  };
+
+  const confirmPasswordChangeHandler = (event) => {
+    const currentConfirmPassword = event.target.value.trim();
+    let passwordDoesNotMatch = false;
+
+    if (currentConfirmPassword !== fields.password.value) {
+      passwordDoesNotMatch = true;
+    }
+
+    setConfirmPassword((prev) => ({
+      ...prev,
+      value: event.target.value,
+      hasError: passwordDoesNotMatch,
+    }));
+  };
 
   return (
     <Container className={classes['input-container']}>
@@ -120,10 +159,20 @@ export default function Step1() {
             name="password"
             placeholder="Password"
             onBlur={fields.password.inputBlurHandler}
-            onChange={fields.password.valueChangeHandler}
+            onChange={passwordChangeHandler}
             value={fields.password.value}
             hasError={fields.password.hasError}
             errorMessage={fields.password.errorMessage}
+          />
+          <Input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            placeholder="Confirm Password"
+            onChange={confirmPasswordChangeHandler}
+            value={confirmPassword.value}
+            errorMessage={confirmPassword.errorMessage}
+            hasError={confirmPassword.hasError}
           />
         </FormRow>
       )}
