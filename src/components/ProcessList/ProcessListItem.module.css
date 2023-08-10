@@ -16,4 +16,11 @@
     flex-direction: row;
     gap: 1rem;
     margin: 0.5rem 0;
+    width: 30rem;
+}
+
+@media screen and (max-width: 650px) {
+    .field-container {
+        width: initial;
+    }
 }
