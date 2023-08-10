@@ -35,3 +35,13 @@
     font-size: xx-large;
     font-weight: 800;
 }
+
+@media screen and (max-width: 320px) {
+    .form {
+        padding: 1rem 0.5rem;
+    }
+
+    .input-container {
+        width: 95%;
+    }
+}
