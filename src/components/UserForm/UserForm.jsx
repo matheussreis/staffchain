@@ -74,11 +74,17 @@ export default function UserForm() {
       goToNextStep();
     } catch (error) {
       const operation = isEdit ? 'Updating' : 'Creating';
+
+      let errorMessage = error.message;
+      if (error.response?.status === 409) {
+        errorMessage = error.response?.data?.message;
+      }
+
       toastRef.current.clear();
       toastRef.current.show({
         severity: 'error',
         summary: `Failure ${operation} User`,
-        detail: error.message,
+        detail: errorMessage,
         sticky: true,
       });
     }
