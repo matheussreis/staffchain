@@ -17,6 +17,7 @@ export default function Input({
   onBlur,
   value,
   className,
+  required = false,
 }) {
   const getContainerClasses = () => {
     let containerClasses = classes.container;
@@ -78,7 +79,12 @@ export default function Input({
 
   return (
     <div className={getContainerClasses()}>
-      {useLabel && <label>{(label ??= placeholder)}:</label>}
+      {useLabel && (
+        <label>
+          {required && <span className={classes.required}>* </span>}
+          {(label ??= placeholder)}:
+        </label>
+      )}
       {inputHandler(type)}
       {hasError && <p className={classes.error}>{errorMessage}</p>}
     </div>

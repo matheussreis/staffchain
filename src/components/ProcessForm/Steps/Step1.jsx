@@ -27,6 +27,7 @@ export default function Step1() {
         value={step1.fields.name.value}
         hasError={step1.fields.name.hasError}
         errorMessage={step1.fields.name.errorMessage}
+        required
       />
       <Input
         isSingleLine
@@ -39,6 +40,7 @@ export default function Step1() {
         value={step1.fields.description.value}
         hasError={step1.fields.description.hasError}
         errorMessage={step1.fields.description.errorMessage}
+        required
       />
     </Container>
   );

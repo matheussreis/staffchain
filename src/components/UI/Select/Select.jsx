@@ -17,6 +17,7 @@ export default function Select({
   errorMessage,
   value,
   className,
+  required = false,
 }) {
   const windowDimensions = useWindowDimensions();
 
@@ -85,7 +86,12 @@ export default function Select({
 
   return (
     <div className={getContainerClasses()}>
-      {useLabel && <label>{(label ??= placeholder)}:</label>}
+      {useLabel && (
+        <label>
+          {required && <span className={classes.required}>* </span>}
+          {(label ??= placeholder)}:
+        </label>
+      )}
       <ReactSelect
         styles={selectStyles}
         name={name}

@@ -82,6 +82,15 @@
     -ms-user-select: none;
 }
 
+.required {
+    color: var(--color-error-500);
+    font-size: 0.9rem;
+    font-weight: 800;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
 @media screen and (max-width: 769px) {
     .upload-button {
         width: auto !important;

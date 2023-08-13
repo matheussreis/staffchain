@@ -113,6 +113,7 @@ export default function Step1() {
               errorMessage={formValues.fields[field.id]?.errorMessage || ''}
               defaultValue={field?.value}
               isSingleLine
+              required={field.required}
             />
           );
         }
@@ -131,6 +132,7 @@ export default function Step1() {
             }
             errorMessage={formValues.fields[field.id]?.errorMessage || ''}
             isSingleLine
+            required={field.required}
           />
         );
       })}

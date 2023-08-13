@@ -43,7 +43,8 @@ export default function FileUpload({
   errorMessage,
   onChange,
   defaultValue,
-  className
+  className,
+  required = false,
 }) {
   const fileInputRef = useRef();
   const [file, setFile] = useState(undefined);
@@ -85,7 +86,10 @@ export default function FileUpload({
   return (
     <div className={getCssClasses('container')}>
       {placeholder && (
-        <label className={classes['field-name']}>{placeholder}:</label>
+        <label className={classes['field-name']}>
+          {required && <span className={classes.required}>* </span>}
+          {placeholder}:
+        </label>
       )}
       <Button
         size={BUTTON_SIZES.LARGE}

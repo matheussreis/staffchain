@@ -4,12 +4,14 @@ import FormRow from '../../UI/Form/FormRow';
 import Select from '../../UI/Select/Select';
 import yesNoDom from '../../../options/yes-no-dom';
 import Container from '../../UI/Container/Container';
+import useEditPageCheck from '../../../hooks/use-edit-page-check';
 import { UserFormContext } from '../../../store/user-form-context';
 import { CurrentUserContext } from '../../../store/current-user-context';
 
 import classes from './Step1.module.css';
 
 export default function Step1() {
+  const isEdit = useEditPageCheck();
   const { fields } = useContext(UserFormContext);
   const { user } = useContext(CurrentUserContext);
   const [confirmPassword, setConfirmPassword] = useState({
@@ -65,6 +67,7 @@ export default function Step1() {
           value={fields.firstName.value}
           hasError={fields.firstName.hasError}
           errorMessage={fields.firstName.errorMessage}
+          required
         />
         <Input
           type="text"
@@ -76,6 +79,7 @@ export default function Step1() {
           value={fields.lastName.value}
           hasError={fields.lastName.hasError}
           errorMessage={fields.lastName.errorMessage}
+          required
         />
       </FormRow>
       <FormRow>
@@ -89,6 +93,7 @@ export default function Step1() {
           value={fields.email.value}
           hasError={fields.email.hasError}
           errorMessage={fields.email.errorMessage}
+          required
         />
         <Input
           type="text"
@@ -100,6 +105,7 @@ export default function Step1() {
           value={fields.phone.value}
           hasError={fields.phone.hasError}
           errorMessage={fields.phone.errorMessage}
+          required
         />
       </FormRow>
       <FormRow>
@@ -113,6 +119,7 @@ export default function Step1() {
           value={fields.birthdate.value}
           hasError={fields.birthdate.hasError}
           errorMessage={fields.birthdate.errorMessage}
+          required
         />
         {user.isAdmin && (
           <Select
@@ -124,6 +131,7 @@ export default function Step1() {
             onChange={fields.isAdministrator.valueChangeHandler}
             hasError={fields.isAdministrator.hasError}
             errorMessage={fields.isAdministrator.errorMessage}
+            required
           />
         )}
       </FormRow>
@@ -138,6 +146,7 @@ export default function Step1() {
           value={fields.departmentName.value}
           hasError={fields.departmentName.hasError}
           errorMessage={fields.departmentName.errorMessage}
+          required
         />
         <Input
           type="text"
@@ -149,6 +158,7 @@ export default function Step1() {
           value={fields.roleName.value}
           hasError={fields.roleName.hasError}
           errorMessage={fields.roleName.errorMessage}
+          required
         />
       </FormRow>
       {user.isAdmin && (
@@ -163,6 +173,7 @@ export default function Step1() {
             value={fields.password.value}
             hasError={fields.password.hasError}
             errorMessage={fields.password.errorMessage}
+            required={!isEdit}
           />
           <Input
             type="password"
@@ -173,6 +184,7 @@ export default function Step1() {
             value={confirmPassword.value}
             errorMessage={confirmPassword.errorMessage}
             hasError={confirmPassword.hasError}
+            required={!isEdit}
           />
         </FormRow>
       )}
