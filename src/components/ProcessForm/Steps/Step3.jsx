@@ -133,30 +133,35 @@ export default function Step3() {
   }, [step3]);
 
   return (
-    <Container className={classes.container}>
-      {step3.systemUsers.users.length > 0 && (
-        <List className={classes.list} scrollable>
-          {filterSystemUsers(step3).map((user) => (
-            <SelectableUser
-              key={user.id}
-              user={user}
-              onClick={moveUserToSelectedUsersList}
-            />
-          ))}
-        </List>
-      )}
-      {step3.processUsers.users.length > 0 && (
-        <List className={classes.list} scrollable>
-          {step3.processUsers.users.map((user) => (
-            <SelectableUser
-              key={user.id}
-              user={user}
-              onClick={moveUserBackToUsersList}
-              isMoveBack={true}
-            />
-          ))}
-        </List>
-      )}
-    </Container>
+    <>
+      <span className={classes.info}>
+        To proceed to the next step, select two users or more.
+      </span>
+      <Container className={classes.container}>
+        {step3.systemUsers.users.length > 0 && (
+          <List className={classes.list} scrollable>
+            {filterSystemUsers(step3).map((user) => (
+              <SelectableUser
+                key={user.id}
+                user={user}
+                onClick={moveUserToSelectedUsersList}
+              />
+            ))}
+          </List>
+        )}
+        {step3.processUsers.users.length > 0 && (
+          <List className={classes.list} scrollable>
+            {step3.processUsers.users.map((user) => (
+              <SelectableUser
+                key={user.id}
+                user={user}
+                onClick={moveUserBackToUsersList}
+                isMoveBack={true}
+              />
+            ))}
+          </List>
+        )}
+      </Container>
+    </>
   );
 }

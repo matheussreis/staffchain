@@ -106,6 +106,9 @@ export default function Step2() {
   return (
     <>
       <Container className={classes['input-container']}>
+        <span className={classes.info}>
+          To proceed to the next step, add one field or more.
+        </span>
         <FormRow>
           <Input
             type="text"

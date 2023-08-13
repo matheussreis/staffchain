@@ -59,6 +59,13 @@
     width: 100% !important;
 }
 
+.info {
+    font-weight: 500;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
 @media screen and (max-width: 768px) {
     .input-container {
         flex-direction: column;

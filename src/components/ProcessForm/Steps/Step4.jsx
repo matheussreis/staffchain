@@ -67,6 +67,21 @@ function UserListItem({ user, availableUsers, onChangeReportsTo }) {
   );
 }
 
+function InfoText() {
+  return (
+    <div className={classes['info-container']}>
+      <span className={classes.info}>
+        To create the process, assign the reports-to of each user to the user
+        who should send a request to their reporting user.
+      </span>
+      <span className={classes['info-secondary']}>
+        NOTE: The process can only be created if there's one user who reports to
+        himself. This user is the final approver in the request chain.
+      </span>
+    </div>
+  );
+}
+
 const findReporteesByBossId = (selectedUsers, bossId) => {
   const reportees = [];
 
@@ -110,6 +125,17 @@ const getAvailableUsers = (currentUser, currentStep, rootUser) => {
   return formattedList;
 };
 
+const findRootUser = (selectedUsers) => {
+  for (const userId in selectedUsers) {
+    const selectedUser = selectedUsers[userId];
+    if (userId === selectedUser.reportsTo.id) {
+      return selectedUser;
+    }
+  }
+
+  return null;
+};
+
 const setIsStep4Valid = (step4) => {
   const { requestTree } = step4;
 
@@ -123,8 +149,12 @@ const setIsStep4Valid = (step4) => {
   const isUserCountEqual = availableUsers.length === selectedUsers.length;
   const usersInCommonCount = usersInCommon.length;
 
+  const rootUser = findRootUser(requestTree.selectedUsers);
+
   const isValid =
-    isUserCountEqual && usersInCommonCount === availableUsers.length;
+    isUserCountEqual &&
+    usersInCommonCount === availableUsers.length &&
+    !!rootUser;
 
   step4.setIsValid(isValid);
 };
@@ -163,17 +193,6 @@ export default function Step4() {
   };
 
   useEffect(() => {
-    const findRootUser = (selectedUsers) => {
-      for (const userId in selectedUsers) {
-        const selectedUser = selectedUsers[userId];
-        if (userId === selectedUser.reportsTo.id) {
-          return selectedUser;
-        }
-      }
-
-      return null;
-    };
-
     if (rootUser === null) {
       const user = findRootUser(step4.requestTree.selectedUsers);
       setRootUser(user);
@@ -185,19 +204,22 @@ export default function Step4() {
   }, [step4]);
 
   return (
-    <Container className={classes['list-container']}>
-      {step4.requestTree.availableUsers.length > 0 && (
-        <List className={classes.list} scrollable>
-          {step4.requestTree.availableUsers.map((user) => (
-            <UserListItem
-              key={user.id}
-              user={user}
-              availableUsers={getAvailableUsers(user, step4, rootUser)}
-              onChangeReportsTo={reportsToChangeHandler}
-            />
-          ))}
-        </List>
-      )}
-    </Container>
+    <>
+      <InfoText />
+      <Container className={classes['list-container']}>
+        {step4.requestTree.availableUsers.length > 0 && (
+          <List className={classes.list} scrollable>
+            {step4.requestTree.availableUsers.map((user) => (
+              <UserListItem
+                key={user.id}
+                user={user}
+                availableUsers={getAvailableUsers(user, step4, rootUser)}
+                onChangeReportsTo={reportsToChangeHandler}
+              />
+            ))}
+          </List>
+        )}
+      </Container>
+    </>
   );
 }

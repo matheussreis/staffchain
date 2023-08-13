@@ -25,6 +25,26 @@
     align-content: center;
 }
 
+.info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.info {
+    font-weight: 500;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.info-secondary {
+    font-weight: 300;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
 /* user list item - START */
 
 .field {
