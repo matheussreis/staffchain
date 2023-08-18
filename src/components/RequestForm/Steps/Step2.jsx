@@ -10,7 +10,12 @@ export default function Step2() {
       <h3>
         The request has been successfully {isEdit ? 'updated' : 'created'}!
       </h3>
-      {/* Add dynamic message based on the request reviewer */}
+      {!isEdit && (
+        <p className={classes.text}>
+          The reviewer has been notified about your request, and will soon take
+          an action.
+        </p>
+      )}
     </div>
   );
 }
