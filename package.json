@@ -2,6 +2,12 @@
   "name": "request-management-app",
   "version": "0.1.0",
   "private": true,
+  "overrides": {
+    "react-scripts": {
+      "@svgr/webpack": "8.1.0",
+      "postcss": "8.4.38"
+    }
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -30,6 +36,9 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "engines": {
+    "node": ">=18.20.6"
   },
   "browserslist": {
     "production": [
