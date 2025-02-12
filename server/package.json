@@ -4,7 +4,7 @@
   "description": "API for the request management app",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node seeder/index.js && node server.js"
   },
   "author": "Matheus Reis",
   "license": "MIT",
