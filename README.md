@@ -16,6 +16,7 @@ StaffChain is a flow management tool that allows users to set up form templates 
       - [File Upload](#file-upload)
       - [JWT](#jwt)
       - [CORS](#cors)
+      - [System User](#system-user)
     - [Frontend Setup](#frontend-setup)
       - [App Name](#app-name)
       - [API URL (Backend)](#api-url-backend)
@@ -132,6 +133,17 @@ The API uses CORS to only allow requests from a certain origin, which should be 
 ```bash
 CLIENT_URL='http://localhost:3000'
 ```
+
+#### System User
+
+When initialising the system, a default user called "System Administrator" is created to manage users and setup processes. However, before using this account, you must configure an email address and password by replacing the variables below with your desired credentials:
+
+```bash
+ADMIN_EMAIL=''
+ADMIN_PASSWORD=''
+```
+
+**_NOTE:_** During API initialisation, the system checks whether a system administrator already exists. If not, a new one is created. Changing the `ADMIN_EMAIL` and restarting the server may result in a new administrator account being created. Additionally, if `ADMIN_PASSWORD` is not set, the system defaults the password to `admin`.
 
 ### Frontend Setup
 
