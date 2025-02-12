@@ -39,7 +39,9 @@ const seedAdmin = async () => {
   try {
     mongoose.set('strictQuery', false);
 
-    await mongoose.connect(process.env.MONGO_CONNECTION_STRING);
+    await mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
+      dbName: process.env.DEFAULT_DATABASE_NAME || 'staffchain',
+    });
 
     await seedAdmin();
 

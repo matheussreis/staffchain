@@ -12,7 +12,9 @@ const requestRoutes = require('./api/routes/requests');
 const userRoutes = require('./api/routes/users');
 
 mongoose.set('strictQuery', false);
-mongoose.connect(process.env.MONGO_CONNECTION_STRING);
+mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
+  dbName: 'staffchain',
+});
 
 app.use('/file', express.static(process.env.UPLOAD_DIR_PATH));
 
